@@ -12,7 +12,7 @@ import FaqSection from "@site/components/home/FaqSection";
 import ContactUsSection from "@site/components/home/ContactUsSection";
 import { useHomeContent } from "@site/hooks/useHomeContent";
 import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
-import { Loader2 } from "lucide-react";
+import { Loader2, Phone, MessageSquare } from "lucide-react";
 
 export default function Index() {
   const { content, meta, title, publishedAt, updatedAt, isLoading } = useHomeContent();
@@ -42,12 +42,19 @@ export default function Index() {
         updatedTime={updatedAt}
       />
 
-      {/* Hero and Contact Form Section */}
+      {/* Hero Section */}
       <div className="max-w-[2560px] mx-auto w-[95%] py-[27px] my-[20px] md:my-[40px]">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-[3%]">
-          {/* Left Side: Headline and Call Box */}
-          <div className="lg:w-[65.667%]">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-[3%]">
+          {/* Left Side: H1, Headline and CTAs */}
+          <div className="lg:w-[65.667%] flex flex-col justify-center">
             <div className="mb-[30px] md:mb-[40px]">
+              {/* H1 Title - All caps, green, positioned ABOVE headline */}
+              {heroContent.h1Title && (
+                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-[15px] md:mb-[20px]">
+                  {heroContent.h1Title}
+                </h1>
+              )}
+
               <div className="relative">
                 <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left">
                   {heroContent.highlightedText && heroContent.headline.includes(heroContent.highlightedText)
@@ -74,43 +81,60 @@ export default function Index() {
                   }
                 </p>
               </div>
-              {/* H1 Title - All caps, positioned between headline and phone button */}
-              {heroContent.h1Title && (
-                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-white mt-[20px] md:mt-[30px]">
-                  {heroContent.h1Title}
-                </h1>
-              )}
             </div>
 
-            {/* Call Box */}
-            <a href={`tel:${phoneNumber.replace(/\D/g, "")}`}>
-              <div className="bg-brand-accent p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Phone Button - Green background with white text */}
+              <a
+                href={`tel:${phoneNumber.replace(/\D/g, "")}`}
+                className="bg-accent hover:bg-accent/90 transition-all duration-300 p-[8px] flex-1 max-w-[400px] group"
+              >
                 <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                    <svg
-                      className="w-8 h-8 text-black group-hover:text-white transition-colors duration-300"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" />
-                    </svg>
+                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center">
+                    <Phone className="w-8 h-8 text-accent" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-outfit text-[16px] md:text-[18px] leading-tight text-black pb-[10px] font-normal group-hover:text-white transition-colors duration-300">
+                    <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-white pb-[10px] font-normal">
                       {phoneLabel}
                     </h4>
-                    <p className="font-outfit text-[clamp(1.75rem,5vw,40px)] text-black leading-tight group-hover:text-white transition-colors duration-300">
+                    <p className="font-inter text-[clamp(1.75rem,5vw,40px)] text-white leading-tight">
                       {phoneDisplay}
                     </p>
                   </div>
                 </div>
-              </div>
-            </a>
+              </a>
+
+              {/* Free Consultation Button - White background with green text */}
+              {heroContent.consultationButtonText && (
+                <a
+                  href={heroContent.consultationButtonLink || "/contact"}
+                  className="bg-white hover:bg-gray-100 transition-all duration-300 p-[8px] flex-1 max-w-[400px] group"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="bg-accent p-[15px] mt-1 flex items-center justify-center">
+                      <MessageSquare className="w-8 h-8 text-white" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 flex items-center">
+                      <p className="font-inter text-[clamp(1.5rem,4vw,32px)] text-accent leading-tight font-semibold">
+                        {heroContent.consultationButtonText}
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              )}
+            </div>
           </div>
 
-          {/* Right Side: Contact Form */}
-          <div className="lg:w-[31.3333%]">
-            <ContactForm />
+          {/* Right Side: Hero Image */}
+          <div className="lg:w-[31.3333%] flex items-end">
+            {heroContent.heroImage && (
+              <img
+                src={heroContent.heroImage}
+                alt={heroContent.heroImageAlt || "Hero"}
+                className="w-full h-auto object-cover object-bottom"
+              />
+            )}
           </div>
         </div>
       </div>

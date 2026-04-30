@@ -2,11 +2,15 @@
 // Each section maps directly to a static component's data needs
 
 export interface HeroContent {
-  h1Title: string; // H1 title text (all caps, ~20px) between headline and phone button
+  h1Title: string; // H1 title text (all caps, ~20px) above headline
   headline: string;
   highlightedText: string;
   phone: string;
   phoneLabel: string;
+  heroImage: string; // Image displayed on right side (replaces form)
+  heroImageAlt: string;
+  consultationButtonText: string; // Text for second CTA button
+  consultationButtonLink: string; // Link for consultation button
 }
 
 export interface PartnerLogo {
@@ -155,6 +159,10 @@ export const defaultHomeContent: HomePageContent = {
     highlightedText: "",
     phone: "",
     phoneLabel: "",
+    heroImage: "",
+    heroImageAlt: "",
+    consultationButtonText: "",
+    consultationButtonLink: "",
   },
   partnerLogos: [],
   about: {

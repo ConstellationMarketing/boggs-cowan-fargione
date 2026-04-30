@@ -50,7 +50,7 @@ function HeroSection({ content, update }: SectionProps) {
     <Section title="Hero Section">
       <div className="grid gap-4">
         <HeadingField
-          label="H1 Title"
+          label="H1 Title (appears above headline in green)"
           value={hero.h1Title}
           onChange={(v) => set({ h1Title: v })}
           tag={ht.get("hero.h1Title") === "h2" ? "h1" : ht.get("hero.h1Title")}
@@ -66,7 +66,43 @@ function HeroSection({ content, update }: SectionProps) {
           <Input value={hero.highlightedText} onChange={(e) => set({ highlightedText: e.target.value })} />
           <p className="text-xs text-gray-500 mt-1">Enter the exact portion of the headline to display in accent color</p>
         </div>
-        <p className="text-xs text-gray-500 italic">Phone number is managed in Site Settings &gt; Contact Info</p>
+
+        <ImageField
+          label="Hero Image (replaces contact form)"
+          value={hero.heroImage}
+          onChange={(url) => set({ heroImage: url })}
+          altValue={hero.heroImageAlt}
+          onAltChange={(heroImageAlt) => set({ heroImageAlt })}
+          folder="hero"
+        />
+        <div>
+          <Label>Hero Image Alt Text</Label>
+          <Input value={hero.heroImageAlt} onChange={(e) => set({ heroImageAlt: e.target.value })} />
+        </div>
+
+        <p className="text-xs text-gray-500 italic mt-2">Phone number is managed in Site Settings &gt; Contact Info</p>
+
+        <div className="border-t pt-4 mt-4">
+          <h4 className="font-medium mb-3">Free Consultation Button</h4>
+          <div className="grid gap-3">
+            <div>
+              <Label>Button Text</Label>
+              <Input
+                value={hero.consultationButtonText}
+                onChange={(e) => set({ consultationButtonText: e.target.value })}
+                placeholder="Free Consultation"
+              />
+            </div>
+            <div>
+              <Label>Button Link</Label>
+              <Input
+                value={hero.consultationButtonLink}
+                onChange={(e) => set({ consultationButtonLink: e.target.value })}
+                placeholder="/contact"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </Section>
   );
