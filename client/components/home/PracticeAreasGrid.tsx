@@ -1,9 +1,47 @@
 import { Link } from "react-router-dom";
+import {
+  AlertTriangle,
+  Bike,
+  Briefcase,
+  Building,
+  Car,
+  DollarSign,
+  FileText,
+  Footprints,
+  Heart,
+  Home,
+  Scale,
+  Shield,
+  Stethoscope,
+  TrendingUp,
+  Truck,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import type { PracticeAreaItem } from "@site/lib/cms/homePageTypes";
 
 interface PracticeAreasGridProps {
   areas?: PracticeAreaItem[];
 }
+
+const iconMap: Record<string, LucideIcon> = {
+  AlertTriangle,
+  Bike,
+  Briefcase,
+  Building,
+  Car,
+  DollarSign,
+  FileText,
+  Footprints,
+  Heart,
+  Home,
+  Scale,
+  Shield,
+  Stethoscope,
+  TrendingUp,
+  Truck,
+  Users,
+};
 
 export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
   if (!areas || areas.length === 0) {
@@ -11,39 +49,46 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
   }
 
   return (
-    <div className="bg-white">
-      {" "}
-      {/* Removed py-[40px] */}
-      <div className="w-full">
-        {" "}
-        {/* Removed max-w-[2560px], mx-auto, w-[90%] */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
-          {areas.map((area, index) => (
-            <Link
-              key={index}
-              to={area.link}
-              className="relative min-h-[400px] lg:min-h-[500px] overflow-hidden group"
-              role="img"
-              aria-label={area.imageAlt || area.title}
-              style={{
-                backgroundImage: `url(${area.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              {/* Dark Overlay with Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70 transition-all duration-500 group-hover:from-brand-accent-dark/60 group-hover:via-brand-accent-dark/70 group-hover:to-brand-dark/90"></div>
+    <section className="bg-white py-[40px] md:py-[60px]">
+      <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {areas.map((area, index) => {
+            const Icon = iconMap[area.icon] || Scale;
+            const subPractices = area.subPractices.filter((item) => item.trim().length > 0);
 
-              {/* Content */}
-              <div className="relative h-full flex items-end p-4">
-                <h3 className="font-inter text-[36px] leading-tight text-white font-normal transition-all duration-300 group-hover:text-brand-accent">
-                  {area.title}
-                </h3>
-              </div>
-            </Link>
-          ))}
+            return (
+              <article
+                key={`${area.title}-${index}`}
+                className="flex min-h-[360px] flex-col border-[3px] border-black bg-white px-6 pb-6 pt-5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+              >
+                <div className="flex items-center justify-center gap-3">
+                  <Icon className="h-6 w-6 text-brand-accent" strokeWidth={1.75} />
+                  <h3 className="font-playfair text-[28px] leading-tight text-black">
+                    {area.title}
+                  </h3>
+                </div>
+
+                <div className="mx-auto mt-4 h-[2px] w-full bg-brand-accent/70" />
+
+                <ul className="mt-5 flex-1 space-y-3 font-inter text-[18px] leading-[28px] text-black/90">
+                  {subPractices.map((item, itemIndex) => (
+                    <li key={`${item}-${itemIndex}`}>{item}</li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    to={area.link || "/practice-areas/"}
+                    className="inline-flex min-h-[46px] items-center justify-center bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                  >
+                    Learn More
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

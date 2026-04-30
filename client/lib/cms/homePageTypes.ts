@@ -45,17 +45,15 @@ export interface AboutContent {
 
 export interface PracticeAreaItem {
   title: string;
-  image: string;
-  imageAlt: string;
+  icon: string;
+  subPractices: string[];
   link: string;
 }
 
 export interface PracticeAreasIntroContent {
   sectionLabel: string;
   heading: string;
-  buttonLink: string;
-  buttonTextLine1: string;
-  buttonTextLine2: string;
+  description: string;
 }
 
 export interface AwardsContent {
@@ -187,9 +185,7 @@ export const defaultHomeContent: HomePageContent = {
   practiceAreasIntro: {
     sectionLabel: "",
     heading: "",
-    buttonLink: "",
-    buttonTextLine1: "",
-    buttonTextLine2: "",
+    description: "",
   },
   practiceAreas: [],
   awards: {
