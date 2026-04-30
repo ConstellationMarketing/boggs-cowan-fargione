@@ -8,7 +8,7 @@ interface PracticeAreasGridProps {
 }
 
 const normalizedIconMap = Object.entries(LucideIcons).reduce<Record<string, LucideIcon>>((acc, [name, icon]) => {
-  if (typeof icon !== "function") {
+  if (name === "default" || name === "icons" || name === "aliases") {
     return acc;
   }
 
