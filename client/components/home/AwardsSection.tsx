@@ -32,8 +32,7 @@ export default function AwardsSection({ content, headingTag }: AwardsSectionProp
               <DynamicHeading
                 tag={headingTag}
                 defaultTag="h2"
-                className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px]"
-                style={{ color: "rgb(27, 94, 32)" }}
+                className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent"
               >
                 {data.sectionLabel}
               </DynamicHeading>

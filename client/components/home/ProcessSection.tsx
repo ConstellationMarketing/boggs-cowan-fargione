@@ -25,8 +25,7 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
             <DynamicHeading
               tag={headingTags?.["process.sectionLabel"]}
               defaultTag="h2"
-              className="font-inter text-[24px] leading-[36px]"
-              style={{ color: "rgb(27, 94, 32)" }}
+              className="font-inter text-[24px] leading-[36px] text-brand-accent"
             >
               {data.sectionLabel}
             </DynamicHeading>
@@ -59,8 +58,7 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
             {step.number && (
               <div className="mb-[20px]">
                 <p
-                  className="font-inter text-[24px] leading-[36px]"
-                  style={{ color: "rgb(27, 94, 32)" }}
+                  className="font-inter text-[24px] leading-[36px] text-brand-accent"
                 >
                   {step.number}
                 </p>

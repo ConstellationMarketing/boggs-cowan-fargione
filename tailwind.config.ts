@@ -28,8 +28,8 @@ export default {
         "brand-dark": "rgb(0, 0, 0)",           // Black
         "brand-card": "rgb(0, 0, 0)",           // Black
         "brand-border": "rgb(230, 230, 230)",   // Light gray
-        "brand-accent": "rgb(27, 94, 32)",      // #1B5E20
-        "brand-accent-dark": "rgb(20, 70, 24)", // Darker green for hovers
+        "brand-accent": "rgb(44, 143, 52)",     // #2C8F34
+        "brand-accent-dark": "rgb(44, 143, 52)", // Match brand green so only one green is used
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

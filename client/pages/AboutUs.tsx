@@ -114,7 +114,7 @@ export default function AboutUs() {
             {/* Left Side - Content */}
             <div>
               <div className="mb-[10px]">
-                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-[rgb(107,141,12)]">
+                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
                   {content.story.sectionLabel}
                 </p>
               </div>
@@ -191,7 +191,7 @@ export default function AboutUs() {
         <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
           <div className="text-center mb-[30px] md:mb-[50px]">
             <div className="mb-[10px]">
-              <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-[rgb(107,141,12)]">
+              <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
                 {content.team.sectionLabel}
               </p>
             </div>
@@ -265,7 +265,7 @@ export default function AboutUs() {
             {/* Left Side - Heading + Image */}
             <div>
               <div className="mb-[10px]">
-                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-[rgb(107,141,12)]">
+                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
                   {content.whyChooseUs.sectionLabel}
                 </p>
               </div>
