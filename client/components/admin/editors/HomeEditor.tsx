@@ -345,7 +345,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
                 onChange={(e) => upd({ ...item, icon: e.target.value })}
                 placeholder="Scale"
               />
-              <p className="mt-1 text-xs text-gray-500">Use a Lucide icon name like Scale, Car, Briefcase, Building, Heart, or Shield.</p>
+              <p className="mt-1 text-xs text-gray-500">Use a Lucide icon name like Users, CarFront, BriefcaseBusiness, Shield, Heart, or Scale. Spaces and dashes are also accepted.</p>
             </div>
             <ArrayEditor
               items={Array.isArray(item.subPractices)

@@ -1,47 +1,30 @@
 import { Link } from "react-router-dom";
-import {
-  AlertTriangle,
-  Bike,
-  Briefcase,
-  Building,
-  Car,
-  DollarSign,
-  FileText,
-  Footprints,
-  Heart,
-  Home,
-  Scale,
-  Shield,
-  Stethoscope,
-  TrendingUp,
-  Truck,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { Scale, type LucideIcon } from "lucide-react";
 import type { PracticeAreaItem } from "@site/lib/cms/homePageTypes";
 
 interface PracticeAreasGridProps {
   areas?: PracticeAreaItem[];
 }
 
-const iconMap: Record<string, LucideIcon> = {
-  AlertTriangle,
-  Bike,
-  Briefcase,
-  Building,
-  Car,
-  DollarSign,
-  FileText,
-  Footprints,
-  Heart,
-  Home,
-  Scale,
-  Shield,
-  Stethoscope,
-  TrendingUp,
-  Truck,
-  Users,
-};
+const normalizedIconMap = Object.entries(LucideIcons).reduce<Record<string, LucideIcon>>((acc, [name, icon]) => {
+  if (typeof icon !== "function") {
+    return acc;
+  }
+
+  const normalizedName = name.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  acc[normalizedName] = icon as LucideIcon;
+  return acc;
+}, {});
+
+function resolvePracticeAreaIcon(iconName: string | null | undefined): LucideIcon {
+  if (!iconName || typeof iconName !== "string") {
+    return Scale;
+  }
+
+  const normalizedInput = iconName.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  return normalizedIconMap[normalizedInput] || Scale;
+}
 
 export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
   if (!areas || areas.length === 0) {
@@ -53,7 +36,7 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
       <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {areas.map((area, index) => {
-            const Icon = iconMap[area.icon] || Scale;
+            const Icon = resolvePracticeAreaIcon(area.icon);
             const subPractices = Array.isArray(area.subPractices)
               ? area.subPractices.filter(
                   (item): item is { text: string; link: string } =>
