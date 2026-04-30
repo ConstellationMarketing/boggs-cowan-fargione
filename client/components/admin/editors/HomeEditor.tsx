@@ -331,7 +331,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
         items={Array.isArray(content.practiceAreas) ? content.practiceAreas : []}
         onChange={(items) => update("practiceAreas", items)}
         itemLabel="Practice Area"
-        newItem={() => ({ title: "", icon: "Scale", subPractices: [""], link: "/practice-areas/" })}
+        newItem={() => ({ title: "", icon: "Scale", subPractices: [{ text: "", link: "" }], link: "/practice-areas/" })}
         renderItem={(item, _, upd) => (
           <div className="grid gap-3">
             <div>
@@ -348,18 +348,28 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
               <p className="mt-1 text-xs text-gray-500">Use a Lucide icon name like Scale, Car, Briefcase, Building, Heart, or Shield.</p>
             </div>
             <ArrayEditor
-              items={(Array.isArray(item.subPractices) ? item.subPractices : []).map((text, index) => ({ id: `${index}`, text }))}
-              onChange={(items) => upd({ ...item, subPractices: items.map((entry) => entry.text) })}
+              items={Array.isArray(item.subPractices) ? item.subPractices : []}
+              onChange={(items) => upd({ ...item, subPractices: items })}
               itemLabel="Sub-practice"
-              newItem={() => ({ id: String(Date.now()), text: "" })}
+              newItem={() => ({ text: "", link: "" })}
               renderItem={(subPractice, __, updateSubPractice) => (
-                <div>
-                  <Label>Text</Label>
-                  <Input
-                    value={subPractice.text}
-                    onChange={(e) => updateSubPractice({ ...subPractice, text: e.target.value })}
-                    placeholder="Motor Vehicle Accidents"
-                  />
+                <div className="grid gap-3">
+                  <div>
+                    <Label>Text</Label>
+                    <Input
+                      value={subPractice.text}
+                      onChange={(e) => updateSubPractice({ ...subPractice, text: e.target.value })}
+                      placeholder="Motor Vehicle Accidents"
+                    />
+                  </div>
+                  <div>
+                    <Label>Link</Label>
+                    <Input
+                      value={subPractice.link}
+                      onChange={(e) => updateSubPractice({ ...subPractice, link: e.target.value })}
+                      placeholder="/practice-areas/personal-injury/"
+                    />
+                  </div>
                 </div>
               )}
             />

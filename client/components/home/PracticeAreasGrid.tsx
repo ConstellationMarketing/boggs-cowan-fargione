@@ -49,19 +49,24 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
   }
 
   return (
-    <section className="bg-white py-[40px] md:py-[60px]">
+    <section className="bg-brand-dark py-[40px] md:py-[60px]">
       <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {areas.map((area, index) => {
             const Icon = iconMap[area.icon] || Scale;
             const subPractices = Array.isArray(area.subPractices)
-              ? area.subPractices.filter((item) => typeof item === "string" && item.trim().length > 0)
+              ? area.subPractices.filter(
+                  (item): item is { text: string; link: string } =>
+                    !!item
+                    && typeof item.text === "string"
+                    && item.text.trim().length > 0,
+                )
               : [];
 
             return (
               <article
                 key={`${area.title}-${index}`}
-                className="flex min-h-[360px] flex-col border-[3px] border-black bg-white px-6 pb-6 pt-5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+                className="flex min-h-[360px] flex-col bg-white px-6 pb-6 pt-5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
               >
                 <div className="flex items-center justify-center gap-3">
                   <Icon className="h-6 w-6 text-brand-accent" strokeWidth={1.75} />
@@ -74,7 +79,18 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
 
                 <ul className="mt-5 flex-1 space-y-3 font-inter text-[18px] leading-[28px] text-black/90">
                   {subPractices.map((item, itemIndex) => (
-                    <li key={`${item}-${itemIndex}`}>{item}</li>
+                    <li key={`${item.text}-${itemIndex}`}>
+                      {item.link ? (
+                        <Link
+                          to={item.link}
+                          className="transition-colors duration-200 hover:text-brand-accent"
+                        >
+                          {item.text}
+                        </Link>
+                      ) : (
+                        item.text
+                      )}
+                    </li>
                   ))}
                 </ul>
 

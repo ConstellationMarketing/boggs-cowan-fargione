@@ -494,7 +494,26 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
           title: item.title || "",
           icon: typeof item.icon === "string" && item.icon.trim() ? item.icon : "Scale",
           subPractices: Array.isArray(item.subPractices)
-            ? item.subPractices.filter((entry): entry is string => typeof entry === "string")
+            ? (item.subPractices as unknown[]).flatMap((entry) => {
+                if (typeof entry === "string") {
+                  const text = entry.trim();
+                  return text ? [{ text, link: "" }] : [];
+                }
+
+                if (isRecord(entry)) {
+                  const text = typeof entry.text === "string" ? entry.text.trim() : "";
+                  if (!text) {
+                    return [];
+                  }
+
+                  return [{
+                    text,
+                    link: typeof entry.link === "string" ? entry.link : "",
+                  }];
+                }
+
+                return [];
+              })
             : [],
           link: item.link || "/practice-areas/",
         }))

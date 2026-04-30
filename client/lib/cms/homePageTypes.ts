@@ -43,10 +43,15 @@ export interface AboutContent {
   membershipsItems: string[];
 }
 
+export interface PracticeAreaSubPractice {
+  text: string;
+  link: string;
+}
+
 export interface PracticeAreaItem {
   title: string;
   icon: string;
-  subPractices: string[];
+  subPractices: PracticeAreaSubPractice[];
   link: string;
 }
 
