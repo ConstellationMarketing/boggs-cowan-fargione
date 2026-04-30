@@ -69,8 +69,6 @@ CREATE TABLE public.site_settings (
   phone_display text,
   phone_availability text,
   apply_phone_globally boolean DEFAULT true,
-  header_cta_text text,
-  header_cta_url text,
   navigation_items jsonb DEFAULT '[]'::jsonb,
   footer_about_links jsonb DEFAULT '[]'::jsonb,
   footer_practice_links jsonb DEFAULT '[]'::jsonb,
@@ -278,7 +276,7 @@ CREATE OR REPLACE VIEW public.site_settings_public AS
 SELECT
   id, settings_key, site_name, logo_url, logo_alt,
   phone_number, phone_display, phone_availability, apply_phone_globally,
-  header_cta_text, header_cta_url, navigation_items,
+  navigation_items,
   footer_about_links, footer_practice_links,
   footer_resources_heading, footer_practice_areas_heading,
   address_line1, address_line2, map_embed_url,

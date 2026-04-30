@@ -43,10 +43,6 @@ export interface SiteSettings {
   phoneAvailability: string; // e.g., "Available 24/7"
   applyPhoneGlobally: boolean;
 
-  // Header CTA
-  headerCtaText: string;
-  headerCtaUrl: string;
-
   // Navigation
   navigationItems: NavigationItem[];
 
@@ -97,8 +93,6 @@ export interface SiteSettingsRow {
   phone_display: string | null;
   phone_availability: string | null;
   apply_phone_globally: boolean;
-  header_cta_text: string | null;
-  header_cta_url: string | null;
   navigation_items: NavigationItem[];
   footer_about_links: FooterLink[];
   footer_practice_links: FooterLink[];
@@ -135,8 +129,6 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   phoneDisplay: "",
   phoneAvailability: "",
   applyPhoneGlobally: true,
-  headerCtaText: "",
-  headerCtaUrl: "",
   navigationItems: [
   ],
   footerAboutLinks: [
@@ -180,8 +172,6 @@ export function rowToSiteSettings(row: SiteSettingsRow): SiteSettings {
       row.phone_availability || DEFAULT_SITE_SETTINGS.phoneAvailability,
     applyPhoneGlobally:
       row.apply_phone_globally ?? DEFAULT_SITE_SETTINGS.applyPhoneGlobally,
-    headerCtaText: row.header_cta_text || DEFAULT_SITE_SETTINGS.headerCtaText,
-    headerCtaUrl: row.header_cta_url || DEFAULT_SITE_SETTINGS.headerCtaUrl,
     navigationItems: row.navigation_items?.length
       ? row.navigation_items
       : DEFAULT_SITE_SETTINGS.navigationItems,
@@ -227,8 +217,6 @@ export function siteSettingsToRow(
     phone_display: settings.phoneDisplay,
     phone_availability: settings.phoneAvailability,
     apply_phone_globally: settings.applyPhoneGlobally,
-    header_cta_text: settings.headerCtaText,
-    header_cta_url: settings.headerCtaUrl,
     navigation_items: settings.navigationItems,
     footer_about_links: settings.footerAboutLinks,
     footer_practice_links: settings.footerPracticeLinks,

@@ -566,39 +566,6 @@ export default function AdminSiteSettings() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Header CTA Button</CardTitle>
-              <CardDescription>
-                The call-to-action button in the header
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="headerCtaText">Button Text</Label>
-                <Input
-                  id="headerCtaText"
-                  value={settings.headerCtaText}
-                  onChange={(e) =>
-                    updateSettings({ headerCtaText: e.target.value })
-                  }
-                  placeholder="GET HELP NOW"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="headerCtaUrl">Button URL</Label>
-                <Input
-                  id="headerCtaUrl"
-                  value={settings.headerCtaUrl}
-                  onChange={(e) =>
-                    updateSettings({ headerCtaUrl: e.target.value })
-                  }
-                  placeholder="#book"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
               <CardTitle>Copyright Text</CardTitle>
               <CardDescription>Displayed in the footer</CardDescription>
             </CardHeader>

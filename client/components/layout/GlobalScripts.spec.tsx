@@ -36,8 +36,6 @@ const baseSettings: SiteSettings = {
   phoneDisplay: "",
   phoneAvailability: "",
   applyPhoneGlobally: true,
-  headerCtaText: "",
-  headerCtaUrl: "",
   navigationItems: [],
   footerAboutLinks: [],
   footerPracticeLinks: [],

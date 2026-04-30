@@ -27,8 +27,6 @@ export interface SiteSettings {
   phoneDisplay: string;
   phoneAvailability: string;
   applyPhoneGlobally: boolean;
-  headerCtaText: string;
-  headerCtaUrl: string;
   navigationItems: {
     label: string;
     href: string;
@@ -153,8 +151,6 @@ interface SiteSettingsRow {
   phone_display?: string | null;
   phone_availability?: string | null;
   apply_phone_globally?: boolean | null;
-  header_cta_text?: string | null;
-  header_cta_url?: string | null;
   navigation_items?: SiteSettings["navigationItems"] | null;
   footer_about_links?: SiteSettings["footerAboutLinks"] | null;
   footer_practice_links?: SiteSettings["footerPracticeLinks"] | null;
@@ -191,8 +187,6 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   phoneDisplay: "",
   phoneAvailability: "",
   applyPhoneGlobally: true,
-  headerCtaText: "",
-  headerCtaUrl: "",
   navigationItems: [],
   footerAboutLinks: [],
   footerPracticeLinks: [],
@@ -427,8 +421,6 @@ export function shapeSiteSettings(row?: SiteSettingsRow | null): SiteSettings {
     phoneDisplay: row.phone_display || DEFAULT_SITE_SETTINGS.phoneDisplay,
     phoneAvailability: row.phone_availability || DEFAULT_SITE_SETTINGS.phoneAvailability,
     applyPhoneGlobally: row.apply_phone_globally ?? DEFAULT_SITE_SETTINGS.applyPhoneGlobally,
-    headerCtaText: row.header_cta_text || DEFAULT_SITE_SETTINGS.headerCtaText,
-    headerCtaUrl: row.header_cta_url || DEFAULT_SITE_SETTINGS.headerCtaUrl,
     navigationItems: row.navigation_items?.length ? row.navigation_items : DEFAULT_SITE_SETTINGS.navigationItems,
     footerAboutLinks: row.footer_about_links?.length ? row.footer_about_links : DEFAULT_SITE_SETTINGS.footerAboutLinks,
     footerPracticeLinks: row.footer_practice_links?.length ? row.footer_practice_links : DEFAULT_SITE_SETTINGS.footerPracticeLinks,
