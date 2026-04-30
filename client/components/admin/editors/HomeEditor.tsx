@@ -328,7 +328,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
   return (
     <Section title="Practice Areas Grid" defaultOpen={false}>
       <ArrayEditor
-        items={content.practiceAreas}
+        items={Array.isArray(content.practiceAreas) ? content.practiceAreas : []}
         onChange={(items) => update("practiceAreas", items)}
         itemLabel="Practice Area"
         newItem={() => ({ title: "", icon: "Scale", subPractices: [""], link: "/practice-areas/" })}
@@ -348,7 +348,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
               <p className="mt-1 text-xs text-gray-500">Use a Lucide icon name like Scale, Car, Briefcase, Building, Heart, or Shield.</p>
             </div>
             <ArrayEditor
-              items={item.subPractices.map((text, index) => ({ id: `${index}`, text }))}
+              items={(Array.isArray(item.subPractices) ? item.subPractices : []).map((text, index) => ({ id: `${index}`, text }))}
               onChange={(items) => upd({ ...item, subPractices: items.map((entry) => entry.text) })}
               itemLabel="Sub-practice"
               newItem={() => ({ id: String(Date.now()), text: "" })}
