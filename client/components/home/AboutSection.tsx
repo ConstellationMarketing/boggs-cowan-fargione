@@ -76,24 +76,24 @@ export default function AboutSection({ content }: AboutSectionProps) {
                 <img
                   src={data.attorneyImage}
                   alt={data.attorneyImageAlt || data.heading || "Attorney"}
-                  className="block w-full aspect-[4/5] object-cover object-top"
+                  className="block w-full h-auto object-contain object-top"
                   loading="lazy"
                 />
               </div>
             ) : null}
 
             {badges.length > 0 ? (
-              <div className="grid grid-cols-3 gap-3 md:gap-5 mt-5 md:mt-7">
+              <div className="grid grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
                 {badges.map((badge, index) => (
                   <div
                     key={`${badge.src}-${index}`}
-                    className="flex min-h-[72px] items-center justify-center"
+                    className="flex min-h-[96px] md:min-h-[120px] items-center justify-center"
                   >
                     {badge.src ? (
                       <img
                         src={badge.src}
                         alt={badge.alt || `Badge ${index + 1}`}
-                        className="max-h-[92px] w-full object-contain"
+                        className="max-h-[120px] md:max-h-[148px] w-full object-contain"
                         loading="lazy"
                       />
                     ) : null}
@@ -119,7 +119,7 @@ export default function AboutSection({ content }: AboutSectionProps) {
             {data.description ? (
               <RichText
                 html={data.description}
-                className="font-inter text-[16px] md:text-[19px] leading-[1.75] text-black/80 max-w-[760px]"
+                className="font-inter text-[16px] md:text-[19px] leading-[1.75] text-black/80 max-w-[760px] [&_p]:my-0 [&_p+p]:mt-5 md:[&_p+p]:mt-6"
               />
             ) : null}
 
