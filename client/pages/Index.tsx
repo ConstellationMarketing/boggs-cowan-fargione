@@ -42,29 +42,29 @@ export default function Index() {
         updatedTime={updatedAt}
       />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-brand-dark my-[20px] md:my-[40px]">
+      {/* Hero Section – negative top margin extends it under the transparent sticky header */}
+      <div className="relative overflow-hidden bg-brand-dark -mt-[6.5rem] mb-[20px] md:mb-[40px]">
         {heroContent.backgroundImage ? (
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `linear-gradient(90deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.9) 36%, rgba(0, 0, 0, 0.72) 68%, rgba(0, 0, 0, 0.45) 100%), url(${heroContent.backgroundImage})`,
+              backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.85) 65%, rgba(0,0,0,0.60) 100%), url(${heroContent.backgroundImage})`,
             }}
           />
         ) : null}
-        <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] py-[27px] md:py-[36px]">
-          <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-[3%]">
+        <div className="relative z-10 max-w-[2560px] mx-auto w-[95%]">
+          <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-[3%]">
             {/* Left Side: H1, Headline and CTAs */}
-            <div className="lg:w-[65.667%] flex flex-col justify-center">
+            <div className="lg:w-[65.667%] flex flex-col justify-end pt-[9rem] md:pt-[10rem] pb-[36px] md:pb-[48px]">
               <div className="mb-[20px] md:mb-[24px]">
               {/* H1 Title - All caps, green, positioned ABOVE headline */}
               {heroContent.h1Title && (
-                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-[1px] md:mb-[2px]">
+                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-0 leading-none">
                   {heroContent.h1Title}
                 </h1>
               )}
 
-              <div className="relative">
+              <div className="relative mt-[-5px] md:mt-[-8px]">
                 <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left">
                   {heroContent.highlightedText && heroContent.headline.includes(heroContent.highlightedText)
                     ? (() => {
@@ -141,8 +141,8 @@ export default function Index() {
             </div>
           </div>
 
-            {/* Right Side: Hero Image */}
-            <div className="lg:w-[31.3333%] flex items-end self-end">
+            {/* Right Side: Hero Image — no wrapper padding so it sits flush to hero bottom */}
+            <div className="lg:w-[31.3333%] flex items-end">
               {heroContent.heroImage && (
                 <img
                   src={heroContent.heroImage}
