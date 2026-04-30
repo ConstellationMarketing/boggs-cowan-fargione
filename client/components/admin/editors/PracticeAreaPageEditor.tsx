@@ -99,7 +99,9 @@ function HeroSection({ content, update }: SectionProps) {
           value={hero.backgroundImage || ""}
           onChange={(url) => set({ backgroundImage: url })}
           altValue={hero.backgroundImageAlt || ""}
-          onAltChange={(backgroundImageAlt) => set({ backgroundImageAlt })}
+          onChangeWithAlt={(backgroundImage, backgroundImageAlt) =>
+            set({ backgroundImage, backgroundImageAlt })
+          }
           folder="practice-areas"
         />
         <div>
@@ -190,8 +192,8 @@ function SocialProofSection({ content, update }: SectionProps) {
                     value={item.ratingImage}
                     onChange={(url) => upd({ ...item, ratingImage: url })}
                     altValue={item.ratingImageAlt || ""}
-                    onAltChange={(ratingImageAlt) =>
-                      upd({ ...item, ratingImageAlt })
+                    onChangeWithAlt={(ratingImage, ratingImageAlt) =>
+                      upd({ ...item, ratingImage, ratingImageAlt })
                     }
                     folder="testimonials"
                   />
@@ -234,7 +236,7 @@ function SocialProofSection({ content, update }: SectionProps) {
                     value={item.src}
                     onChange={(url) => upd({ ...item, src: url })}
                     altValue={item.alt}
-                    onAltChange={(alt) => upd({ ...item, alt })}
+                    onChangeWithAlt={(src, alt) => upd({ ...item, src, alt })}
                     folder="awards"
                   />
                   <div>
@@ -287,7 +289,9 @@ function ContentSectionsEditor({ content, update }: SectionProps) {
               value={item.image}
               onChange={(url) => upd({ ...item, image: url })}
               altValue={item.imageAlt}
-              onAltChange={(imageAlt) => upd({ ...item, imageAlt })}
+              onChangeWithAlt={(image, imageAlt) =>
+                upd({ ...item, image, imageAlt })
+              }
               folder="practice-areas"
             />
             <div>

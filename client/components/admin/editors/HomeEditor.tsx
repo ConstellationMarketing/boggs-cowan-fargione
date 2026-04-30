@@ -88,7 +88,9 @@ function HeroSection({ content, update }: SectionProps) {
           value={hero.heroImage}
           onChange={(url) => set({ heroImage: url })}
           altValue={hero.heroImageAlt}
-          onAltChange={(heroImageAlt) => set({ heroImageAlt })}
+          onChangeWithAlt={(heroImage, heroImageAlt) =>
+            set({ heroImage, heroImageAlt })
+          }
           folder="hero"
         />
         <div>
@@ -140,7 +142,7 @@ function PartnerLogosSection({ content, update }: SectionProps) {
               value={item.src}
               onChange={(url) => upd({ ...item, src: url })}
               altValue={item.alt}
-              onAltChange={(alt) => upd({ ...item, alt })}
+              onChangeWithAlt={(src, alt) => upd({ ...item, src, alt })}
               folder="logos"
             />
             <div>
@@ -191,7 +193,9 @@ function AboutSectionEditor({ content, update }: SectionProps) {
           value={about.attorneyImage}
           onChange={(url) => set({ attorneyImage: url })}
           altValue={about.attorneyImageAlt}
-          onAltChange={(attorneyImageAlt) => set({ attorneyImageAlt })}
+          onChangeWithAlt={(attorneyImage, attorneyImageAlt) =>
+            set({ attorneyImage, attorneyImageAlt })
+          }
           folder="team"
         />
         <div>
@@ -305,7 +309,9 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
               value={item.image}
               onChange={(url) => upd({ ...item, image: url })}
               altValue={item.imageAlt}
-              onAltChange={(imageAlt) => upd({ ...item, imageAlt })}
+              onChangeWithAlt={(image, imageAlt) =>
+                upd({ ...item, image, imageAlt })
+              }
               folder="practice-areas"
             />
             <div>
@@ -357,7 +363,7 @@ function AwardsSection({ content, update }: SectionProps) {
                 value={item.src}
                 onChange={(url) => upd({ ...item, src: url })}
                 altValue={item.alt}
-                onAltChange={(alt) => upd({ ...item, alt })}
+                onChangeWithAlt={(src, alt) => upd({ ...item, src, alt })}
                 folder="awards"
               />
               <div>
@@ -397,7 +403,9 @@ function TestimonialsSection({ content, update }: SectionProps) {
           value={t.backgroundImage}
           onChange={(url) => set({ backgroundImage: url })}
           altValue={t.backgroundImageAlt || ""}
-          onAltChange={(backgroundImageAlt) => set({ backgroundImageAlt })}
+          onChangeWithAlt={(backgroundImage, backgroundImageAlt) =>
+            set({ backgroundImage, backgroundImageAlt })
+          }
           folder="backgrounds"
         />
         <div>
@@ -421,7 +429,9 @@ function TestimonialsSection({ content, update }: SectionProps) {
                 value={item.ratingImage}
                 onChange={(url) => upd({ ...item, ratingImage: url })}
                 altValue={item.ratingImageAlt || ""}
-                onAltChange={(ratingImageAlt) => upd({ ...item, ratingImageAlt })}
+                onChangeWithAlt={(ratingImage, ratingImageAlt) =>
+                  upd({ ...item, ratingImage, ratingImageAlt })
+                }
                 folder="logos"
               />
               <div>
@@ -524,7 +534,9 @@ function GoogleReviewsSection({ content, update }: SectionProps) {
                 value={item.ratingImage}
                 onChange={(url) => upd({ ...item, ratingImage: url })}
                 altValue={item.ratingImageAlt || ""}
-                onAltChange={(ratingImageAlt) => upd({ ...item, ratingImageAlt })}
+                onChangeWithAlt={(ratingImage, ratingImageAlt) =>
+                  upd({ ...item, ratingImage, ratingImageAlt })
+                }
                 folder="logos"
               />
               <div>
@@ -561,7 +573,9 @@ function FaqSectionEditor({ content, update }: SectionProps) {
           value={faq.videoThumbnail}
           onChange={(url) => set({ videoThumbnail: url })}
           altValue={faq.videoThumbnailAlt || ""}
-          onAltChange={(videoThumbnailAlt) => set({ videoThumbnailAlt })}
+          onChangeWithAlt={(videoThumbnail, videoThumbnailAlt) =>
+            set({ videoThumbnail, videoThumbnailAlt })
+          }
           folder="backgrounds"
         />
         <div>
@@ -618,7 +632,7 @@ function ContactSectionEditor({ content, update }: SectionProps) {
           value={c.image}
           onChange={(url) => set({ image: url })}
           altValue={c.imageAlt}
-          onAltChange={(imageAlt) => set({ imageAlt })}
+          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
           folder="team"
         />
         <div>

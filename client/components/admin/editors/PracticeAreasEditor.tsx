@@ -100,7 +100,9 @@ function GridSection({ content, update }: SectionProps) {
                 value={item.image}
                 onChange={(url) => upd({ ...item, image: url })}
                 altValue={item.imageAlt}
-                onAltChange={(imageAlt) => upd({ ...item, imageAlt })}
+                onChangeWithAlt={(image, imageAlt) =>
+                  upd({ ...item, image, imageAlt })
+                }
                 folder="practice-areas"
               />
               <div>

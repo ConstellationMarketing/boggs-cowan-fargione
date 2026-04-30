@@ -101,6 +101,7 @@ export function ImageField({
   onChange,
   altValue,
   onAltChange,
+  onChangeWithAlt,
   folder = "uploads",
 }: {
   label: string;
@@ -108,6 +109,7 @@ export function ImageField({
   onChange: (url: string) => void;
   altValue?: string;
   onAltChange?: (altText: string) => void;
+  onChangeWithAlt?: (url: string, altText: string) => void;
   folder?: string;
 }) {
   return (
@@ -117,6 +119,13 @@ export function ImageField({
         value={value}
         onChange={onChange}
         onSelectAsset={(asset) => {
+          const nextAlt = asset.suggestedAltText || altValue || "";
+
+          if (onChangeWithAlt) {
+            onChangeWithAlt(asset.url, nextAlt);
+            return;
+          }
+
           if (!onAltChange) {
             return;
           }

@@ -89,7 +89,7 @@ function StorySection({ content, update }: SectionProps) {
           value={story.image}
           onChange={(url) => set({ image: url })}
           altValue={story.imageAlt}
-          onAltChange={(imageAlt) => set({ imageAlt })}
+          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
           folder="team"
         />
         <div>
@@ -187,7 +187,9 @@ function TeamSection({ content, update }: SectionProps) {
                 value={item.image}
                 onChange={(url) => upd({ ...item, image: url })}
                 altValue={item.imageAlt}
-                onAltChange={(imageAlt) => upd({ ...item, imageAlt })}
+                onChangeWithAlt={(image, imageAlt) =>
+                  upd({ ...item, image, imageAlt })
+                }
                 folder="team"
               />
               <div>
@@ -311,7 +313,7 @@ function WhyChooseUsSection({ content, update }: SectionProps) {
           value={wcu.image}
           onChange={(url) => set({ image: url })}
           altValue={wcu.imageAlt}
-          onAltChange={(imageAlt) => set({ imageAlt })}
+          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
           folder="about"
         />
         <div>
