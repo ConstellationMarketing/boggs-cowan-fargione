@@ -39,7 +39,7 @@ export default function Header() {
       >
         <div className="w-full flex items-center justify-between">
           {/* Logo - white via CSS filter */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-shrink-0">
             <Link to="/">
               {logoUrl ? (
                 <img
@@ -60,9 +60,9 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center flex-1 justify-end">
-            <ul className="flex flex-wrap justify-end items-center -mx-[11px]">
+          {/* Desktop Navigation - Centered */}
+          <nav className="hidden lg:flex items-center flex-1 justify-center">
+            <ul className="flex flex-wrap justify-center items-center -mx-[11px]">
               {navItems.map((item, index) => {
                 const hasChildren =
                   item.children && item.children.length > 0;
@@ -94,7 +94,7 @@ export default function Header() {
           </nav>
 
           {/* Phone Number Display - Desktop */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block flex-shrink-0">
             {phoneDisplay ? (
               <a
                 href={`tel:${phoneNumber.replace(/\D/g, "")}`}
