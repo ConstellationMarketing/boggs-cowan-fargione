@@ -43,7 +43,7 @@ export default function Index() {
       />
 
       {/* Hero Section – negative top margin extends it under the transparent sticky header */}
-      <div className="relative overflow-hidden bg-brand-dark -mt-[7rem] mb-[20px] md:mb-[40px]">
+      <div className="relative overflow-hidden bg-brand-dark -mt-[7rem] mb-[20px] md:mb-[40px] min-h-[80vh] flex flex-col">
         {heroContent.backgroundImage ? (
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -52,8 +52,8 @@ export default function Index() {
             }}
           />
         ) : null}
-        <div className="relative z-10 max-w-[2560px] mx-auto w-[95%]">
-          <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-[3%]">
+        <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
+          <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-[3%] flex-1">
             {/* Left Side: H1, Headline and CTAs */}
             <div className="lg:w-[65.667%] flex flex-col justify-end pt-[9.5rem] md:pt-[10.5rem] pb-[36px] md:pb-[48px]">
               <div className="mb-[20px] md:mb-[24px]">
@@ -64,8 +64,8 @@ export default function Index() {
                 </h1>
               )}
 
-              <div className="relative mt-[-1rem] md:mt-[-1.5rem]">
-                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left">
+              <div className="relative">
+                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left" style={{ marginTop: '-0.44em' }}>
                   {heroContent.highlightedText && heroContent.headline.includes(heroContent.highlightedText)
                     ? (() => {
                         const idx = heroContent.headline.indexOf(heroContent.highlightedText);
@@ -141,13 +141,13 @@ export default function Index() {
             </div>
           </div>
 
-            {/* Right Side: Hero Image — no wrapper padding so it sits flush to hero bottom */}
-            <div className="lg:w-[31.3333%] flex items-end">
+            {/* Right Side: Hero Image — self-stretch fills hero height; pt-[7rem] blocks the header zone */}
+            <div className="hidden lg:block lg:w-[31.3333%] self-stretch pt-[7rem]">
               {heroContent.heroImage && (
                 <img
                   src={heroContent.heroImage}
                   alt={heroContent.heroImageAlt || "Hero"}
-                  className="block w-full h-auto object-cover object-bottom max-h-[calc(100vh-7rem)]"
+                  className="block w-full h-full object-cover object-top"
                 />
               )}
             </div>
