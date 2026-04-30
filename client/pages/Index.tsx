@@ -43,7 +43,7 @@ export default function Index() {
       />
 
       {/* Hero Section – negative top margin extends it under the transparent sticky header */}
-      <div className="relative overflow-hidden bg-brand-dark -mt-[6.5rem] mb-[20px] md:mb-[40px]">
+      <div className="relative overflow-hidden bg-brand-dark -mt-[7rem] mb-[20px] md:mb-[40px]">
         {heroContent.backgroundImage ? (
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -55,7 +55,7 @@ export default function Index() {
         <div className="relative z-10 max-w-[2560px] mx-auto w-[95%]">
           <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-[3%]">
             {/* Left Side: H1, Headline and CTAs */}
-            <div className="lg:w-[65.667%] flex flex-col justify-end pt-[9rem] md:pt-[10rem] pb-[36px] md:pb-[48px]">
+            <div className="lg:w-[65.667%] flex flex-col justify-end pt-[9.5rem] md:pt-[10.5rem] pb-[36px] md:pb-[48px]">
               <div className="mb-[20px] md:mb-[24px]">
               {/* H1 Title - All caps, green, positioned ABOVE headline */}
               {heroContent.h1Title && (
@@ -64,7 +64,7 @@ export default function Index() {
                 </h1>
               )}
 
-              <div className="relative mt-[-5px] md:mt-[-8px]">
+              <div className="relative mt-[-1rem] md:mt-[-1.5rem]">
                 <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left">
                   {heroContent.highlightedText && heroContent.headline.includes(heroContent.highlightedText)
                     ? (() => {
@@ -147,7 +147,7 @@ export default function Index() {
                 <img
                   src={heroContent.heroImage}
                   alt={heroContent.heroImageAlt || "Hero"}
-                  className="block w-full h-auto object-cover object-bottom"
+                  className="block w-full h-auto object-cover object-bottom max-h-[calc(100vh-7rem)]"
                 />
               )}
             </div>
