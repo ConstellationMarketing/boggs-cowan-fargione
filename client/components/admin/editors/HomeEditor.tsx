@@ -66,9 +66,25 @@ function HeroSection({ content, update }: SectionProps) {
           <Input value={hero.highlightedText} onChange={(e) => set({ highlightedText: e.target.value })} />
           <p className="text-xs text-gray-500 mt-1">Enter the exact portion of the headline to display in accent color</p>
         </div>
+        <div>
+          <Label>Hero Description</Label>
+          <Textarea
+            value={hero.description}
+            onChange={(e) => set({ description: e.target.value })}
+            placeholder="Short supporting text shown under the headline"
+            rows={4}
+          />
+        </div>
 
         <ImageField
-          label="Hero Image (replaces contact form)"
+          label="Hero Background Image"
+          value={hero.backgroundImage}
+          onChange={(url) => set({ backgroundImage: url })}
+          folder="hero"
+        />
+
+        <ImageField
+          label="Hero Side Image (replaces contact form)"
           value={hero.heroImage}
           onChange={(url) => set({ heroImage: url })}
           altValue={hero.heroImageAlt}

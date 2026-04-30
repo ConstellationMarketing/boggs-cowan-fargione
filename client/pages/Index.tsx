@@ -1,6 +1,5 @@
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
-import ContactForm from "@site/components/home/ContactForm";
 import AboutSection from "@site/components/home/AboutSection";
 import PracticeAreasSection from "@site/components/home/PracticeAreasSection";
 import PracticeAreasGrid from "@site/components/home/PracticeAreasGrid";
@@ -13,6 +12,7 @@ import ContactUsSection from "@site/components/home/ContactUsSection";
 import { useHomeContent } from "@site/hooks/useHomeContent";
 import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import { Loader2, Phone, MessageSquare } from "lucide-react";
+import RichText from "@site/components/shared/RichText";
 
 export default function Index() {
   const { content, meta, title, publishedAt, updatedAt, isLoading } = useHomeContent();
@@ -43,14 +43,23 @@ export default function Index() {
       />
 
       {/* Hero Section */}
-      <div className="max-w-[2560px] mx-auto w-[95%] py-[27px] my-[20px] md:my-[40px]">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-[3%]">
-          {/* Left Side: H1, Headline and CTAs */}
-          <div className="lg:w-[65.667%] flex flex-col justify-center">
-            <div className="mb-[30px] md:mb-[40px]">
+      <div className="relative overflow-hidden bg-brand-dark my-[20px] md:my-[40px]">
+        {heroContent.backgroundImage ? (
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `linear-gradient(90deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.9) 36%, rgba(0, 0, 0, 0.72) 68%, rgba(0, 0, 0, 0.45) 100%), url(${heroContent.backgroundImage})`,
+            }}
+          />
+        ) : null}
+        <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] py-[27px] md:py-[36px]">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-[3%]">
+            {/* Left Side: H1, Headline and CTAs */}
+            <div className="lg:w-[65.667%] flex flex-col justify-center">
+              <div className="mb-[20px] md:mb-[24px]">
               {/* H1 Title - All caps, green, positioned ABOVE headline */}
               {heroContent.h1Title && (
-                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-[15px] md:mb-[20px]">
+                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-[6px] md:mb-[8px]">
                   {heroContent.h1Title}
                 </h1>
               )}
@@ -81,24 +90,30 @@ export default function Index() {
                   }
                 </p>
               </div>
+              {heroContent.description ? (
+                <RichText
+                  html={heroContent.description}
+                  className="mt-[12px] max-w-[720px] font-inter text-[15px] md:text-[18px] leading-[24px] md:leading-[30px] text-white/85"
+                />
+              ) : null}
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="grid w-full max-w-[720px] grid-cols-2 gap-3">
               {/* Phone Button - Green background with white text */}
               <a
                 href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-                className="bg-accent hover:bg-accent/90 transition-all duration-300 p-[8px] flex-1 max-w-[400px] group"
+                className="bg-accent hover:bg-accent/90 transition-all duration-300 p-[6px] group"
               >
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center">
-                    <Phone className="w-8 h-8 text-accent" strokeWidth={1.5} />
+                <div className="flex items-center gap-3">
+                  <div className="bg-white p-[10px] flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 md:w-6 md:h-6 text-accent" strokeWidth={1.5} />
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-white pb-[10px] font-normal">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-inter text-[12px] md:text-[14px] leading-tight text-white pb-[4px] font-normal truncate">
                       {phoneLabel}
                     </h4>
-                    <p className="font-inter text-[clamp(1.75rem,5vw,40px)] text-white leading-tight">
+                    <p className="font-inter text-[16px] md:text-[24px] text-white leading-tight font-semibold truncate">
                       {phoneDisplay}
                     </p>
                   </div>
@@ -109,14 +124,14 @@ export default function Index() {
               {heroContent.consultationButtonText && (
                 <a
                   href={heroContent.consultationButtonLink || "/contact"}
-                  className="bg-white hover:bg-gray-100 transition-all duration-300 p-[8px] flex-1 max-w-[400px] group"
+                  className="bg-white hover:bg-gray-100 transition-all duration-300 p-[6px] group"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-accent p-[15px] mt-1 flex items-center justify-center">
-                      <MessageSquare className="w-8 h-8 text-white" strokeWidth={1.5} />
+                  <div className="flex items-center gap-3 h-full">
+                    <div className="bg-accent p-[10px] flex items-center justify-center flex-shrink-0">
+                      <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white" strokeWidth={1.5} />
                     </div>
-                    <div className="flex-1 flex items-center">
-                      <p className="font-inter text-[clamp(1.5rem,4vw,32px)] text-accent leading-tight font-semibold">
+                    <div className="min-w-0 flex-1 flex items-center">
+                      <p className="font-inter text-[14px] md:text-[22px] text-accent leading-tight font-semibold">
                         {heroContent.consultationButtonText}
                       </p>
                     </div>
@@ -126,15 +141,16 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Right Side: Hero Image */}
-          <div className="lg:w-[31.3333%] flex items-end">
-            {heroContent.heroImage && (
-              <img
-                src={heroContent.heroImage}
-                alt={heroContent.heroImageAlt || "Hero"}
-                className="w-full h-auto object-cover object-bottom"
-              />
-            )}
+            {/* Right Side: Hero Image */}
+            <div className="lg:w-[31.3333%] flex items-end">
+              {heroContent.heroImage && (
+                <img
+                  src={heroContent.heroImage}
+                  alt={heroContent.heroImageAlt || "Hero"}
+                  className="w-full h-auto object-cover object-bottom"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
