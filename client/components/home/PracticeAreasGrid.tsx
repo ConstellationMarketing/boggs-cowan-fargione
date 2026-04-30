@@ -83,7 +83,7 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
                       {item.link ? (
                         <Link
                           to={item.link}
-                          className="transition-colors duration-200 hover:text-brand-accent"
+                          className="text-inherit no-underline transition-colors duration-200 hover:text-brand-accent hover:underline"
                         >
                           {item.text}
                         </Link>
