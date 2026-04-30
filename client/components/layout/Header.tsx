@@ -33,21 +33,24 @@ export default function Header() {
       {/* Sticky header wrapper - fullwidth, transparent background */}
       <div
         className={cn(
-          "sticky top-0 z-50 px-[30px] py-[10px] flex items-center justify-between transition-colors duration-300",
-          isScrolled ? "bg-black/90" : "bg-transparent"
+          "sticky top-0 z-50 px-[30px] flex items-center justify-between transition-all duration-300",
+          isScrolled ? "bg-black/95 py-[8px]" : "bg-transparent py-[20px]"
         )}
       >
         <div className="w-full flex items-center justify-between">
           {/* Logo - white via CSS filter */}
-          <div className="flex items-center w-[300px]">
+          <div className="flex items-center">
             <Link to="/">
               {logoUrl ? (
                 <img
                   src={logoUrl}
                   alt={logoAlt}
-                  className="w-[306px] max-w-full brightness-0 invert"
-                  width={306}
-                  height={50}
+                  className={cn(
+                    "max-w-full brightness-0 invert transition-all duration-300",
+                    isScrolled ? "w-[280px]" : "w-[380px]"
+                  )}
+                  width={380}
+                  height={62}
                 />
               ) : (
                 <span className="font-inter text-white text-[22px] leading-none">
@@ -79,7 +82,7 @@ export default function Header() {
                             ? "noopener noreferrer"
                             : undefined
                         }
-                        className="font-inter text-[20px] text-white py-[31px] mr-[20px] whitespace-nowrap hover:opacity-80 transition-opacity duration-400"
+                        className="font-inter text-[16px] text-white mr-[20px] whitespace-nowrap hover:opacity-80 transition-opacity duration-400"
                       >
                         {item.label}
                       </Link>
@@ -95,10 +98,16 @@ export default function Header() {
             {phoneDisplay ? (
               <a
                 href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-                className="flex items-center gap-3 text-white hover:text-accent transition-colors duration-300"
+                className="flex items-center gap-3 text-white hover:text-accent transition-all duration-300"
               >
-                <Phone className="w-6 h-6" strokeWidth={1.5} />
-                <span className="font-inter text-[24px] md:text-[28px] font-semibold">
+                <Phone className={cn(
+                  "transition-all duration-300",
+                  isScrolled ? "w-6 h-6" : "w-7 h-7"
+                )} strokeWidth={1.5} />
+                <span className={cn(
+                  "font-inter font-semibold transition-all duration-300",
+                  isScrolled ? "text-[28px]" : "text-[36px]"
+                )}>
                   {phoneDisplay}
                 </span>
               </a>
