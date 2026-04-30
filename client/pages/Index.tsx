@@ -53,13 +53,13 @@ export default function Index() {
           />
         ) : null}
         <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] py-[27px] md:py-[36px]">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-[3%]">
+          <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-[3%]">
             {/* Left Side: H1, Headline and CTAs */}
             <div className="lg:w-[65.667%] flex flex-col justify-center">
               <div className="mb-[20px] md:mb-[24px]">
               {/* H1 Title - All caps, green, positioned ABOVE headline */}
               {heroContent.h1Title && (
-                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-[6px] md:mb-[8px]">
+                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-[1px] md:mb-[2px]">
                   {heroContent.h1Title}
                 </h1>
               )}
@@ -142,12 +142,12 @@ export default function Index() {
           </div>
 
             {/* Right Side: Hero Image */}
-            <div className="lg:w-[31.3333%] flex items-end">
+            <div className="lg:w-[31.3333%] flex items-end self-end">
               {heroContent.heroImage && (
                 <img
                   src={heroContent.heroImage}
                   alt={heroContent.heroImageAlt || "Hero"}
-                  className="w-full h-auto object-cover object-bottom"
+                  className="block w-full h-auto object-cover object-bottom"
                 />
               )}
             </div>
