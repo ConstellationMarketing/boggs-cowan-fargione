@@ -20,15 +20,16 @@ export default {
           '"Times New Roman"',
           "serif",
         ],
-        outfit: ["Outfit", "Helvetica", "Arial", "Lucida", "sans-serif"],
+        inter: ["Inter", "Helvetica", "Arial", "sans-serif"],
+        sans: ["Inter", "Helvetica", "Arial", "sans-serif"],
       },
       colors: {
-        // TEMPLATE: Update brand colors for each new project
-        "brand-dark": "rgb(6, 29, 27)",
-        "brand-card": "rgb(20, 41, 40)",
-        "brand-border": "rgb(97, 111, 111)",
-        "brand-accent": "rgb(186, 234, 160)",
-        "brand-accent-dark": "rgb(45, 70, 58)",
+        // Brand colors for rebranding
+        "brand-dark": "rgb(0, 0, 0)",           // Black
+        "brand-card": "rgb(0, 0, 0)",           // Black
+        "brand-border": "rgb(230, 230, 230)",   // Light gray
+        "brand-accent": "rgb(27, 94, 32)",      // #1B5E20
+        "brand-accent-dark": "rgb(20, 70, 24)", // Darker green for hovers
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

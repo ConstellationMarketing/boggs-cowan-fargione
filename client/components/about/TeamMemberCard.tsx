@@ -37,12 +37,12 @@ export default function TeamMemberCard({
         <h3 className="font-playfair text-[24px] md:text-[28px] leading-tight text-white pb-[5px]">
           {name}
         </h3>
-        <p className="font-outfit text-[16px] md:text-[18px] text-brand-accent pb-[10px]">
+        <p className="font-inter text-[16px] md:text-[18px] text-brand-accent pb-[10px]">
           {title}
         </p>
         <RichText
           html={bio}
-          className="font-outfit text-[14px] md:text-[16px] leading-[22px] md:leading-[24px] text-white/80"
+          className="font-inter text-[14px] md:text-[16px] leading-[22px] md:leading-[24px] text-white/80"
         />
 
         {specialties && specialties.length > 0 && (
@@ -50,7 +50,7 @@ export default function TeamMemberCard({
             {specialties.map((specialty, index) => (
               <span
                 key={index}
-                className="inline-block px-[12px] py-[4px] bg-brand-accent/20 border border-brand-accent/30 text-brand-accent text-[12px] font-outfit"
+                className="inline-block px-[12px] py-[4px] bg-brand-accent/20 border border-brand-accent/30 text-brand-accent text-[12px] font-inter"
               >
                 {specialty}
               </span>

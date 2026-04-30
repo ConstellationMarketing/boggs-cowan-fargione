@@ -32,7 +32,7 @@ export default function ValueCard({
           </h3>
           <RichText
             html={description}
-            className="font-outfit text-[14px] md:text-[16px] leading-[22px] md:leading-[26px] text-white/80"
+            className="font-inter text-[14px] md:text-[16px] leading-[22px] md:leading-[26px] text-white/80"
           />
         </div>
       </div>

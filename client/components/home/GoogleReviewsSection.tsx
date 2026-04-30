@@ -31,8 +31,8 @@ export default function GoogleReviewsSection({
             <DynamicHeading
               tag={headingTag}
               defaultTag="h2"
-              className="font-outfit text-[24px] leading-[36px]"
-              style={{ color: "#6b8d0c" }}
+              className="font-inter text-[24px] leading-[36px]"
+              style={{ color: "rgb(27, 94, 32)" }}
             >
               {data.sectionLabel}
             </DynamicHeading>
@@ -47,7 +47,7 @@ export default function GoogleReviewsSection({
           {data.description && (
             <RichText
               html={data.description}
-              className="font-outfit text-[24px] leading-[36px] text-black text-center"
+              className="font-inter text-[24px] leading-[36px] text-black text-center"
             />
           )}
         </div>
@@ -78,9 +78,9 @@ export default function GoogleReviewsSection({
                 )}
                 <RichText
                   html={review.text}
-                  className="font-outfit text-[22px] leading-[33px] text-black pb-[22px]"
+                  className="font-inter text-[22px] leading-[33px] text-black pb-[22px]"
                 />
-                <div className="font-outfit text-[22px] leading-[33px] text-black flex items-center justify-between">
+                <div className="font-inter text-[22px] leading-[33px] text-black flex items-center justify-between">
                   <strong className="font-bold">{review.author}</strong>
                   <img
                     src="/images/logos/google-icon.png"
@@ -122,9 +122,9 @@ export default function GoogleReviewsSection({
                 )}
                 <RichText
                   html={review.text}
-                  className="font-outfit text-[22px] leading-[33px] text-black pb-[22px]"
+                  className="font-inter text-[22px] leading-[33px] text-black pb-[22px]"
                 />
-                <div className="font-outfit text-[22px] leading-[33px] text-black flex items-center justify-between">
+                <div className="font-inter text-[22px] leading-[33px] text-black flex items-center justify-between">
                   <strong className="font-bold">{review.author}</strong>
                   <img
                     src="/images/logos/google-icon.png"

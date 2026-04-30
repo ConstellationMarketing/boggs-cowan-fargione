@@ -20,7 +20,7 @@ export default function CTABlock({ block }: CTABlockProps) {
           </h2>
           <RichText
             html={block.description}
-            className="font-outfit text-[18px] md:text-[22px] leading-[26px] md:leading-[32px] text-black/80"
+            className="font-inter text-[18px] md:text-[22px] leading-[26px] md:leading-[32px] text-black/80"
           />
         </div>
 

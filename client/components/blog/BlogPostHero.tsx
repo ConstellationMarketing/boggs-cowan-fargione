@@ -57,10 +57,7 @@ export default function BlogPostHero({
         </div>
 
         {/* Title */}
-        <h1
-          className="text-3xl md:text-4xl lg:text-5xl xl:text-[3.25rem] font-light text-white leading-tight max-w-4xl"
-          style={{ fontFamily: "Playfair Display, serif" }}
-        >
+        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-[3.25rem] font-light text-white leading-tight max-w-4xl font-playfair">
           {title}
         </h1>
 
@@ -68,14 +65,14 @@ export default function BlogPostHero({
         <div className="flex flex-col sm:flex-row gap-3 mt-8">
           <a
             href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-            className="inline-flex items-center gap-3 bg-brand-accent px-5 py-3 text-black font-outfit font-medium hover:bg-brand-accent-dark hover:text-white transition-colors duration-300"
+            className="inline-flex items-center gap-3 bg-brand-accent px-5 py-3 text-black font-inter font-medium hover:bg-brand-accent-dark hover:text-white transition-colors duration-300"
           >
             <Phone className="h-5 w-5" strokeWidth={1.5} />
             <span>{phoneDisplay}</span>
           </a>
           <Link
             to="/contact/"
-            className="inline-flex items-center gap-3 border border-white/40 px-5 py-3 text-white font-outfit font-medium hover:bg-white/10 transition-colors duration-300"
+            className="inline-flex items-center gap-3 border border-white/40 px-5 py-3 text-white font-inter font-medium hover:bg-white/10 transition-colors duration-300"
           >
             <CalendarIcon className="h-5 w-5" strokeWidth={1.5} />
             <span>Book a Consultation</span>

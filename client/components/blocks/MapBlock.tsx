@@ -19,7 +19,7 @@ export default function MapBlock({ block }: MapBlockProps) {
             {block.subtext && (
               <RichText
                 html={block.subtext}
-                className="font-outfit text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-black/80"
+                className="font-inter text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-black/80"
               />
             )}
           </div>

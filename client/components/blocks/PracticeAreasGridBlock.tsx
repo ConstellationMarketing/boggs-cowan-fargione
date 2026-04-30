@@ -56,7 +56,7 @@ export default function PracticeAreasGridBlock({ block }: PracticeAreasGridBlock
           {block.description && (
             <RichText
               html={block.description}
-              className="font-outfit text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-black/80 mt-[15px] max-w-[800px] mx-auto"
+              className="font-inter text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-black/80 mt-[15px] max-w-[800px] mx-auto"
             />
           )}
         </div>

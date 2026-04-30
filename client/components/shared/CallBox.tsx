@@ -47,12 +47,12 @@ export default function CallBox({
         </div>
         <div className="flex-1">
           <h4
-            className={`font-outfit text-[16px] md:text-[18px] leading-tight ${textColor} ${textHoverColor} pb-[10px]`}
+            className={`font-inter text-[16px] md:text-[18px] leading-tight ${textColor} ${textHoverColor} pb-[10px]`}
           >
             {title}
           </h4>
           <p
-            className={`font-outfit text-[18px] md:text-[24px] ${textColor} ${textHoverColor} leading-none whitespace-nowrap`}
+            className={`font-inter text-[18px] md:text-[24px] ${textColor} ${textHoverColor} leading-none whitespace-nowrap`}
           >
             {subtitle}
           </p>

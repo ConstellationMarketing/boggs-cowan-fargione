@@ -21,7 +21,7 @@ export default function PracticeAreasSection({ content }: PracticeAreasSectionPr
           {/* Left Column - Section Label + Heading */}
           <div className="md:w-full">
             {data.sectionLabel && (
-              <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent mb-[10px]">
+              <p className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent mb-[10px]">
                 {data.sectionLabel}
               </p>
             )}
@@ -44,10 +44,10 @@ export default function PracticeAreasSection({ content }: PracticeAreasSectionPr
                     <Scale className="w-8 h-8 text-black group-hover:text-white transition-colors duration-300" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-outfit text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
+                    <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
                       {data.buttonTextLine1}
                     </h4>
-                    <p className="font-outfit text-[18px] md:text-[24px] text-black leading-none group-hover:text-white transition-colors duration-300">
+                    <p className="font-inter text-[18px] md:text-[24px] text-black leading-none group-hover:text-white transition-colors duration-300">
                       {data.buttonTextLine2}
                     </p>
                   </div>

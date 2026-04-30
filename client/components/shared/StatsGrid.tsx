@@ -19,7 +19,7 @@ export default function StatsGrid({ stats, className = "" }: StatsGridProps) {
             <h4 className="font-[Crimson_Pro,Georgia,Times_New_Roman,serif] text-[40px] md:text-[60px] leading-tight md:leading-[60px] text-black pb-[10px]">
               {stat.value}
             </h4>
-            <div className="font-outfit text-[16px] md:text-[20px] font-light text-black text-center">
+            <div className="font-inter text-[16px] md:text-[20px] font-light text-black text-center">
               {stat.label}
             </div>
           </div>

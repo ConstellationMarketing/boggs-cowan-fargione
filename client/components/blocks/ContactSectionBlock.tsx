@@ -17,7 +17,7 @@ export default function ContactSectionBlock({ block }: ContactSectionBlockProps)
           <div className="py-[4.2415%] relative w-full">
             <div className="relative w-full">
               <div className="mb-[10px]">
-                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-[#6b8d0c]">
+                <p className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-[#6b8d0c]">
                   {block.sectionLabel}
                 </p>
               </div>
@@ -27,7 +27,7 @@ export default function ContactSectionBlock({ block }: ContactSectionBlockProps)
                 </h2>
                 <RichText
                   html={block.description}
-                  className="font-outfit text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black"
+                  className="font-inter text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black"
                 />
               </div>
             </div>
@@ -42,7 +42,7 @@ export default function ContactSectionBlock({ block }: ContactSectionBlockProps)
               <h4 className="font-playfair text-[22px] md:text-[28px] leading-tight md:leading-[36.4px] text-white pb-[10px]">
                 {block.formHeading}
               </h4>
-              <p className="font-outfit text-[16px] md:text-[20px] leading-[24px] md:leading-[28px] text-white font-light">
+              <p className="font-inter text-[16px] md:text-[20px] leading-[24px] md:leading-[28px] text-white font-light">
                 Our intake team is available 24 hours a day, seven days a week
               </p>
               <div className="mt-[20px] md:mt-[30px] flex justify-start">

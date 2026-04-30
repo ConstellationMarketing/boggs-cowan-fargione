@@ -17,7 +17,7 @@ export default function LegacyBlock({ block }: LegacyBlockProps) {
         <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
           <RichText
             html={block.content}
-            className="font-outfit text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-black/90 prose prose-lg max-w-none"
+            className="font-inter text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-black/90 prose prose-lg max-w-none"
           />
         </div>
       </div>

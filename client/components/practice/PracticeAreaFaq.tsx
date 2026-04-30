@@ -40,7 +40,7 @@ export default function PracticeAreaFaq({
           </DynamicHeading>
           <RichText
             html={content.description}
-            className="font-outfit text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black text-center"
+            className="font-inter text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black text-center"
           />
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function PracticeAreaFaq({
           >
             <button
               onClick={() => toggleFaq(index)}
-              className={`w-full font-outfit text-[20px] md:text-[28px] leading-[28px] px-[20px] py-[20px] text-left flex items-center justify-between cursor-pointer ${
+              className={`w-full font-inter text-[20px] md:text-[28px] leading-[28px] px-[20px] py-[20px] text-left flex items-center justify-between cursor-pointer ${
                 openIndex === index ? "text-white" : "text-[rgb(67,67,67)]"
               }`}
             >
@@ -70,7 +70,7 @@ export default function PracticeAreaFaq({
             {openIndex === index && (
               <RichText
                 html={faq.answer}
-                className="font-outfit text-[18px] md:text-[22px] leading-[28px] md:leading-[33px] font-light px-[20px] pb-[20px] pt-[10px] text-white"
+                className="font-inter text-[18px] md:text-[22px] leading-[28px] md:leading-[33px] font-light px-[20px] pb-[20px] pt-[10px] text-white"
               />
             )}
           </div>

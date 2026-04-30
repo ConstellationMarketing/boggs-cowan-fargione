@@ -43,7 +43,7 @@ export default function PracticePageView({
             />
             <div
               className="absolute inset-0"
-              style={{ backgroundColor: "rgba(6, 29, 27, 0.85)" }}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
             />
           </>
         )}

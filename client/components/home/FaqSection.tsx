@@ -37,7 +37,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
           {data.description && (
             <RichText
               html={data.description}
-              className="font-outfit text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black text-center"
+              className="font-inter text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black text-center"
             />
           )}
         </div>
@@ -70,7 +70,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
             >
               <button
                 onClick={() => toggleFaq(index)}
-                className={`w-full font-outfit text-[28px] leading-[28px] px-[20px] py-[20px] text-left flex items-center justify-between cursor-pointer ${
+                className={`w-full font-inter text-[28px] leading-[28px] px-[20px] py-[20px] text-left flex items-center justify-between cursor-pointer ${
                   openIndex === index ? "text-white" : "text-[rgb(67,67,67)]"
                 }`}
               >
@@ -84,7 +84,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
               {openIndex === index && (
                 <RichText
                   html={faq.answer}
-                  className="font-outfit text-[22px] leading-[33px] font-light px-[20px] pb-[20px] pt-[20px] text-white"
+                  className="font-inter text-[22px] leading-[33px] font-light px-[20px] pb-[20px] pt-[20px] text-white"
                 />
               )}
             </div>

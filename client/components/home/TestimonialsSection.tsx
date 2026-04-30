@@ -46,8 +46,8 @@ export default function TestimonialsSection({
             <DynamicHeading
               tag={headingTag}
               defaultTag="h2"
-              className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px]"
-              style={{ color: "#6b8d0c" }}
+              className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px]"
+              style={{ color: "rgb(27, 94, 32)" }}
             >
               {data.sectionLabel}
             </DynamicHeading>
@@ -95,9 +95,9 @@ export default function TestimonialsSection({
                     <div className="w-full p-[30px]">
                       <RichText
                         html={testimonial.text}
-                        className="font-outfit text-[24px] leading-[31.2px] text-black pb-[10px] text-left"
+                        className="font-inter text-[24px] leading-[31.2px] text-black pb-[10px] text-left"
                       />
-                      <div className="font-outfit text-[24px] font-semibold text-black text-left">
+                      <div className="font-inter text-[24px] font-semibold text-black text-left">
                         {testimonial.ratingImage && (
                           <img
                             src={testimonial.ratingImage}

@@ -36,7 +36,7 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
 
               {/* Content */}
               <div className="relative h-full flex items-end p-4">
-                <h3 className="font-outfit text-[36px] leading-tight text-white font-normal transition-all duration-300 group-hover:text-brand-accent">
+                <h3 className="font-inter text-[36px] leading-tight text-white font-normal transition-all duration-300 group-hover:text-brand-accent">
                   {area.title}
                 </h3>
               </div>

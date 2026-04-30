@@ -36,7 +36,7 @@ export default function ContactUsSection({ content, headingTag }: ContactUsSecti
                   <DynamicHeading
                     tag={headingTag}
                     defaultTag="h2"
-                    className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-[#6b8d0c]"
+                    className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent"
                   >
                     {data.sectionLabel}
                   </DynamicHeading>
@@ -51,7 +51,7 @@ export default function ContactUsSection({ content, headingTag }: ContactUsSecti
                 {data.description && (
                   <RichText
                     html={data.description}
-                    className="font-outfit text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black"
+                    className="font-inter text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black"
                   />
                 )}
               </div>
@@ -114,7 +114,7 @@ export default function ContactUsSection({ content, headingTag }: ContactUsSecti
                       )}
                       {data.availabilityText && (
                         <div>
-                          <p className="font-outfit text-[16px] md:text-[20px] leading-[24px] md:leading-[28px] text-white font-light">
+                          <p className="font-inter text-[16px] md:text-[20px] leading-[24px] md:leading-[28px] text-white font-light">
                             {data.availabilityText}
                           </p>
                         </div>

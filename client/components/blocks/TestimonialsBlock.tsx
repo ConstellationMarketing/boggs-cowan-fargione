@@ -32,7 +32,7 @@ export default function TestimonialsBlock({ block }: TestimonialsBlockProps) {
       {/* Header Section */}
       <div className="max-w-[1080px] mx-auto w-[95%] md:w-[85%] lg:w-[80%] py-[20px] md:py-[27px]">
         <div className="text-center mb-[10px]">
-          <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
+          <p className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
             {block.sectionLabel}
           </p>
         </div>
@@ -76,9 +76,9 @@ export default function TestimonialsBlock({ block }: TestimonialsBlockProps) {
                     <div className="w-full p-[30px]">
                       <RichText
                         html={testimonial.text}
-                        className="font-outfit text-[24px] leading-[31.2px] text-black pb-[10px] text-left"
+                        className="font-inter text-[24px] leading-[31.2px] text-black pb-[10px] text-left"
                       />
-                      <div className="font-outfit text-[24px] font-semibold text-black text-left">
+                      <div className="font-inter text-[24px] font-semibold text-black text-left">
                         {testimonial.ratingImage && (
                           <img
                             src={testimonial.ratingImage}

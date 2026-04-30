@@ -19,8 +19,8 @@ export default function BlogCategoryFilter({
         className={cn(
           "px-4 py-2 rounded-full text-sm font-medium transition-colors",
           activeCategory === "all"
-            ? "bg-[#183658] text-white"
-            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            ? "bg-black text-white"
+            : "bg-white text-gray-600 hover:bg-gray-100 border border-brand-border"
         )}
       >
         All Posts
@@ -32,8 +32,8 @@ export default function BlogCategoryFilter({
           className={cn(
             "px-4 py-2 rounded-full text-sm font-medium transition-colors",
             activeCategory === cat.slug
-              ? "bg-[#183658] text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              ? "bg-black text-white"
+              : "bg-white text-gray-600 hover:bg-gray-100 border border-brand-border"
           )}
         >
           {cat.name}

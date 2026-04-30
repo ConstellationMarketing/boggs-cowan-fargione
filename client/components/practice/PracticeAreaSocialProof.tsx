@@ -50,9 +50,9 @@ function TestimonialsView({
               )}
               <RichText
                 html={item.text}
-                className="font-outfit text-[18px] md:text-[20px] leading-[28px] md:leading-[30px] text-black flex-1"
+                className="font-inter text-[18px] md:text-[20px] leading-[28px] md:leading-[30px] text-black flex-1"
               />
-              <p className="font-outfit text-[18px] font-semibold text-black mt-4">
+              <p className="font-inter text-[18px] font-semibold text-black mt-4">
                 — {item.author}
               </p>
             </div>

@@ -84,11 +84,11 @@ const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled)
                   </span>
                 </div>
                 <div className="table-cell align-top pl-[15px]">
-                  <h4 className="font-outfit text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
+                  <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
                     {phoneLabel}
                   </h4>
                   <div>
-                    <p className="font-outfit text-[28px] md:text-[40px] leading-tight md:leading-[44px] text-black group-hover:text-white transition-colors duration-300 whitespace-nowrap">
+                    <p className="font-inter text-[28px] md:text-[40px] leading-tight md:leading-[44px] text-black group-hover:text-white transition-colors duration-300 whitespace-nowrap">
                       {phoneDisplay}
                     </p>
                   </div>
@@ -100,7 +100,7 @@ const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled)
       </div>
 
       {/* Footer Links Section */}
-      <div className="border-t border-b border-[#838383] max-w-[2560px] mx-auto w-[95%] py-[20px] md:py-[27px] flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-[3%]">
+      <div className="border-t border-b border-brand-border max-w-[2560px] mx-auto w-[95%] py-[20px] md:py-[27px] flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-[3%]">
         {/* Logo Column */}
         <div className="lg:w-[20%] lg:mr-[3%]">
           <Link to="/" className="block">
@@ -113,7 +113,7 @@ const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled)
                 height={33}
               />
             ) : (
-              <span className="font-outfit text-white text-[24px] leading-none">
+              <span className="font-inter text-white text-[24px] leading-none">
                 {settings.siteName || " "}
               </span>
             )}
@@ -123,9 +123,9 @@ const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled)
 
         {/* Resources Column */}
         <div className="lg:w-[20%] lg:mr-[3%]">
-          <div className="font-outfit text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] text-white">
+          <div className="font-inter text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] text-white">
             {resourcesHeading ? (
-              <h3 className="font-outfit text-[28px] md:text-[36px] leading-tight md:leading-[36px] text-white pb-[10px]">
+              <h3 className="font-inter text-[28px] md:text-[36px] leading-tight md:leading-[36px] text-white pb-[10px]">
                 {resourcesHeading}
               </h3>
             ) : null}
@@ -149,9 +149,9 @@ const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled)
 
         {/* Practice Areas Column */}
         <div className="lg:w-[20%] lg:mr-[3%]">
-          <div className="font-outfit text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] text-white">
+          <div className="font-inter text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] text-white">
             {practiceAreasHeading ? (
-              <h3 className="font-outfit text-[28px] md:text-[36px] leading-tight md:leading-[36px] text-white pb-[10px]">
+              <h3 className="font-inter text-[28px] md:text-[36px] leading-tight md:leading-[36px] text-white pb-[10px]">
                 {practiceAreasHeading}
               </h3>
             ) : null}
@@ -195,9 +195,9 @@ const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled)
 
 
       {/* Copyright Section */}
-      <div className="border-t border-[#838383] max-w-[2560px] mx-auto w-full py-[10px] px-[30px]">
+      <div className="border-t border-brand-border max-w-[2560px] mx-auto w-full py-[10px] px-[30px]">
         <div className="w-full mx-auto my-auto">
-          <div className="font-outfit text-[18px] font-light leading-[27px] text-white text-center">
+          <div className="font-inter text-[18px] font-light leading-[27px] text-white text-center">
             {copyrightText ? <p>{copyrightText}</p> : null}
           </div>
         </div>
@@ -234,7 +234,7 @@ function SocialLinksSection() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-block w-[52px] h-[52px] bg-[#142928] border border-[#616f6f] ${
+                  className={`inline-block w-[52px] h-[52px] bg-brand-card border border-brand-border ${
                     isLast ? "" : "mr-[8px]"
                   } align-middle transition-all duration-300 hover:bg-brand-accent hover:border-brand-accent group flex items-center justify-center`}
                   title={`Follow on ${label}`}

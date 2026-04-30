@@ -25,7 +25,7 @@ export default function ContentSectionBlock({ block, index }: ContentSectionBloc
           <div className={hasSidebar ? "lg:w-[60%]" : "w-full"}>
             <RichText
               html={block.body}
-              className="font-outfit text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-black/90 prose prose-lg max-w-none
+              className="font-inter text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-black/90 prose prose-lg max-w-none
                 [&_h2]:font-playfair [&_h2]:text-[28px] [&_h2]:md:text-[36px] [&_h2]:leading-tight [&_h2]:text-black [&_h2]:mb-4
                 [&_h3]:font-playfair [&_h3]:text-[22px] [&_h3]:md:text-[28px] [&_h3]:leading-tight [&_h3]:text-black [&_h3]:mb-3
                 [&_p]:mb-4 [&_ul]:mb-4 [&_ol]:mb-4 [&_li]:mb-1"

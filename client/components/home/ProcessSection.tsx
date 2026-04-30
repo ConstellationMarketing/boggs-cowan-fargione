@@ -25,8 +25,8 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
             <DynamicHeading
               tag={headingTags?.["process.sectionLabel"]}
               defaultTag="h2"
-              className="font-outfit text-[24px] leading-[36px]"
-              style={{ color: "rgb(186, 234, 160)" }}
+              className="font-inter text-[24px] leading-[36px]"
+              style={{ color: "rgb(27, 94, 32)" }}
             >
               {data.sectionLabel}
             </DynamicHeading>
@@ -59,8 +59,8 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
             {step.number && (
               <div className="mb-[20px]">
                 <p
-                  className="font-outfit text-[24px] leading-[36px]"
-                  style={{ color: "rgb(186, 234, 160)" }}
+                  className="font-inter text-[24px] leading-[36px]"
+                  style={{ color: "rgb(27, 94, 32)" }}
                 >
                   {step.number}
                 </p>
@@ -70,14 +70,14 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
             {/* Step Content */}
             <div className="mb-[30px]">
               {step.title && (
-                <h3 className="font-outfit text-[32px] leading-[32px] text-white pb-[10px]">
+                <h3 className="font-inter text-[32px] leading-[32px] text-white pb-[10px]">
                   {step.title}
                 </h3>
               )}
               {step.description && (
                 <RichText
                   html={step.description}
-                  className="font-outfit text-[20px] leading-[30px] text-white"
+                  className="font-inter text-[20px] leading-[30px] text-white"
                 />
               )}
             </div>
