@@ -336,19 +336,34 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
           <div className="grid gap-3">
             <div>
               <Label>Title</Label>
-              <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
+              <Input value={typeof item.title === "string" ? item.title : ""} onChange={(e) => upd({ ...item, title: e.target.value })} />
             </div>
             <div>
               <Label>Icon Name</Label>
               <Input
-                value={item.icon}
+                value={typeof item.icon === "string" ? item.icon : ""}
                 onChange={(e) => upd({ ...item, icon: e.target.value })}
                 placeholder="Scale"
               />
               <p className="mt-1 text-xs text-gray-500">Use a Lucide icon name like Scale, Car, Briefcase, Building, Heart, or Shield.</p>
             </div>
             <ArrayEditor
-              items={Array.isArray(item.subPractices) ? item.subPractices : []}
+              items={Array.isArray(item.subPractices)
+                ? item.subPractices.map((entry) => {
+                    if (entry && typeof entry === "object") {
+                      return {
+                        text: typeof entry.text === "string" ? entry.text : "",
+                        link: typeof entry.link === "string" ? entry.link : "",
+                      };
+                    }
+
+                    if (typeof entry === "string") {
+                      return { text: entry, link: "" };
+                    }
+
+                    return { text: "", link: "" };
+                  })
+                : []}
               onChange={(items) => upd({ ...item, subPractices: items })}
               itemLabel="Sub-practice"
               newItem={() => ({ text: "", link: "" })}
@@ -357,7 +372,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
                   <div>
                     <Label>Text</Label>
                     <Input
-                      value={subPractice.text}
+                      value={typeof subPractice.text === "string" ? subPractice.text : ""}
                       onChange={(e) => updateSubPractice({ ...subPractice, text: e.target.value })}
                       placeholder="Motor Vehicle Accidents"
                     />
@@ -365,7 +380,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
                   <div>
                     <Label>Link</Label>
                     <Input
-                      value={subPractice.link}
+                      value={typeof subPractice.link === "string" ? subPractice.link : ""}
                       onChange={(e) => updateSubPractice({ ...subPractice, link: e.target.value })}
                       placeholder="/practice-areas/personal-injury/"
                     />
@@ -375,7 +390,7 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
             />
             <div>
               <Label>Link</Label>
-              <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} />
+              <Input value={typeof item.link === "string" ? item.link : ""} onChange={(e) => upd({ ...item, link: e.target.value })} />
             </div>
           </div>
         )}
