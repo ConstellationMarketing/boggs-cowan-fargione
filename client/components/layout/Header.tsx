@@ -51,12 +51,12 @@ export default function Header() {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center flex-1 justify-end">
               <ul className="flex flex-wrap justify-end items-center -mx-[11px]">
-                {navItems.map((item) => {
+                {navItems.map((item, index) => {
                   const hasChildren =
                     item.children && item.children.length > 0;
 
                   return (
-                    <li key={item.href} className="px-[11px] flex items-center">
+                    <li key={`nav-${index}-${item.href}`} className="px-[11px] flex items-center">
                       {hasChildren ? (
                         <NavDropdown item={item} />
                       ) : (
@@ -105,12 +105,12 @@ export default function Header() {
                 className="bg-brand-card border-brand-border"
               >
                 <nav className="flex flex-col gap-4 mt-8">
-                  {navItems.map((item) => {
+                  {navItems.map((item, index) => {
                     const hasChildren =
                       item.children && item.children.length > 0;
 
                     return (
-                      <MobileNavItem key={item.href} item={item} hasChildren={hasChildren} />
+                      <MobileNavItem key={`mobile-nav-${index}-${item.href}`} item={item} hasChildren={hasChildren} />
                     );
                   })}
                   {ctaText ? (
