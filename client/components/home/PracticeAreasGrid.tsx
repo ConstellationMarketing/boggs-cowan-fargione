@@ -54,7 +54,9 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {areas.map((area, index) => {
             const Icon = iconMap[area.icon] || Scale;
-            const subPractices = area.subPractices.filter((item) => item.trim().length > 0);
+            const subPractices = Array.isArray(area.subPractices)
+              ? area.subPractices.filter((item) => typeof item === "string" && item.trim().length > 0)
+              : [];
 
             return (
               <article

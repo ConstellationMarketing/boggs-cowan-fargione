@@ -489,7 +489,16 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
       ...defaults.practiceAreasIntro,
       ...cmsContent.practiceAreasIntro,
     },
-    practiceAreas: cmsContent.practiceAreas?.length ? cmsContent.practiceAreas : defaults.practiceAreas,
+    practiceAreas: cmsContent.practiceAreas?.length
+      ? cmsContent.practiceAreas.map((item) => ({
+          title: item.title || "",
+          icon: typeof item.icon === "string" && item.icon.trim() ? item.icon : "Scale",
+          subPractices: Array.isArray(item.subPractices)
+            ? item.subPractices.filter((entry): entry is string => typeof entry === "string")
+            : [],
+          link: item.link || "/practice-areas/",
+        }))
+      : defaults.practiceAreas,
     awards: {
       ...defaults.awards,
       ...cmsContent.awards,
