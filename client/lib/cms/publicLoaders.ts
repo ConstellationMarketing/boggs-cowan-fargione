@@ -481,8 +481,9 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
     about: {
       ...defaults.about,
       ...cmsContent.about,
-      features: cmsContent.about?.features?.length ? cmsContent.about.features : defaults.about.features,
-      stats: cmsContent.about?.stats?.length ? cmsContent.about.stats : defaults.about.stats,
+      badges: cmsContent.about?.badges?.length ? cmsContent.about.badges : defaults.about.badges,
+      admissionsItems: cmsContent.about?.admissionsItems?.length ? cmsContent.about.admissionsItems : defaults.about.admissionsItems,
+      membershipsItems: cmsContent.about?.membershipsItems?.length ? cmsContent.about.membershipsItems : defaults.about.membershipsItems,
     },
     practiceAreasIntro: {
       ...defaults.practiceAreasIntro,

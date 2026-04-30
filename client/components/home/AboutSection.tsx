@@ -1,157 +1,160 @@
-import { Phone, MessageCircle } from "lucide-react";
+import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { AboutContent } from "@site/lib/cms/homePageTypes";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
 
 interface AboutSectionProps {
   content?: AboutContent;
 }
 
+function CredentialList({ title, items }: { title: string; items: string[] }) {
+  if (!title && items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div>
+      {title ? (
+        <h4 className="font-inter text-[18px] md:text-[20px] font-semibold text-black mb-3">
+          {title}
+        </h4>
+      ) : null}
+      {items.length > 0 ? (
+        <ul className="space-y-2.5">
+          {items.map((item, index) => (
+            <li key={`${title}-${index}`} className="flex items-start gap-2.5 text-black/80">
+              <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-accent text-white">
+                <Check className="h-3.5 w-3.5" strokeWidth={3} />
+              </span>
+              <span className="font-inter text-[15px] md:text-[17px] leading-[1.5]">
+                {item}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
 export default function AboutSection({ content }: AboutSectionProps) {
-  // Guard: if no meaningful content, don't render
-  if (!content || (!content.heading && !content.description)) {
+  if (!content) {
     return null;
   }
 
   const data = content;
-  const features = data.features || [];
-  const stats = data.stats || [];
-  const { phoneNumber, phoneLabel, phoneDisplay } = useGlobalPhone();
+  const badges = (data.badges || []).slice(0, 3);
+  const admissionsItems = (data.admissionsItems || []).filter(Boolean);
+  const membershipsItems = (data.membershipsItems || []).filter(Boolean);
+  const buttonText = data.contactLabel?.trim() || "Learn More";
+  const buttonLink = data.contactText?.trim() || "/about/";
+  const hasCredentials =
+    !!data.credentialsTitle ||
+    !!data.admissionsTitle ||
+    !!data.membershipsTitle ||
+    admissionsItems.length > 0 ||
+    membershipsItems.length > 0;
+
+  if (
+    !data.sectionLabel &&
+    !data.heading &&
+    !data.description &&
+    !data.attorneyImage &&
+    badges.length === 0 &&
+    !hasCredentials
+  ) {
+    return null;
+  }
 
   return (
-    <div className="bg-white pt-[30px] md:pt-[54px]">
-      {/* Main Content Section */}
-      <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] pt-[20px] md:pt-[27px]">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-[5.5%]">
-          {/* Left Column - About Text and CTAs */}
-          <div className="md:w-full">
-            {/* About Us Label */}
-            {data.sectionLabel && (
-              <div className="text-brand-accent font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] mb-[10px]">
-                {data.sectionLabel}
-              </div>
-            )}
-
-            {/* Heading */}
-            <div className="mb-[20px] md:mb-[9.27%]">
-              {data.heading && (
-                <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black pb-[10px]">
-                  {data.heading}
-                </h2>
-              )}
-              {data.description && (
-                <RichText
-                  html={data.description}
-                  className="font-inter text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-black"
+    <section className="bg-white py-[40px] md:py-[72px]">
+      <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[6%] items-start">
+          <div>
+            {data.attorneyImage ? (
+              <div className="overflow-hidden border border-black/10 bg-[#f7f7f7]">
+                <img
+                  src={data.attorneyImage}
+                  alt={data.attorneyImageAlt || data.heading || "Attorney"}
+                  className="block w-full aspect-[4/5] object-cover object-top"
+                  loading="lazy"
                 />
-              )}
-            </div>
-
-            {/* Call Us 24/7 Box */}
-            <a href={`tel:${phoneNumber.replace(/\D/g, "")}`}>
-              <div className="bg-brand-accent p-[8px] w-full max-w-[400px] mb-[9.27%] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group">
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                    <Phone
-                      className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
-                      strokeWidth={1.5}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
-                      {phoneLabel}
-                    </h4>
-                    <p className="font-inter text-[28px] md:text-[40px] text-black leading-none group-hover:text-white transition-colors duration-300">
-                      {phoneDisplay}
-                    </p>
-                  </div>
-                </div>
               </div>
-            </a>
+            ) : null}
 
-            {/* Contact Us Box */}
-            {data.contactLabel && (
-              <Link to="/contact/" className="bg-brand-accent p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block">
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                    <MessageCircle
-                      className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
-                      strokeWidth={1.5}
-                    />
+            {badges.length > 0 ? (
+              <div className="grid grid-cols-3 gap-3 md:gap-5 mt-5 md:mt-7">
+                {badges.map((badge, index) => (
+                  <div
+                    key={`${badge.src}-${index}`}
+                    className="flex min-h-[72px] items-center justify-center"
+                  >
+                    {badge.src ? (
+                      <img
+                        src={badge.src}
+                        alt={badge.alt || `Badge ${index + 1}`}
+                        className="max-h-[92px] w-full object-contain"
+                        loading="lazy"
+                      />
+                    ) : null}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
-                      {data.contactLabel}
-                    </h4>
-                    <p className="font-inter text-[18px] md:text-[24px] text-black leading-none group-hover:text-white transition-colors duration-300">
-                      {data.contactText}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
+                ))}
+              </div>
+            ) : null}
           </div>
 
-          {/* Middle Column - Image */}
-          {data.attorneyImage && (
-            <div className="md:w-full flex justify-center md:justify-start">
-              <img
-                src={data.attorneyImage}
-                alt={data.attorneyImageAlt}
-                className="max-w-full w-auto h-auto object-contain"
-                width={462}
-                height={631}
-                loading="lazy"
-              />
-            </div>
-          )}
+          <div className="pt-1">
+            {data.sectionLabel ? (
+              <p className="font-inter text-brand-accent text-[18px] md:text-[24px] font-semibold uppercase tracking-[0.08em] mb-3 md:mb-4">
+                {data.sectionLabel}
+              </p>
+            ) : null}
 
-          {/* Right Column - Features */}
-          {features.length > 0 && (
-            <div className="md:w-full space-y-[20px] md:space-y-[30px]">
-              {features.map((feature, index) => (
-                <div key={index}>
-                  <div className="mb-[20px] md:mb-[30px]">
-                    <h3 className="font-inter text-[22px] md:text-[28px] leading-tight md:leading-[28px] text-black pb-[10px]">
-                      {feature.number}. {feature.title}
-                    </h3>
-                    <RichText
-                      html={feature.description}
-                      className="font-inter text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-black"
-                    />
-                  </div>
-                  {index < features.length - 1 && (
-                    <div className="h-[23px]">
-                      <div className="inline-block w-full"></div>
-                    </div>
-                  )}
+            {data.heading ? (
+              <h2 className="font-playfair text-black text-[34px] md:text-[52px] leading-[1.08] mb-5 md:mb-6 max-w-[720px]">
+                {data.heading}
+              </h2>
+            ) : null}
+
+            {data.description ? (
+              <RichText
+                html={data.description}
+                className="font-inter text-[16px] md:text-[19px] leading-[1.75] text-black/80 max-w-[760px]"
+              />
+            ) : null}
+
+            {hasCredentials ? (
+              <div className="mt-7 md:mt-9 rounded-xl border border-black/10 bg-white p-5 md:p-7 shadow-[0_12px_40px_rgba(0,0,0,0.06)]">
+                {data.credentialsTitle ? (
+                  <h3 className="font-playfair text-brand-accent text-[26px] md:text-[32px] leading-tight mb-5 border-b border-black/10 pb-3">
+                    {data.credentialsTitle}
+                  </h3>
+                ) : null}
+
+                <div className="space-y-6">
+                  <CredentialList
+                    title={data.admissionsTitle}
+                    items={admissionsItems}
+                  />
+                  <CredentialList
+                    title={data.membershipsTitle}
+                    items={membershipsItems}
+                  />
                 </div>
-              ))}
+              </div>
+            ) : null}
+
+            <div className="mt-6 md:mt-8">
+              <Link
+                to={buttonLink}
+                className="inline-flex min-h-[56px] items-center justify-center bg-brand-accent px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-accent-dark"
+              >
+                {buttonText}
+              </Link>
             </div>
-          )}
+          </div>
         </div>
       </div>
-
-      {/* Stats Section */}
-      {stats.length > 0 && (
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] py-[20px] md:py-[27px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-[3%]">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="max-w-[550px] mx-auto">
-                  <h4 className="font-[Crimson_Pro,Georgia,Times_New_Roman,serif] text-[40px] md:text-[60px] leading-tight md:leading-[60px] text-black pb-[10px]">
-                    {stat.value}
-                  </h4>
-                  <div className="font-inter text-[16px] md:text-[20px] font-light text-black text-center">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    </section>
   );
 }

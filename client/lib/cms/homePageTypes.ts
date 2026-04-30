@@ -20,15 +20,9 @@ export interface PartnerLogo {
   alt: string;
 }
 
-export interface AboutFeature {
-  number: string;
-  title: string;
-  description: string;
-}
-
-export interface AboutStat {
-  value: string;
-  label: string;
+export interface AboutBadge {
+  src: string;
+  alt: string;
 }
 
 export interface AboutContent {
@@ -41,8 +35,12 @@ export interface AboutContent {
   contactText: string;
   attorneyImage: string;
   attorneyImageAlt: string;
-  features: AboutFeature[];
-  stats: AboutStat[];
+  badges: AboutBadge[];
+  credentialsTitle: string;
+  admissionsTitle: string;
+  admissionsItems: string[];
+  membershipsTitle: string;
+  membershipsItems: string[];
 }
 
 export interface PracticeAreaItem {
@@ -176,11 +174,15 @@ export const defaultHomeContent: HomePageContent = {
     phone: "",
     phoneLabel: "",
     contactLabel: "",
-    contactText: "",
+    contactText: "/about/",
     attorneyImage: "",
     attorneyImageAlt: "",
-    features: [],
-    stats: [],
+    badges: [],
+    credentialsTitle: "Credentials & Affiliations",
+    admissionsTitle: "Court Admissions",
+    admissionsItems: [],
+    membershipsTitle: "Memberships",
+    membershipsItems: [],
   },
   practiceAreasIntro: {
     sectionLabel: "",
