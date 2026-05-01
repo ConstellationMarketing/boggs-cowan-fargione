@@ -53,6 +53,7 @@ export default function PageHero({
   underHeader = true,
 }: PageHeroProps) {
   const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
+  const heroImage = content.heroImage?.trim() || "";
 
   return (
     <div
@@ -135,10 +136,20 @@ export default function PageHero({
             </div>
           </div>
 
-          <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${underHeader ? "pt-[7rem]" : "pt-[3rem]"}`}>
-            {content.heroImage ? (
+          {heroImage ? (
+            <div className="w-full pb-[24px] lg:hidden">
               <img
-                src={content.heroImage}
+                src={heroImage}
+                alt={content.heroImageAlt || "Hero"}
+                className="block h-[280px] w-full object-cover object-top sm:h-[360px]"
+              />
+            </div>
+          ) : null}
+
+          <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${underHeader ? "pt-[7rem]" : "pt-[3rem]"}`}>
+            {heroImage ? (
+              <img
+                src={heroImage}
                 alt={content.heroImageAlt || "Hero"}
                 className="block w-full h-full object-cover object-top"
               />

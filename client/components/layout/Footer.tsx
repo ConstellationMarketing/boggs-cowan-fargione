@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, Phone } from "lucide-react";
 import { useSiteSettings, useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
+import MobileNavSheet from "./MobileNavSheet";
 import NavDropdown from "./NavDropdown";
 
 function FooterPolicyLink({ href, label }: { href: string; label: string }) {
@@ -149,30 +150,41 @@ export default function Footer() {
         ) : null}
 
         {navItems.length > 0 ? (
-          <nav className="mt-8 flex items-center justify-center">
-            <ul className="flex flex-wrap items-center justify-center -mx-[11px]">
-              {navItems.map((item, index) => {
-                const hasChildren = item.children && item.children.length > 0;
+          <>
+            <div className="mt-8 lg:hidden">
+              <MobileNavSheet
+                navItems={navItems}
+                phoneDisplay={phoneDisplay}
+                phoneNumber={phoneNumber}
+                variant="footer"
+              />
+            </div>
 
-                return (
-                  <li key={`footer-nav-${item.href}-${index}`} className="px-[11px] flex items-center justify-center">
-                    {hasChildren ? (
-                      <NavDropdown item={item} />
-                    ) : (
-                      <Link
-                        to={item.href}
-                        target={item.openInNewTab ? "_blank" : undefined}
-                        rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-                        className="font-inter text-[16px] text-white mr-[20px] whitespace-nowrap hover:opacity-80 transition-opacity duration-400"
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+            <nav className="mt-8 hidden items-center justify-center lg:flex">
+              <ul className="flex flex-wrap items-center justify-center -mx-[11px]">
+                {navItems.map((item, index) => {
+                  const hasChildren = item.children && item.children.length > 0;
+
+                  return (
+                    <li key={`footer-nav-${item.href}-${index}`} className="px-[11px] flex items-center justify-center">
+                      {hasChildren ? (
+                        <NavDropdown item={item} />
+                      ) : (
+                        <Link
+                          to={item.href}
+                          target={item.openInNewTab ? "_blank" : undefined}
+                          rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                          className="font-inter text-[16px] text-white mr-[20px] whitespace-nowrap hover:opacity-80 transition-opacity duration-400"
+                        >
+                          {item.label}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </>
         ) : null}
 
         <div className="mt-8 h-px w-[80%] bg-brand-accent" />
