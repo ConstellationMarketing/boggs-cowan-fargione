@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { useSiteSettings, useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
 import NavDropdown from "./NavDropdown";
@@ -42,6 +42,9 @@ export default function Footer() {
   const logoAlt = settings.logoAlt?.trim() || settings.siteName?.trim() || "Logo";
   const taglineHtml = settings.footerTaglineHtml || "";
   const footerDescription = settings.footerDescription?.trim() || "";
+  const addressLine1 = settings.addressLine1?.trim() || "";
+  const addressLine2 = settings.addressLine2?.trim() || "";
+  const mapEmbedUrl = settings.mapEmbedUrl?.trim() || "";
   const disclaimerText = settings.footerDisclaimerText?.trim() || "";
   const privacyPolicyLabel = settings.privacyPolicyLabel?.trim() || "";
   const privacyPolicyUrl = settings.privacyPolicyUrl?.trim() || "";
@@ -53,6 +56,9 @@ export default function Footer() {
     (a, b) => (a.order ?? 0) - (b.order ?? 0),
   );
 
+  const hasAddress = Boolean(addressLine1 || addressLine2);
+  const hasMap = Boolean(mapEmbedUrl);
+  const hasLocationBand = hasAddress || hasMap;
   const hasLegalRow = disclaimerText || (privacyPolicyLabel && privacyPolicyUrl) || (termsOfServiceLabel && termsOfServiceUrl);
 
   return (
@@ -98,6 +104,48 @@ export default function Footer() {
             html={footerDescription}
             className="mt-6 max-w-[760px] font-inter text-[17px] leading-[1.6] text-white [&_p]:my-0 [&_p+p]:mt-4"
           />
+        ) : null}
+
+        {hasLocationBand ? (
+          <section className="mt-10 w-full max-w-[980px] rounded-[28px] border border-white/10 bg-white/[0.03] px-6 py-6 md:mt-12 md:px-8 md:py-8">
+            <div
+              className={[
+                "grid gap-6",
+                hasAddress && hasMap ? "md:grid-cols-[minmax(0,320px)_minmax(0,1fr)] md:items-center" : "",
+              ].join(" ").trim()}
+            >
+              {hasAddress ? (
+                <div className="space-y-4 text-center md:text-left">
+                  <div className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-accent/40 px-3 py-1 font-inter text-[12px] font-semibold uppercase tracking-[0.24em] text-brand-accent md:justify-start">
+                    <MapPin className="h-4 w-4" strokeWidth={1.5} />
+                    <span>Visit Our Office</span>
+                  </div>
+                  <div className="space-y-2 font-inter text-[18px] leading-[1.7] text-white md:text-[20px]">
+                    {addressLine1 ? <p>{addressLine1}</p> : null}
+                    {addressLine2 ? <p className="text-white/80">{addressLine2}</p> : null}
+                  </div>
+                </div>
+              ) : null}
+
+              {hasMap ? (
+                <div className={hasAddress ? "w-full" : "mx-auto w-full max-w-[720px]"}>
+                  <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black/20 shadow-[0_24px_60px_rgba(0,0,0,0.25)]">
+                    <div className="h-[260px] w-full md:h-[300px]">
+                      <iframe
+                        src={mapEmbedUrl}
+                        title="Office location map"
+                        className="h-full w-full"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </section>
         ) : null}
 
         {navItems.length > 0 ? (

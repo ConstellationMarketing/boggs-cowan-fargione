@@ -790,9 +790,9 @@ export default function AdminSiteSettings() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Address</CardTitle>
+              <CardTitle>Office Location</CardTitle>
               <CardDescription>
-                Physical address displayed in the footer
+                Address and Google Maps embed displayed in the footer
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -817,6 +817,20 @@ export default function AdminSiteSettings() {
                   }
                   placeholder="City, State 12345"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mapEmbedUrl">Google Maps Embed URL</Label>
+                <Input
+                  id="mapEmbedUrl"
+                  value={settings.mapEmbedUrl}
+                  onChange={(e) =>
+                    updateSettings({ mapEmbedUrl: e.target.value })
+                  }
+                  placeholder="https://www.google.com/maps/embed?..."
+                />
+                <p className="text-sm text-gray-500">
+                  Paste the Google Maps embed URL from the iframe <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">src</code> value.
+                </p>
               </div>
             </CardContent>
           </Card>
