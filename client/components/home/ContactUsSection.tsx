@@ -38,7 +38,7 @@ export default function ContactUsSection({ content, headingTag }: ContactUsSecti
           {data.description ? (
             <RichText
               html={data.description}
-              className="mt-3 font-inter text-[16px] leading-[1.7] text-white/80 [&_p]:my-0 [&_p+p]:mt-4 md:text-[19px]"
+              className="mt-3 font-inter text-[15px] leading-[1.55] text-white [&_p]:my-0 [&_p+p]:mt-4 md:text-[17px] md:leading-[1.6]"
             />
           ) : null}
         </div>
