@@ -39,6 +39,12 @@ export interface SiteSettings {
   footerResourcesHeading: string;
   footerPracticeAreasHeading: string;
   footerTaglineHtml: string;
+  footerDescription: string;
+  footerDisclaimerText: string;
+  privacyPolicyLabel: string;
+  privacyPolicyUrl: string;
+  termsOfServiceLabel: string;
+  termsOfServiceUrl: string;
   addressLine1: string;
   addressLine2: string;
   mapEmbedUrl: string;
@@ -157,6 +163,12 @@ interface SiteSettingsRow {
   footer_resources_heading?: string | null;
   footer_practice_areas_heading?: string | null;
   footer_tagline_html?: string | null;
+  footer_description?: string | null;
+  footer_disclaimer_text?: string | null;
+  privacy_policy_label?: string | null;
+  privacy_policy_url?: string | null;
+  terms_of_service_label?: string | null;
+  terms_of_service_url?: string | null;
   address_line1?: string | null;
   address_line2?: string | null;
   map_embed_url?: string | null;
@@ -193,6 +205,12 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   footerResourcesHeading: "",
   footerPracticeAreasHeading: "",
   footerTaglineHtml: "",
+  footerDescription: "",
+  footerDisclaimerText: "",
+  privacyPolicyLabel: "Privacy Policy",
+  privacyPolicyUrl: "",
+  termsOfServiceLabel: "Terms of Service",
+  termsOfServiceUrl: "",
   addressLine1: "",
   addressLine2: "",
   mapEmbedUrl: "",
@@ -427,6 +445,12 @@ export function shapeSiteSettings(row?: SiteSettingsRow | null): SiteSettings {
     footerResourcesHeading: row.footer_resources_heading || DEFAULT_SITE_SETTINGS.footerResourcesHeading,
     footerPracticeAreasHeading: row.footer_practice_areas_heading || DEFAULT_SITE_SETTINGS.footerPracticeAreasHeading,
     footerTaglineHtml: row.footer_tagline_html || DEFAULT_SITE_SETTINGS.footerTaglineHtml,
+    footerDescription: row.footer_description || DEFAULT_SITE_SETTINGS.footerDescription,
+    footerDisclaimerText: row.footer_disclaimer_text || DEFAULT_SITE_SETTINGS.footerDisclaimerText,
+    privacyPolicyLabel: row.privacy_policy_label || DEFAULT_SITE_SETTINGS.privacyPolicyLabel,
+    privacyPolicyUrl: row.privacy_policy_url || DEFAULT_SITE_SETTINGS.privacyPolicyUrl,
+    termsOfServiceLabel: row.terms_of_service_label || DEFAULT_SITE_SETTINGS.termsOfServiceLabel,
+    termsOfServiceUrl: row.terms_of_service_url || DEFAULT_SITE_SETTINGS.termsOfServiceUrl,
     addressLine1: row.address_line1 || DEFAULT_SITE_SETTINGS.addressLine1,
     addressLine2: row.address_line2 || DEFAULT_SITE_SETTINGS.addressLine2,
     mapEmbedUrl: row.map_embed_url || DEFAULT_SITE_SETTINGS.mapEmbedUrl,

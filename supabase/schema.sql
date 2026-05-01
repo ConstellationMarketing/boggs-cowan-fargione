@@ -80,6 +80,12 @@ CREATE TABLE public.site_settings (
   social_links jsonb DEFAULT '[]'::jsonb,
   copyright_text text,
   footer_tagline_html text,
+  footer_description text,
+  footer_disclaimer_text text,
+  privacy_policy_label text,
+  privacy_policy_url text,
+  terms_of_service_label text,
+  terms_of_service_url text,
   site_noindex boolean DEFAULT false,
   ga4_measurement_id text,
   google_ads_id text,
@@ -283,7 +289,10 @@ SELECT
   social_links, copyright_text, footer_tagline_html,
   site_noindex, ga4_measurement_id, google_ads_id,
   google_ads_conversion_label, head_scripts, footer_scripts,
-  site_url, updated_at, favicon_source_url, favicon_assets, global_schema
+  site_url, updated_at, favicon_source_url, favicon_assets, global_schema,
+  footer_description, footer_disclaimer_text,
+  privacy_policy_label, privacy_policy_url,
+  terms_of_service_label, terms_of_service_url
 FROM site_settings;
 
 -- =============================================

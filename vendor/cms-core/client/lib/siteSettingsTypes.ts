@@ -67,6 +67,12 @@ export interface SiteSettings {
 
   // Footer Tagline (Rich Text HTML)
   footerTaglineHtml: string;
+  footerDescription: string;
+  footerDisclaimerText: string;
+  privacyPolicyLabel: string;
+  privacyPolicyUrl: string;
+  termsOfServiceLabel: string;
+  termsOfServiceUrl: string;
 
   // SEO
   siteUrl: string;
@@ -104,6 +110,12 @@ export interface SiteSettingsRow {
   social_links: SocialLink[];
   copyright_text: string | null;
   footer_tagline_html: string | null;
+  footer_description: string | null;
+  footer_disclaimer_text: string | null;
+  privacy_policy_label: string | null;
+  privacy_policy_url: string | null;
+  terms_of_service_label: string | null;
+  terms_of_service_url: string | null;
   site_noindex: boolean;
   ga4_measurement_id: string | null;
   google_ads_id: string | null;
@@ -148,6 +160,12 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   ],
   copyrightText: "",
   footerTaglineHtml: "",
+  footerDescription: "",
+  footerDisclaimerText: "",
+  privacyPolicyLabel: "Privacy Policy",
+  privacyPolicyUrl: "",
+  termsOfServiceLabel: "Terms of Service",
+  termsOfServiceUrl: "",
   siteUrl: "",
   siteNoindex: false,
   globalSchema: "",
@@ -193,6 +211,12 @@ export function rowToSiteSettings(row: SiteSettingsRow): SiteSettings {
       : DEFAULT_SITE_SETTINGS.socialLinks,
     copyrightText: row.copyright_text || DEFAULT_SITE_SETTINGS.copyrightText,
     footerTaglineHtml: row.footer_tagline_html || DEFAULT_SITE_SETTINGS.footerTaglineHtml,
+    footerDescription: row.footer_description || DEFAULT_SITE_SETTINGS.footerDescription,
+    footerDisclaimerText: row.footer_disclaimer_text || DEFAULT_SITE_SETTINGS.footerDisclaimerText,
+    privacyPolicyLabel: row.privacy_policy_label || DEFAULT_SITE_SETTINGS.privacyPolicyLabel,
+    privacyPolicyUrl: row.privacy_policy_url || DEFAULT_SITE_SETTINGS.privacyPolicyUrl,
+    termsOfServiceLabel: row.terms_of_service_label || DEFAULT_SITE_SETTINGS.termsOfServiceLabel,
+    termsOfServiceUrl: row.terms_of_service_url || DEFAULT_SITE_SETTINGS.termsOfServiceUrl,
     siteUrl: row.site_url || "",
     siteNoindex: row.site_noindex ?? DEFAULT_SITE_SETTINGS.siteNoindex,
     globalSchema: row.global_schema || "",
@@ -228,6 +252,12 @@ export function siteSettingsToRow(
     social_links: settings.socialLinks,
     copyright_text: settings.copyrightText,
     footer_tagline_html: settings.footerTaglineHtml || null,
+    footer_description: settings.footerDescription || null,
+    footer_disclaimer_text: settings.footerDisclaimerText || null,
+    privacy_policy_label: settings.privacyPolicyLabel || null,
+    privacy_policy_url: settings.privacyPolicyUrl || null,
+    terms_of_service_label: settings.termsOfServiceLabel || null,
+    terms_of_service_url: settings.termsOfServiceUrl || null,
     site_noindex: settings.siteNoindex,
     ga4_measurement_id: settings.ga4MeasurementId || null,
     google_ads_id: settings.googleAdsId || null,

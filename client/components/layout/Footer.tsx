@@ -1,252 +1,153 @@
-import React from "react";
-
-import {
-  Facebook,
-  Instagram,
-  Youtube,
-  Linkedin,
-  Twitter,
-  Phone,
-} from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSiteSettings } from "@site/contexts/SiteSettingsContext";
+import { Phone } from "lucide-react";
+import { useSiteSettings, useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import RichText from "@site/components/shared/RichText";
+import NavDropdown from "./NavDropdown";
 
+function FooterPolicyLink({ href, label }: { href: string; label: string }) {
+  if (!href || !label) {
+    return null;
+  }
 
-const SOCIAL_ICON_MAP: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  facebook: Facebook,
-  instagram: Instagram,
-  youtube: Youtube,
-  linkedin: Linkedin,
-  twitter: Twitter,
-};
+  const isExternal = /^https?:\/\//i.test(href);
 
-const SOCIAL_LABEL_MAP: Record<string, string> = {
-  facebook: "Facebook",
-  instagram: "Instagram",
-  youtube: "Youtube",
-  linkedin: "LinkedIn",
-  twitter: "X",
-};
-
-export default function Footer() {
-  const { settings } = useSiteSettings();
-
-const logoUrl = settings.logoUrl?.trim() || "";
-const logoAlt = settings.logoAlt?.trim() || settings.siteName?.trim() || "Logo";
-
-const phoneNumber = settings.phoneNumber?.trim() || "";
-const phoneDisplay = settings.phoneDisplay?.trim() || "";
-const phoneLabel = settings.phoneAvailability?.trim() || "";
-
-const copyrightRaw = settings.copyrightText?.trim() || "";
-const copyrightText = copyrightRaw.replace(/\{year\}/gi, String(new Date().getFullYear()));
-const mapEmbedUrl = settings.mapEmbedUrl?.trim() || "";
-
-const resourceLinks = settings.footerAboutLinks ?? [];
-const practiceLinks = settings.footerPracticeLinks ?? [];
-const resourcesHeading = settings.footerResourcesHeading?.trim() || "";
-const practiceAreasHeading = settings.footerPracticeAreasHeading?.trim() || "";
-const footerTaglineHtml = settings.footerTaglineHtml || "";
-
-const enabledSocialLinks = (settings.socialLinks ?? []).filter((s) => s.enabled);
-
+  if (isExternal) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="hover:text-brand-accent transition-colors duration-300"
+      >
+        {label}
+      </a>
+    );
+  }
 
   return (
-    <footer className="bg-brand-dark relative">
-      {/* Top Section: Tagline and Call Box */}
-      <div className="max-w-[2560px] mx-auto w-[95%] py-[20px] md:py-[27px] flex flex-col lg:flex-row lg:items-center gap-8">
-        {/* Left: Tagline */}
-        <div className="lg:w-[75%]">
-          <div>
-{footerTaglineHtml ? (
-  <div
-    className="font-playfair text-[clamp(2rem,6vw,59.136px)] leading-tight md:leading-[70.9632px] font-light text-white"
-    dangerouslySetInnerHTML={{ __html: footerTaglineHtml }}
-  />
-) : null}
-
-          </div>
-        </div>
-
-        {/* Right: Call Us Box */}
-        <div className="lg:w-[25%]">
-          <a href={`tel:${phoneNumber.replace(/\D/g, "")}`}>
-            <div className="bg-brand-accent p-[8px] w-full ml-auto cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group">
-              <div className="table w-full mx-auto max-w-full flex-row-reverse">
-                <div className="table-cell w-[32px] leading-[0] mb-[30px]">
-                  <span className="m-auto">
-                    <span className="inline-block bg-white p-[15px] text-black group-hover:bg-black transition-colors duration-300">
-                      <Phone
-                        className="w-[31px] h-[31px] [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
-                        strokeWidth={1.5}
-                      />
-                    </span>
-                  </span>
-                </div>
-                <div className="table-cell align-top pl-[15px]">
-                  <h4 className="font-inter text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
-                    {phoneLabel}
-                  </h4>
-                  <div>
-                    <p className="font-inter text-[28px] md:text-[40px] leading-tight md:leading-[44px] text-black group-hover:text-white transition-colors duration-300 whitespace-nowrap">
-                      {phoneDisplay}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      {/* Footer Links Section */}
-      <div className="border-t border-b border-brand-border max-w-[2560px] mx-auto w-[95%] py-[20px] md:py-[27px] flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-[3%]">
-        {/* Logo Column */}
-        <div className="lg:w-[20%] lg:mr-[3%]">
-          <Link to="/" className="block">
-            {logoUrl ? (
-              <img
-                src={logoUrl}
-                alt={logoAlt}
-                className="w-[200px] max-w-full"
-                width={200}
-                height={33}
-              />
-            ) : (
-              <span className="font-inter text-white text-[24px] leading-none">
-                {settings.siteName || " "}
-              </span>
-            )}
-          </Link>
-
-        </div>
-
-        {/* Resources Column */}
-        <div className="lg:w-[20%] lg:mr-[3%]">
-          <div className="font-inter text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] text-white">
-            {resourcesHeading ? (
-              <h3 className="font-inter text-[28px] md:text-[36px] leading-tight md:leading-[36px] text-white pb-[10px]">
-                {resourcesHeading}
-              </h3>
-            ) : null}
-              {resourceLinks.length > 0 ? (
-                <ul className="text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] space-y-1">
-                  {resourceLinks.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        to={link.href || "#"}
-                        className="hover:text-brand-accent transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-
-          </div>
-        </div>
-
-        {/* Practice Areas Column */}
-        <div className="lg:w-[20%] lg:mr-[3%]">
-          <div className="font-inter text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] text-white">
-            {practiceAreasHeading ? (
-              <h3 className="font-inter text-[28px] md:text-[36px] leading-tight md:leading-[36px] text-white pb-[10px]">
-                {practiceAreasHeading}
-              </h3>
-            ) : null}
-              {practiceLinks.length > 0 ? (
-                <ul className="text-[18px] md:text-[24px] font-light leading-tight md:leading-[36px] space-y-1">
-                  {practiceLinks.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        to={link.href || "/practice-areas/"}
-                        className="hover:text-brand-accent transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-          </div>
-        </div>
-
-        {/* Map Column */}
-        <div className="lg:w-[40%] max-w-[900px]">
-          <div className="relative">
-            {mapEmbedUrl ? (
-              <iframe
-                src={mapEmbedUrl}
-                width="100%"
-                height="250"
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-[250px]"
-                title="Office Location"
-              />
-            ) : null}
-          </div>
-        </div>
-</div>
-      {/* Social Media Section */}
-      <SocialLinksSection />
-
-
-      {/* Copyright Section */}
-      <div className="border-t border-brand-border max-w-[2560px] mx-auto w-full py-[10px] px-[30px]">
-        <div className="w-full mx-auto my-auto">
-          <div className="font-inter text-[18px] font-light leading-[27px] text-white text-center">
-            {copyrightText ? <p>{copyrightText}</p> : null}
-          </div>
-        </div>
-      </div>
-    </footer>
+    <Link
+      to={href}
+      className="hover:text-brand-accent transition-colors duration-300"
+    >
+      {label}
+    </Link>
   );
 }
 
-/** Renders the social icon row; falls back to default set if CMS provides none */
-function SocialLinksSection() {
+export default function Footer() {
   const { settings } = useSiteSettings();
+  const { phoneNumber, phoneDisplay } = useGlobalPhone();
 
-  const socialLinks =
-    settings.socialLinks?.filter((s) => s.enabled) ?? [];
+  const logoUrl = settings.logoUrl?.trim() || "";
+  const logoAlt = settings.logoAlt?.trim() || settings.siteName?.trim() || "Logo";
+  const taglineHtml = settings.footerTaglineHtml || "";
+  const footerDescription = settings.footerDescription?.trim() || "";
+  const disclaimerText = settings.footerDisclaimerText?.trim() || "";
+  const privacyPolicyLabel = settings.privacyPolicyLabel?.trim() || "";
+  const privacyPolicyUrl = settings.privacyPolicyUrl?.trim() || "";
+  const termsOfServiceLabel = settings.termsOfServiceLabel?.trim() || "";
+  const termsOfServiceUrl = settings.termsOfServiceUrl?.trim() || "";
+  const copyrightRaw = settings.copyrightText?.trim() || "";
+  const copyrightText = copyrightRaw.replace(/\{year\}/gi, String(new Date().getFullYear()));
+  const navItems = [...(settings.navigationItems ?? [])].sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
 
-  if (socialLinks.length === 0) return null;
+  const hasLegalRow = disclaimerText || (privacyPolicyLabel && privacyPolicyUrl) || (termsOfServiceLabel && termsOfServiceUrl);
 
   return (
-    <div className="max-w-[1080px] mx-auto w-[80%] py-[20px]">
-      <div className="w-full">
-        <ul className="text-center leading-[26px]">
-          {socialLinks.map((social, idx) => {
-            const Icon = SOCIAL_ICON_MAP[social.platform];
-            const label =
-              SOCIAL_LABEL_MAP[social.platform] || social.platform;
+    <footer className="bg-black py-[44px] md:py-[64px]">
+      <div className="mx-auto flex w-[92%] max-w-[1200px] flex-col items-center text-center">
+        <Link to="/" className="block">
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={logoAlt}
+              className="mx-auto w-[320px] max-w-full brightness-0 invert md:w-[420px]"
+              width={420}
+              height={69}
+            />
+          ) : (
+            <span className="font-inter text-[32px] font-semibold leading-none text-white md:text-[42px]">
+              {settings.siteName || " "}
+            </span>
+          )}
+        </Link>
 
-            if (!Icon) return null;
+        {taglineHtml ? (
+          <RichText
+            html={taglineHtml}
+            className="mt-6 max-w-[760px] font-inter text-[17px] leading-[1.6] text-white [&_p]:my-0 [&_p+p]:mt-4"
+          />
+        ) : null}
 
-            const isLast = idx === socialLinks.length - 1;
+        {phoneDisplay ? (
+          <a
+            href={`tel:${phoneNumber.replace(/\D/g, "")}`}
+            className="mt-6 inline-flex items-center justify-center gap-3 transition-all duration-300"
+          >
+            <Phone className="h-7 w-7 text-accent" strokeWidth={1.5} />
+            <span className="font-inter text-[28px] font-semibold text-white transition-all duration-300 hover:text-accent md:text-[36px]">
+              {phoneDisplay}
+            </span>
+          </a>
+        ) : null}
 
-            return (
-              <li key={social.platform} className="inline-block mb-[8px]">
-                <a
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-block w-[52px] h-[52px] bg-brand-card border border-brand-border ${
-                    isLast ? "" : "mr-[8px]"
-                  } align-middle transition-all duration-300 hover:bg-brand-accent hover:border-brand-accent group flex items-center justify-center`}
-                  title={`Follow on ${label}`}
-                >
-                  <Icon className="w-6 h-6 text-white group-hover:text-black transition-colors duration-300" />
-                  <span className="sr-only">Follow on {label}</span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        {footerDescription ? (
+          <RichText
+            html={footerDescription}
+            className="mt-6 max-w-[760px] font-inter text-[17px] leading-[1.6] text-white [&_p]:my-0 [&_p+p]:mt-4"
+          />
+        ) : null}
+
+        {navItems.length > 0 ? (
+          <nav className="mt-8 flex items-center justify-center">
+            <ul className="flex flex-wrap items-center justify-center -mx-[11px]">
+              {navItems.map((item, index) => {
+                const hasChildren = item.children && item.children.length > 0;
+
+                return (
+                  <li key={`footer-nav-${item.href}-${index}`} className="px-[11px] flex items-center justify-center">
+                    {hasChildren ? (
+                      <NavDropdown item={item} />
+                    ) : (
+                      <Link
+                        to={item.href}
+                        target={item.openInNewTab ? "_blank" : undefined}
+                        rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                        className="font-inter text-[16px] text-white mr-[20px] whitespace-nowrap hover:opacity-80 transition-opacity duration-400"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        ) : null}
+
+        <div className="mt-8 h-px w-[80%] bg-brand-accent" />
+
+        {hasLegalRow ? (
+          <div className="mt-6 max-w-[860px] space-y-3 font-inter text-[15px] leading-[1.6] text-white">
+            {disclaimerText ? <p>{disclaimerText}</p> : null}
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+              <FooterPolicyLink href={privacyPolicyUrl} label={privacyPolicyLabel} />
+              {privacyPolicyUrl && privacyPolicyLabel && termsOfServiceUrl && termsOfServiceLabel ? (
+                <span aria-hidden="true">|</span>
+              ) : null}
+              <FooterPolicyLink href={termsOfServiceUrl} label={termsOfServiceLabel} />
+            </div>
+          </div>
+        ) : null}
+
+        {copyrightText ? (
+          <p className="mt-6 font-inter text-[14px] leading-[1.6] text-white/50">
+            {copyrightText}
+          </p>
+        ) : null}
       </div>
-    </div>
+    </footer>
   );
 }

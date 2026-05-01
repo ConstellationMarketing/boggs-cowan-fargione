@@ -564,36 +564,6 @@ export default function AdminSiteSettings() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Copyright Text</CardTitle>
-              <CardDescription>Displayed in the footer</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="copyrightText">Copyright Text</Label>
-                <Input
-                  id="copyrightText"
-                  value={settings.copyrightText}
-                  onChange={(e) =>
-                    updateSettings({ copyrightText: e.target.value })
-                  }
-                  placeholder="Copyright © 2017 - {year} | Company Name | All Rights Reserved"
-                />
-                <p className="text-sm text-gray-500">
-                  Use <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">{'{year}'}</code> to insert the current year automatically. Example: <span className="italic">Copyright © 2017 - {'{year}'}</span>
-                </p>
-              </div>
-              {settings.copyrightText && (
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Preview:</p>
-                  <p className="text-sm text-gray-800">
-                    {settings.copyrightText.replace(/\{year\}/gi, String(new Date().getFullYear()))}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </TabsContent>
 
         {/* Navigation Tab */}
@@ -665,189 +635,102 @@ export default function AdminSiteSettings() {
         <TabsContent value="footer" className="mt-6 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Footer Tagline</CardTitle>
+              <CardTitle>Footer Content</CardTitle>
               <CardDescription>
-                Rich text tagline displayed in the footer area
+                Manage the stacked footer layout shown at the bottom of every page.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="footerResourcesHeading">Resources Column Title</Label>
-                  <Input
-                    id="footerResourcesHeading"
-                    value={settings.footerResourcesHeading}
-                    onChange={(e) => updateSettings({ footerResourcesHeading: e.target.value })}
-                    placeholder="Resources"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="footerPracticeAreasHeading">Practice Areas Column Title</Label>
-                  <Input
-                    id="footerPracticeAreasHeading"
-                    value={settings.footerPracticeAreasHeading}
-                    onChange={(e) => updateSettings({ footerPracticeAreasHeading: e.target.value })}
-                    placeholder="Practice Areas"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Tagline (HTML)</Label>
-                  <RichTextEditor
-                    value={settings.footerTaglineHtml}
-                    onChange={(html) => updateSettings({ footerTaglineHtml: html })}
-                    placeholder="Enter footer tagline..."
-                  />
-                  <p className="text-xs text-gray-500">
-                    Use the <strong>paint brush</strong> button to highlight text with the accent color.
-                  </p>
-                </div>
-
-                {/* Live preview */}
-                {settings.footerTaglineHtml && (
-                  <div className="space-y-2">
-                    <Label className="text-xs text-gray-500">Preview (as it appears in footer)</Label>
-                    <div className="bg-[#1a1a2e] rounded-lg p-6">
-                      <div
-                        className="font-playfair text-[24px] md:text-[32px] leading-tight text-white [&_.text-law-accent]:text-[#c8b560]"
-                        dangerouslySetInnerHTML={{ __html: settings.footerTaglineHtml }}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>About Column Links</CardTitle>
-              <CardDescription>
-                Links in the resources section of the footer
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {settings.footerAboutLinks.map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Input
-                    value={item.label}
-                    onChange={(e) =>
-                      updateAboutLink(index, { label: e.target.value })
-                    }
-                    placeholder="Link text"
-                    className="flex-1"
-                  />
-                  <Input
-                    value={item.href || ""}
-                    onChange={(e) =>
-                      updateAboutLink(index, {
-                        href: e.target.value || undefined,
-                      })
-                    }
-                    placeholder="/page-url (optional)"
-                    className="flex-1"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeAboutLink(index)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                variant="outline"
-                onClick={addAboutLink}
-                className="w-full"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Link
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Practice Areas Column Links</CardTitle>
-              <CardDescription>
-                Links in the "Practice Areas" section of the footer
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {settings.footerPracticeLinks.map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Input
-                    value={item.label}
-                    onChange={(e) =>
-                      updatePracticeLink(index, { label: e.target.value })
-                    }
-                    placeholder="Link text"
-                    className="flex-1"
-                  />
-                  <Input
-                    value={item.href || ""}
-                    onChange={(e) =>
-                      updatePracticeLink(index, {
-                        href: e.target.value || undefined,
-                      })
-                    }
-                    placeholder="/page-url (optional)"
-                    className="flex-1"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removePracticeLink(index)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                variant="outline"
-                onClick={addPracticeLink}
-                className="w-full"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Link
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Map Embed</CardTitle>
-              <CardDescription>
-                Google Maps embed URL for the footer map
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="mapEmbedUrl">Map Embed URL</Label>
-                <Input
-                  id="mapEmbedUrl"
-                  value={settings.mapEmbedUrl}
-                  onChange={(e) =>
-                    updateSettings({ mapEmbedUrl: e.target.value })
-                  }
-                  placeholder="https://www.google.com/maps/embed?..."
+                <Label>Tagline</Label>
+                <RichTextEditor
+                  value={settings.footerTaglineHtml}
+                  onChange={(html) => updateSettings({ footerTaglineHtml: html })}
+                  placeholder="Enter footer tagline..."
                 />
               </div>
-              {settings.mapEmbedUrl && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-500 mb-2">Preview:</p>
-                  <iframe
-                    src={settings.mapEmbedUrl}
-                    width="100%"
-                    height="200"
-                    className="rounded-lg border"
-                    loading="lazy"
-                    title="Map Preview"
+
+              <div className="space-y-2">
+                <Label>Footer Description</Label>
+                <RichTextEditor
+                  value={settings.footerDescription}
+                  onChange={(html) => updateSettings({ footerDescription: html })}
+                  placeholder="Enter footer description..."
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="footerDisclaimerText">Disclaimer Text</Label>
+                <Textarea
+                  id="footerDisclaimerText"
+                  value={settings.footerDisclaimerText}
+                  onChange={(e) => updateSettings({ footerDisclaimerText: e.target.value })}
+                  placeholder="Enter the footer disclaimer text..."
+                  rows={4}
+                />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="privacyPolicyLabel">Privacy Policy Link Label</Label>
+                  <Input
+                    id="privacyPolicyLabel"
+                    value={settings.privacyPolicyLabel}
+                    onChange={(e) => updateSettings({ privacyPolicyLabel: e.target.value })}
+                    placeholder="Privacy Policy"
                   />
                 </div>
-              )}
+                <div className="space-y-2">
+                  <Label htmlFor="privacyPolicyUrl">Privacy Policy URL</Label>
+                  <Input
+                    id="privacyPolicyUrl"
+                    value={settings.privacyPolicyUrl}
+                    onChange={(e) => updateSettings({ privacyPolicyUrl: e.target.value })}
+                    placeholder="/privacy-policy/"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="termsOfServiceLabel">Terms of Service Link Label</Label>
+                  <Input
+                    id="termsOfServiceLabel"
+                    value={settings.termsOfServiceLabel}
+                    onChange={(e) => updateSettings({ termsOfServiceLabel: e.target.value })}
+                    placeholder="Terms of Service"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="termsOfServiceUrl">Terms of Service URL</Label>
+                  <Input
+                    id="termsOfServiceUrl"
+                    value={settings.termsOfServiceUrl}
+                    onChange={(e) => updateSettings({ termsOfServiceUrl: e.target.value })}
+                    placeholder="/terms-of-service/"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Copyright Text</CardTitle>
+              <CardDescription>Displayed at the bottom of the footer</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="copyrightText">Copyright Text</Label>
+                <Input
+                  id="copyrightText"
+                  value={settings.copyrightText}
+                  onChange={(e) =>
+                    updateSettings({ copyrightText: e.target.value })
+                  }
+                  placeholder="Copyright © 2017 - {year} | Company Name | All Rights Reserved"
+                />
+                <p className="text-sm text-gray-500">
+                  Use <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">{'{year}'}</code> to insert the current year automatically. Example: <span className="italic">Copyright © 2017 - {'{year}'}</span>
+                </p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
