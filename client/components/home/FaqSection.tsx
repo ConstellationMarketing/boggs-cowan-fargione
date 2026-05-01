@@ -9,7 +9,7 @@ interface FaqSectionProps {
 }
 
 export default function FaqSection({ content }: FaqSectionProps) {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1);
 
   // Guard: if no FAQ items, don't render
   if (!content || !content.items || content.items.length === 0) {
@@ -37,7 +37,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
           {data.description && (
             <RichText
               html={data.description}
-              className="font-inter text-[16px] md:text-[24px] leading-[24px] md:leading-[36px] text-black text-center"
+              className="font-inter text-[16px] md:text-[19px] leading-[1.75] text-black/80 text-center [&_p]:my-0 [&_p+p]:mt-4"
             />
           )}
         </div>
@@ -64,19 +64,17 @@ export default function FaqSection({ content }: FaqSectionProps) {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`border-[0.8px] border-[rgb(217,217,217)] ${
-                index < faqs.length - 1 ? "mb-[5.82%]" : ""
-              } ${openIndex === index ? "bg-brand-dark" : "bg-white"}`}
+              className={`bg-white shadow-[0_10px_24px_rgba(0,0,0,0.06)] border-b-2 border-brand-accent ${
+                index < faqs.length - 1 ? "mb-4" : ""
+              }`}
             >
               <button
                 onClick={() => toggleFaq(index)}
-                className={`w-full font-inter text-[28px] leading-[28px] px-[20px] py-[20px] text-left flex items-center justify-between cursor-pointer ${
-                  openIndex === index ? "text-white" : "text-[rgb(67,67,67)]"
-                }`}
+                className="flex w-full cursor-pointer items-center justify-between px-5 py-5 text-left font-inter text-[18px] leading-[1.45] text-black md:px-6 md:py-6 md:text-[19px]"
               >
-                <span className="pr-[50px]">{faq.question}</span>
+                <span className="pr-6 font-medium">{faq.question}</span>
                 <ChevronDown
-                  className={`h-6 w-6 flex-shrink-0 transition-transform duration-200 ${
+                  className={`h-5 w-5 flex-shrink-0 text-brand-accent transition-transform duration-200 ${
                     openIndex === index ? "rotate-180" : ""
                   }`}
                 />
@@ -84,7 +82,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
               {openIndex === index && (
                 <RichText
                   html={faq.answer}
-                  className="font-inter text-[22px] leading-[33px] font-light px-[20px] pb-[20px] pt-[20px] text-white"
+                  className="border-t border-black/5 px-5 pb-5 pt-1 font-inter text-[16px] leading-[1.7] text-black/80 [&_p]:my-0 [&_p+p]:mt-4 md:px-6 md:pb-6 md:text-[18px]"
                 />
               )}
             </div>
