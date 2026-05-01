@@ -650,27 +650,7 @@ function ContactSectionEditor({ content, update }: SectionProps) {
           <Input value={c.heading} onChange={(e) => set({ heading: e.target.value })} />
         </div>
         <RichTextField label="Description" value={c.description} onChange={(v) => set({ description: v })} />
-        <ImageField
-          label="Section Image"
-          value={c.image}
-          onChange={(url) => set({ image: url })}
-          altValue={c.imageAlt}
-          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
-          folder="team"
-        />
-        <div>
-          <Label>Image Alt Text</Label>
-          <Input value={c.imageAlt} onChange={(e) => set({ imageAlt: e.target.value })} placeholder="Describe the image" />
-        </div>
-        <p className="text-xs text-gray-500 italic">Phone and address are managed in Site Settings &gt; Contact Info</p>
-        <div>
-          <Label>Form Heading</Label>
-          <Input value={c.formHeading} onChange={(e) => set({ formHeading: e.target.value })} />
-        </div>
-        <div>
-          <Label>Availability Text</Label>
-          <Input value={c.availabilityText || ""} onChange={(e) => set({ availabilityText: e.target.value })} placeholder="Our intake team is available 24 hours a day, seven days a week" />
-        </div>
+        <p className="text-xs text-gray-500 italic">This section uses the existing Contact Form from Forms and renders a centered single-column layout on the homepage.</p>
       </div>
     </Section>
   );

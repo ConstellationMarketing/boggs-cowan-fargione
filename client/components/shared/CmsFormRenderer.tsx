@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { useCmsForm } from "@site/hooks/useCmsForm";
 import {
   AUTO_TRACKED_FORM_FIELD_NAMES,
@@ -20,12 +21,15 @@ interface CmsFormRendererProps {
   formId?: string;
   /** Optional extra className on the wrapper */
   className?: string;
+  /** Optional visual styling preset */
+  variant?: "default" | "contactSection";
 }
 
 export default function CmsFormRenderer({
   form: formProp,
   formId,
   className,
+  variant = "default",
 }: CmsFormRendererProps) {
   const { form: fetchedForm, isLoading } = useCmsForm(
     formProp ? undefined : formId,
@@ -44,15 +48,17 @@ export default function CmsFormRenderer({
     return null;
   }
 
-  return <FormInner form={form} className={className} />;
+  return <FormInner form={form} className={className} variant={variant} />;
 }
 
 function FormInner({
   form,
   className,
+  variant,
 }: {
   form: CmsForm;
   className?: string;
+  variant: "default" | "contactSection";
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trackingPayload, setTrackingPayload] = useState(
@@ -114,6 +120,11 @@ function FormInner({
     }
   };
 
+  const formClassName =
+    variant === "contactSection"
+      ? cn("mx-auto w-full max-w-[760px]", className ?? "space-y-4 md:space-y-5")
+      : className ?? "space-y-[25px]";
+
   return (
     <form
       name={form.name}
@@ -122,7 +133,7 @@ function FormInner({
       data-netlify="true"
       data-netlify-honeypot="bot-field"
       onSubmit={handleSubmit}
-      className={className ?? "space-y-[25px]"}
+      className={formClassName}
     >
       <input type="hidden" name="form-name" value={form.name} />
       {AUTO_TRACKED_FORM_FIELD_NAMES.map((fieldName) => (
@@ -136,14 +147,18 @@ function FormInner({
       ))}
 
       {form.fields.map((field) => (
-        <FormField key={field.id} field={field} />
+        <FormField key={field.id} field={field} variant={variant} />
       ))}
 
       <div>
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-none"
+          className={
+            variant === "contactSection"
+              ? "h-[56px] w-full rounded-none border border-brand-accent bg-brand-accent text-[18px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+              : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-none"
+          }
         >
           {isSubmitting ? "SUBMITTING..." : form.submit_button_text}
         </Button>
@@ -165,22 +180,79 @@ function FormInner({
   );
 }
 
-const fieldInputClass =
+const defaultFieldInputClass =
   "w-full h-[50px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-none focus-visible:ring-0 focus-visible:ring-offset-0";
 
-function FormField({ field }: { field: FormFieldDef }) {
+const contactSectionFieldInputClass =
+  "w-full h-[44px] md:h-[52px] bg-white border border-white text-black text-[16px] px-5 py-3 rounded-none placeholder:text-black/45 focus-visible:ring-0 focus-visible:ring-offset-0";
+
+function getFieldPlaceholder(field: FormFieldDef, variant: "default" | "contactSection") {
+  if (variant !== "contactSection") {
+    return field.label;
+  }
+
+  const normalizedName = field.name.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  const normalizedLabel = field.label.replace(/\*/g, "").trim();
+
+  if (field.type === "email" || normalizedName.includes("email")) {
+    return "your@email.com";
+  }
+
+  if (field.type === "phone" || normalizedName.includes("phone")) {
+    return "(555) 123-4567";
+  }
+
+  if (field.type === "textarea") {
+    return "Please Describe Your Situation...";
+  }
+
+  if (normalizedName.includes("name")) {
+    return "Your Full Name";
+  }
+
+  return normalizedLabel || field.label;
+}
+
+function renderFieldLabel(field: FormFieldDef, variant: "default" | "contactSection") {
+  if (variant !== "contactSection" || field.type === "html") {
+    return null;
+  }
+
+  return (
+    <label
+      htmlFor={field.id}
+      className="mb-2 block font-inter text-[15px] font-medium leading-tight text-white"
+    >
+      {field.label}
+      {field.required ? " *" : ""}
+    </label>
+  );
+}
+
+function FormField({
+  field,
+  variant,
+}: {
+  field: FormFieldDef;
+  variant: "default" | "contactSection";
+}) {
+  const inputClassName =
+    variant === "contactSection" ? contactSectionFieldInputClass : defaultFieldInputClass;
+
   switch (field.type) {
     case "text":
     case "email":
     case "phone":
       return (
         <div>
+          {renderFieldLabel(field, variant)}
           <Input
+            id={field.id}
             type={field.type === "phone" ? "tel" : field.type}
             name={field.name}
-            placeholder={field.label}
+            placeholder={getFieldPlaceholder(field, variant)}
             required={field.required}
-            className={fieldInputClass}
+            className={inputClassName}
           />
         </div>
       );
@@ -188,11 +260,17 @@ function FormField({ field }: { field: FormFieldDef }) {
     case "textarea":
       return (
         <div>
+          {renderFieldLabel(field, variant)}
           <Textarea
+            id={field.id}
             name={field.name}
-            placeholder={field.label}
+            placeholder={getFieldPlaceholder(field, variant)}
             required={field.required}
-            className="w-full h-[200px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className={
+              variant === "contactSection"
+                ? "min-h-[120px] w-full resize-none rounded-none border border-white bg-white px-5 py-4 text-[16px] text-black placeholder:text-black/45 focus-visible:ring-0 focus-visible:ring-offset-0"
+                : "w-full h-[200px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            }
           />
         </div>
       );
@@ -200,14 +278,16 @@ function FormField({ field }: { field: FormFieldDef }) {
     case "select":
       return (
         <div>
+          {renderFieldLabel(field, variant)}
           <select
+            id={field.id}
             name={field.name}
             required={field.required}
             defaultValue=""
-            className={fieldInputClass + " appearance-none"}
+            className={inputClassName + " appearance-none"}
           >
             <option value="" disabled>
-              {field.label}
+              {getFieldPlaceholder(field, variant)}
             </option>
             {(field.options ?? []).map((opt) => (
               <option key={opt} value={opt}>
@@ -221,13 +301,13 @@ function FormField({ field }: { field: FormFieldDef }) {
     case "checkbox":
       return (
         <fieldset>
-          <legend className="font-inter text-[16px] text-gray-600 mb-2">
+          <legend className={variant === "contactSection" ? "mb-2 font-inter text-[15px] font-medium text-white" : "mb-2 font-inter text-[16px] text-gray-600"}>
             {field.label}
           </legend>
           {(field.options ?? []).map((opt) => (
             <label
               key={opt}
-              className="flex items-center gap-2 font-inter text-[15px] text-gray-600 mb-1 cursor-pointer"
+              className={variant === "contactSection" ? "mb-2 flex cursor-pointer items-center gap-2 font-inter text-[15px] text-white/85" : "flex items-center gap-2 font-inter text-[15px] text-gray-600 mb-1 cursor-pointer"}
             >
               <input
                 type="checkbox"
@@ -244,13 +324,13 @@ function FormField({ field }: { field: FormFieldDef }) {
     case "radio":
       return (
         <fieldset>
-          <legend className="font-inter text-[16px] text-gray-600 mb-2">
+          <legend className={variant === "contactSection" ? "mb-2 font-inter text-[15px] font-medium text-white" : "font-inter text-[16px] text-gray-600 mb-2"}>
             {field.label}
           </legend>
           {(field.options ?? []).map((opt) => (
             <label
               key={opt}
-              className="flex items-center gap-2 font-inter text-[15px] text-gray-600 mb-1 cursor-pointer"
+              className={variant === "contactSection" ? "mb-2 flex cursor-pointer items-center gap-2 font-inter text-[15px] text-white/85" : "flex items-center gap-2 font-inter text-[15px] text-gray-600 mb-1 cursor-pointer"}
             >
               <input
                 type="radio"
@@ -268,15 +348,14 @@ function FormField({ field }: { field: FormFieldDef }) {
     case "file":
       return (
         <div>
-          <label className="block font-inter text-[16px] text-gray-600 mb-1">
-            {field.label}
-          </label>
-          <input
+          {renderFieldLabel(field, variant)}
+          <Input
+            id={field.id}
             type="file"
             name={field.name}
-            required={field.required}
             accept={field.accept}
-            className="w-full text-gray-600 text-[16px] file:mr-4 file:py-2 file:px-4 file:border file:border-brand-border file:bg-white file:text-gray-600 file:text-sm file:font-inter file:rounded-none"
+            required={field.required}
+            className={cn(inputClassName, variant === "contactSection" ? "file:mr-4 file:border-0 file:bg-transparent file:text-black" : "")}
           />
         </div>
       );
@@ -284,8 +363,8 @@ function FormField({ field }: { field: FormFieldDef }) {
     case "html":
       return (
         <div
-          className="font-inter text-[15px] text-gray-600 [&_a]:text-blue-600 [&_a]:underline"
-          dangerouslySetInnerHTML={{ __html: field.htmlContent ?? "" }}
+          className={variant === "contactSection" ? "text-white/85 [&_a]:text-brand-accent" : "text-gray-700 [&_a]:underline"}
+          dangerouslySetInnerHTML={{ __html: field.htmlContent || "" }}
         />
       );
 
