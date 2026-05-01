@@ -1,5 +1,5 @@
 import type { AboutPageContent } from "@site/lib/cms/aboutPageTypes";
-import { Section, ArrayEditor, ImageField, RichTextField, HeadingField, Input, Label, Textarea } from "./EditorShared";
+import { Section, ArrayEditor, ImageField, RichTextField, HeadingField, Input, Label, Textarea, GlobalSectionInfo } from "./EditorShared";
 
 interface AboutEditorProps {
   content: AboutPageContent;
@@ -17,9 +17,7 @@ export default function AboutEditor({ content, onChange }: AboutEditorProps) {
       <StorySection content={content} update={update} />
       <TeamSection content={content} update={update} />
       <ApproachSection content={content} update={update} />
-      <ValuesSection content={content} update={update} />
-      <StatsSection content={content} update={update} />
-      <WhyChooseUsSection content={content} update={update} />
+      <GlobalSectionInfo sectionTitle="Why Choose Us" managedIn="Home" />
       <CTASection content={content} update={update} />
     </div>
   );
@@ -326,141 +324,6 @@ function ApproachSection({ content, update }: SectionProps) {
           value={approach.description}
           onChange={(v) => set({ description: v })}
           placeholder="Add at least 3 paragraphs describing the firm's approach."
-        />
-      </div>
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-function ValuesSection({ content, update }: SectionProps) {
-  const values = content.values;
-  const set = (patch: Partial<typeof values>) => update("values", { ...values, ...patch });
-  const ht = useHeadingTag(content, update);
-
-  return (
-    <Section title="Our Values" defaultOpen={false}>
-      <div className="grid gap-4">
-        <div>
-          <Label>Section Label</Label>
-          <Input value={values.sectionLabel} onChange={(e) => set({ sectionLabel: e.target.value })} />
-        </div>
-        <HeadingField
-          label="Heading"
-          value={values.heading}
-          onChange={(v) => set({ heading: v })}
-          tag={ht.get("values.heading")}
-          onTagChange={(t) => ht.set("values.heading", t)}
-        />
-        <div>
-          <Label>Subtitle</Label>
-          <Input value={values.subtitle} onChange={(e) => set({ subtitle: e.target.value })} />
-        </div>
-        <ArrayEditor
-          items={values.items}
-          onChange={(items) => set({ items })}
-          itemLabel="Value"
-          newItem={() => ({ icon: "Star", title: "", description: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <div className="grid grid-cols-4 gap-3">
-                <div>
-                  <Label>Icon</Label>
-                  <Input value={item.icon} onChange={(e) => upd({ ...item, icon: e.target.value })} placeholder="Lucide icon name" />
-                </div>
-                <div className="col-span-3">
-                  <Label>Title</Label>
-                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
-                </div>
-              </div>
-              <RichTextField label="Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
-            </div>
-          )}
-        />
-      </div>
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-function StatsSection({ content, update }: SectionProps) {
-  return (
-    <Section title="Stats" defaultOpen={false}>
-      <ArrayEditor
-        items={content.stats.stats}
-        onChange={(items) => update("stats", { stats: items })}
-        itemLabel="Stat"
-        newItem={() => ({ value: "", label: "" })}
-        renderItem={(item, _, upd) => (
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Value</Label>
-              <Input value={item.value} onChange={(e) => upd({ ...item, value: e.target.value })} />
-            </div>
-            <div>
-              <Label>Label</Label>
-              <Input value={item.label} onChange={(e) => upd({ ...item, label: e.target.value })} />
-            </div>
-          </div>
-        )}
-      />
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-function WhyChooseUsSection({ content, update }: SectionProps) {
-  const wcu = content.whyChooseUs;
-  const set = (patch: Partial<typeof wcu>) => update("whyChooseUs", { ...wcu, ...patch });
-  const ht = useHeadingTag(content, update);
-
-  return (
-    <Section title="Why Choose Us" defaultOpen={false}>
-      <div className="grid gap-4">
-        <div>
-          <Label>Section Label</Label>
-          <Input value={wcu.sectionLabel} onChange={(e) => set({ sectionLabel: e.target.value })} />
-        </div>
-        <HeadingField
-          label="Heading"
-          value={wcu.heading}
-          onChange={(v) => set({ heading: v })}
-          tag={ht.get("whyChooseUs.heading")}
-          onTagChange={(t) => ht.set("whyChooseUs.heading", t)}
-        />
-        <RichTextField label="Description" value={wcu.description} onChange={(v) => set({ description: v })} />
-        <ImageField
-          label="Section Image"
-          value={wcu.image}
-          onChange={(url) => set({ image: url })}
-          altValue={wcu.imageAlt}
-          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
-          folder="about"
-        />
-        <div>
-          <Label>Image Alt Text</Label>
-          <Input value={wcu.imageAlt} onChange={(e) => set({ imageAlt: e.target.value })} />
-        </div>
-        <ArrayEditor
-          items={wcu.items}
-          onChange={(items) => set({ items })}
-          itemLabel="Item"
-          newItem={() => ({ number: String(wcu.items.length + 1), title: "", description: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <div className="grid grid-cols-4 gap-3">
-                <div>
-                  <Label>Number</Label>
-                  <Input value={item.number} onChange={(e) => upd({ ...item, number: e.target.value })} />
-                </div>
-                <div className="col-span-3">
-                  <Label>Title</Label>
-                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
-                </div>
-              </div>
-              <RichTextField label="Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
-            </div>
-          )}
         />
       </div>
     </Section>

@@ -179,14 +179,8 @@ function AboutPreview({ content }: { content: AboutPageContent }) {
   const story = (about.story as Record<string, unknown> | undefined) ?? {};
   const team = (about.team as Record<string, unknown> | undefined) ?? {};
   const approach = (about.approach as Record<string, unknown> | undefined) ?? {};
-  const values = (about.values as Record<string, unknown> | undefined) ?? {};
-  const stats = (about.stats as Record<string, unknown> | undefined) ?? {};
-  const whyChooseUs = (about.whyChooseUs as Record<string, unknown> | undefined) ?? {};
   const cta = (about.cta as Record<string, unknown> | undefined) ?? {};
   const teamMembers = Array.isArray(team.members) ? team.members : [];
-  const valueItems = Array.isArray(values.items) ? values.items : [];
-  const statItems = Array.isArray(stats.stats) ? stats.stats : [];
-  const whyChooseItems = Array.isArray(whyChooseUs.items) ? whyChooseUs.items : [];
   const secondaryButton = (cta.secondaryButton as Record<string, unknown> | undefined) ?? {};
 
   return (
@@ -224,20 +218,10 @@ function AboutPreview({ content }: { content: AboutPageContent }) {
         />
       </PreviewSection>
 
-      <PreviewSection title="Our Values">
-        <PreviewField label="Section Label" value={typeof values.sectionLabel === "string" ? values.sectionLabel : null} />
-        <PreviewField label="Heading" value={typeof values.heading === "string" ? values.heading : null} />
-        <PreviewField label="Items" value={valueItems.length} />
-      </PreviewSection>
-
-      <PreviewSection title="Stats">
-        <PreviewField label="Stats" value={statItems.length} />
-      </PreviewSection>
-
       <PreviewSection title="Why Choose Us">
-        <PreviewField label="Section Label" value={typeof whyChooseUs.sectionLabel === "string" ? whyChooseUs.sectionLabel : null} />
-        <PreviewField label="Heading" value={typeof whyChooseUs.heading === "string" ? whyChooseUs.heading : null} />
-        <PreviewField label="Items" value={whyChooseItems.length} />
+        <p className="text-sm text-gray-600">
+          This section is shared from the homepage and is managed there.
+        </p>
       </PreviewSection>
 
       <PreviewSection title="CTA">

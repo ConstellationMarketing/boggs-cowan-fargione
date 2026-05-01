@@ -1,32 +1,19 @@
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
 import AboutSection from "@site/components/home/AboutSection";
+import WhyChooseUsSection from "@site/components/home/AwardsSection";
 import CallBox from "@site/components/shared/CallBox";
 import PageHero from "@site/components/shared/PageHero";
-import StatsGrid from "@site/components/shared/StatsGrid";
 import TeamMemberCard from "@site/components/about/TeamMemberCard";
-import ValueCard from "@site/components/about/ValueCard";
 import {
   Phone as PhoneIcon,
   Calendar,
-  Scale,
-  Award,
-  Users,
-  Heart,
-  type LucideIcon,
   Loader2,
 } from "lucide-react";
 import { useAboutContent } from "@site/hooks/useAboutContent";
+import { useHomeContent } from "@site/hooks/useHomeContent";
 import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
-
-// Icon mapping for values section
-const iconMap: Record<string, LucideIcon> = {
-  Scale,
-  Award,
-  Users,
-  Heart,
-};
 
 const TEAM_AVATAR_BACKGROUNDS = ["#E7E0D3", "#D9E4EC", "#E8D9E6"];
 
@@ -47,9 +34,10 @@ function createBlankAvatar(index: number) {
 
 export default function AboutUs() {
   const { content, meta, title, publishedAt, updatedAt, isLoading } = useAboutContent();
+  const { content: homeContent, isLoading: isHomeLoading } = useHomeContent();
   const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
 
-  if (isLoading) {
+  if (isLoading || isHomeLoading) {
     return (
       <Layout>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -70,18 +58,6 @@ export default function AboutUs() {
     content.approach.heading.trim() || content.approach.description.trim(),
   );
 
-  // Map core values from CMS content with icon components
-  const coreValues = content.values.items.map((item) => ({
-    icon: iconMap[item.icon] || Scale,
-    title: item.title,
-    description: item.description,
-  }));
-
-  // Map stats from CMS content
-  const stats = content.stats.stats;
-
-  // Map why choose us from CMS content
-  const whyChooseUs = content.whyChooseUs.items;
 
   return (
     <Layout>
@@ -156,104 +132,10 @@ export default function AboutUs() {
 
       )}
 
-      {/* Core Values Section */}
-      {coreValues.length > 0 && (
-      <div className="bg-brand-dark py-[40px] md:py-[60px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
-          <div className="text-center mb-[30px] md:mb-[50px]">
-            <div className="mb-[10px]">
-              <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
-                {content.values.sectionLabel}
-              </p>
-            </div>
-            <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-white">
-              {content.values.heading}
-            </h2>
-            {content.values.subtitle && (
-              <p className="font-outfit text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-white/80 mt-[15px]">
-                {content.values.subtitle}
-              </p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-[5%]">
-            {coreValues.map((value, index) => (
-              <ValueCard key={index} {...value} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      )}
-
-      {/* Stats Section */}
-      {stats.length > 0 && (
-      <div className="bg-white py-[30px] md:py-[40px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%]">
-          <StatsGrid stats={stats} />
-        </div>
-      </div>
-
-      )}
-
-      {/* Why Choose Us Section */}
-      {whyChooseUs.length > 0 && (
-      <div className="bg-white pt-[30px] md:pt-[40px] pb-[40px] md:pb-[60px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[80%]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[8%]">
-            {/* Left Side - Heading + Image */}
-            <div>
-              <div className="mb-[10px]">
-                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
-                  {content.whyChooseUs.sectionLabel}
-                </p>
-              </div>
-              <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black pb-[20px]">
-                {content.whyChooseUs.heading}
-              </h2>
-              <RichText
-                html={content.whyChooseUs.description}
-                className="font-outfit text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-black mb-[30px]"
-              />
-              {/* Stock image */}
-              {content.whyChooseUs.image && (
-                <div className="hidden lg:block">
-                  <img
-                    src={content.whyChooseUs.image}
-                    alt={content.whyChooseUs.imageAlt || "Why Choose Us"}
-                    className="w-full max-w-[400px] h-auto object-cover"
-                    width={400}
-                    height={300}
-                    loading="lazy"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Right Side - Features List */}
-            <div className="space-y-[20px] md:space-y-[30px]">
-              {whyChooseUs.map((feature, index) => (
-                <div key={index}>
-                  <div className="mb-[15px] md:mb-[20px]">
-                    <h3 className="font-outfit text-[22px] md:text-[28px] leading-tight md:leading-[28px] text-black pb-[10px]">
-                      {feature.number}. {feature.title}
-                    </h3>
-                    <RichText
-                      html={feature.description}
-                      className="font-outfit text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-black"
-                    />
-                  </div>
-                  {index < whyChooseUs.length - 1 && (
-                    <div className="h-[1px] bg-brand-border/30"></div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      )}
+      <WhyChooseUsSection
+        content={homeContent.whyChooseUs}
+        headingTag={homeContent.headingTags?.["whyChooseUs.sectionLabel"]}
+      />
 
       {/* Call to Action Section */}
       {content.cta.heading && (
