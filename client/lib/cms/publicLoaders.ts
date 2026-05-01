@@ -230,7 +230,7 @@ const HOME_CONTENT_KEYS: (keyof HomePageContent)[] = [
   "about",
   "practiceAreasIntro",
   "practiceAreas",
-  "awards",
+  "whyChooseUs",
   "testimonials",
   "process",
   "googleReviews",
@@ -518,10 +518,26 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
           link: item.link || "/practice-areas/",
         }))
       : defaults.practiceAreas,
-    awards: {
-      ...defaults.awards,
-      ...cmsContent.awards,
-      logos: cmsContent.awards?.logos?.length ? cmsContent.awards.logos : defaults.awards.logos,
+    whyChooseUs: {
+      ...defaults.whyChooseUs,
+      ...cmsContent.whyChooseUs,
+      items: Array.isArray(cmsContent.whyChooseUs?.items)
+        ? cmsContent.whyChooseUs.items.flatMap((item) => {
+            if (!isRecord(item)) {
+              return [];
+            }
+
+            const title = typeof item.title === "string" ? item.title : "";
+            const description = typeof item.description === "string" ? item.description : "";
+            const icon = typeof item.icon === "string" && item.icon.trim() ? item.icon : "Check";
+
+            if (!title && !description && !icon) {
+              return [];
+            }
+
+            return [{ title, description, icon }];
+          })
+        : defaults.whyChooseUs.items,
     },
     testimonials: {
       ...defaults.testimonials,

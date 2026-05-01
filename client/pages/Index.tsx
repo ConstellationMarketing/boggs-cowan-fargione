@@ -3,7 +3,7 @@ import Layout from "@site/components/layout/Layout";
 import AboutSection from "@site/components/home/AboutSection";
 import PracticeAreasSection from "@site/components/home/PracticeAreasSection";
 import PracticeAreasGrid from "@site/components/home/PracticeAreasGrid";
-import AwardsSection from "@site/components/home/AwardsSection";
+import WhyChooseUsSection from "@site/components/home/AwardsSection";
 import TestimonialsSection from "@site/components/home/TestimonialsSection";
 import ProcessSection from "@site/components/home/ProcessSection";
 import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
@@ -191,8 +191,8 @@ export default function Index() {
       {/* Practice Areas Grid */}
       <PracticeAreasGrid areas={content.practiceAreas} />
 
-      {/* Awards & Membership Section */}
-      <AwardsSection content={content.awards} headingTag={content.headingTags?.["awards.sectionLabel"]} />
+      {/* Why Choose Us Section */}
+      <WhyChooseUsSection content={content.whyChooseUs} headingTag={content.headingTags?.["whyChooseUs.sectionLabel"]} />
 
       {/* Testimonials Section */}
       <TestimonialsSection content={content.testimonials} headingTag={content.headingTags?.["testimonials.sectionLabel"]} />

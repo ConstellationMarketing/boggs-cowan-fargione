@@ -61,11 +61,19 @@ export interface PracticeAreasIntroContent {
   description: string;
 }
 
-export interface AwardsContent {
+export interface HomeWhyChooseUsItem {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface HomeWhyChooseUsContent {
+  image: string;
+  imageAlt: string;
   sectionLabel: string;
   heading: string;
   description: string;
-  logos: Array<{ src: string; alt: string }>;
+  items: HomeWhyChooseUsItem[];
 }
 
 export interface TestimonialItem {
@@ -144,7 +152,7 @@ export interface HomePageContent {
   about: AboutContent;
   practiceAreasIntro: PracticeAreasIntroContent;
   practiceAreas: PracticeAreaItem[];
-  awards: AwardsContent;
+  whyChooseUs: HomeWhyChooseUsContent;
   testimonials: TestimonialsContent;
   process: ProcessContent;
   googleReviews: GoogleReviewsContent;
@@ -193,11 +201,13 @@ export const defaultHomeContent: HomePageContent = {
     description: "",
   },
   practiceAreas: [],
-  awards: {
+  whyChooseUs: {
+    image: "",
+    imageAlt: "",
     sectionLabel: "",
     heading: "",
     description: "",
-    logos: [],
+    items: [],
   },
   testimonials: {
     sectionLabel: "",

@@ -1,115 +1,123 @@
-import type { AwardsContent } from "@site/lib/cms/homePageTypes";
+import * as LucideIcons from "lucide-react";
+import { Check, type LucideIcon } from "lucide-react";
+import type { HomeWhyChooseUsContent } from "@site/lib/cms/homePageTypes";
 import RichText from "@site/components/shared/RichText";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
 
-interface AwardsSectionProps {
-  content?: AwardsContent;
+interface WhyChooseUsSectionProps {
+  content?: HomeWhyChooseUsContent;
   headingTag?: string;
 }
 
-export default function AwardsSection({ content, headingTag }: AwardsSectionProps) {
-  // Guard: if no logos, don't render
-  if (!content || !content.logos || content.logos.length === 0) {
+const normalizedIconMap = Object.entries(LucideIcons).reduce<Record<string, LucideIcon>>((acc, [name, icon]) => {
+  if (name === "default" || name === "icons" || name === "aliases") {
+    return acc;
+  }
+
+  const normalizedName = name.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  acc[normalizedName] = icon as LucideIcon;
+  return acc;
+}, {});
+
+function resolveIcon(iconName: string | null | undefined): LucideIcon {
+  if (!iconName || typeof iconName !== "string") {
+    return Check;
+  }
+
+  const normalizedInput = iconName.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  return normalizedIconMap[normalizedInput] || Check;
+}
+
+export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsSectionProps) {
+  if (!content) {
     return null;
   }
 
   const data = content;
-  const logos = data.logos;
+  const items = (Array.isArray(data.items) ? data.items : [])
+    .filter((item) => item && (item.title || item.description || item.icon))
+    .slice(0, 4);
+  const hasIntro = !!data.sectionLabel || !!data.heading || !!data.description;
+
+  if (!data.image && !hasIntro && items.length === 0) {
+    return null;
+  }
 
   return (
-    <div
-      className="relative pt-[30px] md:pt-[54px]"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgb(0, 0, 0) 54%, rgb(255, 255, 255) 54%)",
-      }}
-    >
-      <div className="max-w-[1640px] mx-auto w-[95%] md:w-[85%] lg:w-[80%] flex flex-col lg:flex-row relative">
-        {/* Left Side - Text Content */}
-        <div className="lg:w-1/3 lg:min-w-[40%] bg-[rgb(239,239,239)] p-[30px] md:p-[40px] relative z-[2]">
-          {data.sectionLabel && (
-            <div className="mb-[10px]">
+    <section className="bg-white py-[40px] md:py-[72px]">
+      <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%]">
+        <div className={`grid grid-cols-1 ${data.image ? "lg:grid-cols-2" : ""} gap-10 lg:gap-[6%] items-stretch`}>
+          {data.image ? (
+            <div>
+              <div className="h-full min-h-[360px] overflow-hidden border border-black/10 bg-[#f7f7f7] lg:min-h-full">
+                <img
+                  src={data.image}
+                  alt={data.imageAlt || data.heading || "Why Choose Us"}
+                  className="block h-full w-full object-cover object-center"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          ) : null}
+
+          <div className="pt-1">
+            {data.sectionLabel ? (
               <DynamicHeading
                 tag={headingTag}
                 defaultTag="h2"
-                className="font-inter text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent"
+                className="mb-3 md:mb-4 font-inter text-[18px] font-semibold uppercase tracking-[0.08em] text-brand-accent md:text-[24px]"
               >
                 {data.sectionLabel}
               </DynamicHeading>
-            </div>
-          )}
-          <div>
-            {data.heading && (
-              <p className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black pb-[10px]">
+            ) : null}
+
+            {data.heading ? (
+              <p className="mb-5 md:mb-6 max-w-[720px] font-playfair text-[34px] leading-[1.08] text-black md:text-[52px]">
                 {data.heading}
               </p>
-            )}
-            {data.description && (
+            ) : null}
+
+            {data.description ? (
               <RichText
                 html={data.description}
-                className="font-inter text-[20px] leading-[30px] text-black"
+                className="max-w-[760px] font-inter text-[16px] leading-[1.75] text-black/80 [&_p]:my-0 [&_p+p]:mt-5 md:text-[19px] md:[&_p+p]:mt-6"
               />
-            )}
+            ) : null}
+
+            {items.length > 0 ? (
+              <div className="mt-7 space-y-5 md:mt-9 md:space-y-6">
+                {items.map((item, index) => {
+                  const Icon = resolveIcon(item.icon);
+
+                  return (
+                    <article
+                      key={`${item.title}-${index}`}
+                      className="border-b-2 border-brand-accent bg-white px-5 py-5 shadow-[0_12px_34px_rgba(0,0,0,0.07)] md:px-7 md:py-6"
+                    >
+                      <div className="flex items-start gap-3 md:gap-4">
+                        <Icon className="mt-0.5 h-6 w-6 shrink-0 text-brand-accent md:h-7 md:w-7" strokeWidth={2} />
+                        <div className="min-w-0 flex-1">
+                          {item.title ? (
+                            <h3 className="font-inter text-[22px] font-semibold uppercase leading-tight text-brand-accent md:text-[24px]">
+                              {item.title}
+                            </h3>
+                          ) : null}
+                          {item.description ? (
+                            <RichText
+                              html={item.description}
+                              className="mt-3 font-inter text-[16px] leading-[1.65] text-black/85 [&_p]:my-0 [&_p+p]:mt-4 md:text-[19px]"
+                            />
+                          ) : null}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
         </div>
-
-        {/* Right Side - Logo Grid */}
-        <div className="lg:w-2/3 bg-[rgb(239,239,239)] relative z-[2]">
-          {/* First Row */}
-          {logos.slice(0, 4).length > 0 && (
-            <div className="flex p-[50px] px-[30px] w-full">
-              {logos.slice(0, 4).map((logo, index) => (
-                <div
-                  key={index}
-                  className="bg-white flex-shrink-0"
-                  style={{
-                    width: "21.574%",
-                    marginRight: index < 3 ? "4.569%" : "0",
-                  }}
-                >
-                  <div className="text-center">
-                    <img
-                      src={logo.src}
-                      alt={logo.alt}
-                      width={240}
-                      height={155}
-                      loading="lazy"
-                      className="max-w-full inline-block"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Second Row */}
-          {logos.slice(4, 8).length > 0 && (
-            <div className="flex p-[50px] px-[30px] w-full">
-              {logos.slice(4, 8).map((logo, index) => (
-                <div
-                  key={index}
-                  className="bg-white flex-shrink-0"
-                  style={{
-                    width: "21.574%",
-                    marginRight: index < 3 ? "4.569%" : "0",
-                  }}
-                >
-                  <div className="text-center">
-                    <img
-                      src={logo.src}
-                      alt={logo.alt}
-                      width={240}
-                      height={155}
-                      loading="lazy"
-                      className="max-w-full inline-block"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
-    </div>
+    </section>
   );
 }

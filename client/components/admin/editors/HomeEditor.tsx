@@ -18,7 +18,7 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
       <AboutSectionEditor content={content} update={update} />
       <PracticeAreasIntroSection content={content} update={update} />
       <PracticeAreasItemsSection content={content} update={update} />
-      <AwardsSection content={content} update={update} />
+      <WhyChooseUsSection content={content} update={update} />
       <TestimonialsSection content={content} update={update} />
       <ProcessSection content={content} update={update} />
       <GoogleReviewsSection content={content} update={update} />
@@ -400,49 +400,70 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
 }
 
 /* ------------------------------------------------------------------ */
-function AwardsSection({ content, update }: SectionProps) {
-  const awards = content.awards;
-  const set = (patch: Partial<typeof awards>) => update("awards", { ...awards, ...patch });
+function WhyChooseUsSection({ content, update }: SectionProps) {
+  const whyChooseUs = content.whyChooseUs;
+  const set = (patch: Partial<typeof whyChooseUs>) => update("whyChooseUs", { ...whyChooseUs, ...patch });
   const ht = useHeadingTag(content, update);
 
   return (
-    <Section title="Awards & Memberships" defaultOpen={false}>
+    <Section title="Why Choose Us" defaultOpen={false}>
       <div className="grid gap-4">
-        <HeadingField
-          label="Section Label"
-          value={awards.sectionLabel}
-          onChange={(v) => set({ sectionLabel: v })}
-          tag={ht.get("awards.sectionLabel")}
-          onTagChange={(t) => ht.set("awards.sectionLabel", t)}
+        <ImageField
+          label="Section Image"
+          value={whyChooseUs.image}
+          onChange={(url) => set({ image: url })}
+          altValue={whyChooseUs.imageAlt}
+          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
+          folder="team"
         />
         <div>
-          <Label>Heading</Label>
-          <Input value={awards.heading} onChange={(e) => set({ heading: e.target.value })} />
+          <Label>Image Alt Text</Label>
+          <Input value={whyChooseUs.imageAlt} onChange={(e) => set({ imageAlt: e.target.value })} />
         </div>
-        <RichTextField label="Description" value={awards.description} onChange={(v) => set({ description: v })} />
-        <h4 className="font-medium">Award Logos</h4>
+        <HeadingField
+          label="Section Title"
+          value={whyChooseUs.sectionLabel}
+          onChange={(v) => set({ sectionLabel: v })}
+          tag={ht.get("whyChooseUs.sectionLabel")}
+          onTagChange={(t) => ht.set("whyChooseUs.sectionLabel", t)}
+        />
+        <div>
+          <Label>Headline</Label>
+          <Input value={whyChooseUs.heading} onChange={(e) => set({ heading: e.target.value })} />
+        </div>
+        <RichTextField label="Description" value={whyChooseUs.description} onChange={(v) => set({ description: v })} />
         <ArrayEditor
-          items={awards.logos}
-          onChange={(items) => set({ logos: items })}
-          itemLabel="Logo"
-          newItem={() => ({ src: "", alt: "" })}
+          items={Array.isArray(whyChooseUs.items) ? whyChooseUs.items : []}
+          onChange={(items) => set({ items: items.slice(0, 4) })}
+          itemLabel="Feature Box"
+          newItem={() => ({ icon: "Check", title: "", description: "" })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-3">
-              <ImageField
-                label="Logo Image"
-                value={item.src}
-                onChange={(url) => upd({ ...item, src: url })}
-                altValue={item.alt}
-                onChangeWithAlt={(src, alt) => upd({ ...item, src, alt })}
-                folder="awards"
-              />
               <div>
-                <Label>Alt Text</Label>
-                <Input value={item.alt} onChange={(e) => upd({ ...item, alt: e.target.value })} />
+                <Label>Icon Name</Label>
+                <Input
+                  value={typeof item.icon === "string" ? item.icon : ""}
+                  onChange={(e) => upd({ ...item, icon: e.target.value })}
+                  placeholder="Check"
+                />
+                <p className="mt-1 text-xs text-gray-500">Use a Lucide icon name like Check, BadgeCheck, ShieldCheck, Scale, Users, or CircleCheckBig.</p>
               </div>
+              <div>
+                <Label>Title</Label>
+                <Input
+                  value={typeof item.title === "string" ? item.title : ""}
+                  onChange={(e) => upd({ ...item, title: e.target.value })}
+                />
+              </div>
+              <RichTextField
+                label="Description"
+                value={typeof item.description === "string" ? item.description : ""}
+                onChange={(value) => upd({ ...item, description: value })}
+              />
             </div>
           )}
         />
+        <p className="text-xs text-gray-500 italic">Add up to 4 feature boxes. They stack in the right column under the intro copy.</p>
       </div>
     </Section>
   );
