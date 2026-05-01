@@ -210,18 +210,25 @@ export default function PracticePagePrepEditor({
         onToggle={() => toggleSection("hero")}
       >
         <div className="space-y-3">
-          <FieldRow label="Page Title / Hero H1" required>
+          <FieldRow label="Hero H1 Title" required>
             <Input
-              value={String(hero.sectionLabel ?? "")}
-              onChange={(e) => updateContent("hero.sectionLabel", e.target.value)}
-              placeholder="Primary page heading (H1)"
+              value={String(hero.h1Title ?? hero.sectionLabel ?? "")}
+              onChange={(e) => updateContent("hero.h1Title", e.target.value)}
+              placeholder="Small title above the main headline"
             />
           </FieldRow>
-          <FieldRow label="Tagline">
+          <FieldRow label="Hero Headline">
             <Input
-              value={String(hero.tagline ?? "")}
-              onChange={(e) => updateContent("hero.tagline", e.target.value)}
+              value={String(hero.headline ?? hero.tagline ?? "")}
+              onChange={(e) => updateContent("hero.headline", e.target.value)}
               placeholder="Main hero headline"
+            />
+          </FieldRow>
+          <FieldRow label="Highlighted Text">
+            <Input
+              value={String(hero.highlightedText ?? "")}
+              onChange={(e) => updateContent("hero.highlightedText", e.target.value)}
+              placeholder="Optional accent text"
             />
           </FieldRow>
           <HtmlFieldEditor
@@ -243,11 +250,32 @@ export default function PracticePagePrepEditor({
               )}
             </div>
           </FieldRow>
-          <FieldRow label="Image Alt Text">
+          <FieldRow label="Hero Side Image">
             <Input
-              value={String(hero.backgroundImageAlt ?? "")}
-              onChange={(e) => updateContent("hero.backgroundImageAlt", e.target.value)}
-              placeholder="Describe the image"
+              value={String(hero.heroImage ?? "")}
+              onChange={(e) => updateContent("hero.heroImage", e.target.value)}
+              placeholder="https://..."
+            />
+          </FieldRow>
+          <FieldRow label="Hero Side Image Alt Text">
+            <Input
+              value={String(hero.heroImageAlt ?? hero.backgroundImageAlt ?? "")}
+              onChange={(e) => updateContent("hero.heroImageAlt", e.target.value)}
+              placeholder="Describe the hero image"
+            />
+          </FieldRow>
+          <FieldRow label="Consultation Button Text">
+            <Input
+              value={String(hero.consultationButtonText ?? "")}
+              onChange={(e) => updateContent("hero.consultationButtonText", e.target.value)}
+              placeholder="Free Consultation"
+            />
+          </FieldRow>
+          <FieldRow label="Consultation Button Link">
+            <Input
+              value={String(hero.consultationButtonLink ?? "")}
+              onChange={(e) => updateContent("hero.consultationButtonLink", e.target.value)}
+              placeholder="/contact"
             />
           </FieldRow>
         </div>

@@ -1,19 +1,10 @@
 // Type definitions for structured homepage content
+import type { SharedHeroContent } from "./sharedHero";
+import { defaultSharedHeroContent } from "./sharedHero";
+
 // Each section maps directly to a static component's data needs
 
-export interface HeroContent {
-  h1Title: string; // H1 title text (all caps, ~20px) above headline
-  headline: string;
-  highlightedText: string;
-  description: string;
-  backgroundImage: string;
-  phone: string;
-  phoneLabel: string;
-  heroImage: string; // Image displayed on right side (replaces form)
-  heroImageAlt: string;
-  consultationButtonText: string; // Text for second CTA button
-  consultationButtonLink: string; // Link for consultation button
-}
+export type HeroContent = SharedHeroContent;
 
 export interface PartnerLogo {
   src: string;
@@ -165,17 +156,7 @@ export interface HomePageContent {
 // Default content - empty defaults, content comes exclusively from the CMS
 export const defaultHomeContent: HomePageContent = {
   hero: {
-    h1Title: "",
-    headline: "",
-    highlightedText: "",
-    description: "",
-    backgroundImage: "",
-    phone: "",
-    phoneLabel: "",
-    heroImage: "",
-    heroImageAlt: "",
-    consultationButtonText: "",
-    consultationButtonLink: "",
+    ...defaultSharedHeroContent,
   },
   partnerLogos: [],
   about: {

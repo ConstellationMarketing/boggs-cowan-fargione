@@ -1,11 +1,10 @@
 // Type definitions for structured Contact page content
+import type { SharedHeroContent } from "./sharedHero";
+import { defaultSharedHeroContent } from "./sharedHero";
+
 // Each section maps directly to a static component's data needs
 
-export interface ContactHeroContent {
-  sectionLabel: string; // "– Contact Us" (H1)
-  tagline: string; // "Let's Talk About Your Case" (styled paragraph)
-  description: string; // Description paragraph
-}
+export type ContactHeroContent = SharedHeroContent;
 
 export interface ContactMethodItem {
   icon: string; // Lucide icon name
@@ -83,9 +82,7 @@ export interface ContactPageContent {
 // Default content - empty defaults, content comes exclusively from the CMS
 export const defaultContactContent: ContactPageContent = {
   hero: {
-    sectionLabel: "",
-    tagline: "",
-    description: "",
+    ...defaultSharedHeroContent,
   },
   contactMethods: {
     methods: [],

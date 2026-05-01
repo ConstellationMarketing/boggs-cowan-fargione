@@ -33,9 +33,15 @@ describe("resolvePageTemplate", () => {
       title: "Wrongful Death",
       content: {
         hero: {
-          sectionLabel: "Wrongful Death",
-          tagline: "",
+          h1Title: "Wrongful Death",
+          headline: "",
+          highlightedText: "",
           description: "",
+          backgroundImage: "",
+          heroImage: "",
+          heroImageAlt: "",
+          consultationButtonText: "",
+          consultationButtonLink: "",
         },
         socialProof: {
           mode: "none",

@@ -13,6 +13,7 @@ import {
 } from "./practiceAreaPageTypes";
 import type { PracticeAreasPageContent } from "./practiceAreasPageTypes";
 import { defaultPracticeAreasContent } from "./practiceAreasPageTypes";
+import { normalizeSharedHeroContent } from "./sharedHero";
 import type { ContentBlock } from "../blocks";
 import { normalizeFaviconAssets, type FaviconAssets } from "../seo/favicon";
 import { fetchRestRows, fetchRestSingle } from "./publicFetch";
@@ -500,7 +501,7 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
   }
 
   return {
-    hero: { ...defaults.hero, ...cmsContent.hero },
+    hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
     partnerLogos: cmsContent.partnerLogos?.length ? cmsContent.partnerLogos : defaults.partnerLogos,
     about: {
       ...defaults.about,
@@ -603,7 +604,7 @@ export function mergeAboutContentWithDefaults(cmsContent: Partial<AboutPageConte
   }
 
   return {
-    hero: { ...defaults.hero, ...cmsContent.hero },
+    hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
     story: {
       ...defaults.story,
       ...cmsContent.story,
@@ -661,7 +662,7 @@ export function mergeContactContentWithDefaults(cmsContent: Partial<ContactPageC
   }
 
   return {
-    hero: { ...defaults.hero, ...cmsContent.hero },
+    hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
     contactMethods: {
       ...defaults.contactMethods,
       ...cmsContent.contactMethods,
@@ -724,7 +725,7 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
   }
 
   return {
-    hero: { ...defaults.hero, ...cmsContent.hero },
+    hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
     grid: {
       ...defaults.grid,
       ...cmsContent.grid,
@@ -797,7 +798,7 @@ export function mergePracticeAreaPageContentWithDefaults(cmsContent: Partial<Pra
   }
 
   return {
-    hero: { ...defaults.hero, ...cmsContent.hero },
+    hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
     socialProof: {
       ...defaults.socialProof,
       ...cmsContent.socialProof,
@@ -919,8 +920,8 @@ export function shapeBlogIndexView(document: PreloadedPageDocument<ContentBlock[
 
     if (heroBlock?.type === "hero") {
       hero = {
-        title: heroBlock.sectionLabel || DEFAULT_BLOG_HERO.title,
-        subtitle: heroBlock.tagline || DEFAULT_BLOG_HERO.subtitle,
+        title: heroBlock.h1Title || heroBlock.sectionLabel || DEFAULT_BLOG_HERO.title,
+        subtitle: heroBlock.headline || heroBlock.tagline || DEFAULT_BLOG_HERO.subtitle,
         backgroundImage: heroBlock.backgroundImage,
       };
     }

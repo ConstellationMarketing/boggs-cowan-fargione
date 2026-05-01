@@ -1,6 +1,7 @@
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
 import CallBox from "@site/components/shared/CallBox";
+import PageHero from "@site/components/shared/PageHero";
 import StatsGrid from "@site/components/shared/StatsGrid";
 import TeamMemberCard from "@site/components/about/TeamMemberCard";
 import ValueCard from "@site/components/about/ValueCard";
@@ -66,45 +67,10 @@ export default function AboutUs() {
         updatedTime={updatedAt}
       />
 
-      {/* Hero Section */}
-      <div className="bg-brand-dark pt-[30px] md:pt-[54px] pb-[30px] md:pb-[54px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%]">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-[5%]">
-            {/* Left Side - Heading */}
-            <div className="lg:w-[65%]">
-              {/* H1 Title - Section Label */}
-              <h1 className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent mb-[10px]">
-                {content.hero.sectionLabel}
-              </h1>
-              {/* Tagline - styled as large text but not H1 */}
-              <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white mb-[20px] md:mb-[30px]">
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: content.hero.tagline.replace(
-                      /(Justice & Excellence|Justice|Excellence)/g,
-                      '<span class="text-brand-accent">$1</span>',
-                    ),
-                  }}
-                />
-              </p>
-              <RichText
-                html={content.hero.description}
-                className="font-outfit text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-white/90"
-              />
-            </div>
-
-            {/* Right Side - CallBox */}
-            <div className="w-full lg:w-[30%] lg:flex lg:items-center">
-              <CallBox
-                icon={PhoneIcon}
-                title={phoneLabel}
-                subtitle={phoneDisplay}
-                phone={phoneNumber}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        content={content.hero}
+        headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
+      />
 
       {/* Our Story Section */}
       {(content.story.heading || content.story.paragraphs.length > 0) && (

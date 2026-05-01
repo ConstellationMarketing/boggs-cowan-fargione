@@ -162,7 +162,7 @@ export default function RecipeRuleEditor({
                           targetField: e.target.value,
                         })
                       }
-                      placeholder="e.g. hero.tagline"
+                      placeholder="e.g. hero.headline"
                       className="h-8 text-sm"
                     />
                   </div>

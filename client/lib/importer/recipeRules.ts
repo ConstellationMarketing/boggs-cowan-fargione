@@ -439,7 +439,7 @@ function executeHeroExtract(
     if (imgMatch) {
       hero.backgroundImage = imgMatch[1];
       const altMatch = raw.match(/<img[^>]+alt=["']([^"']+)["']/i);
-      hero.backgroundImageAlt = altMatch ? altMatch[1] : "";
+      hero.heroImageAlt = altMatch ? altMatch[1] : "";
       confidence += 0.2;
     }
   }
@@ -447,9 +447,9 @@ function executeHeroExtract(
   // Do NOT auto-populate description or tagline from body
   // These should only come from explicit mapping
 
-  // Section label from mapping
-  if (input["hero.sectionLabel"]) {
-    hero.sectionLabel = String(input["hero.sectionLabel"]);
+  // H1 title from mapping
+  if (input["hero.h1Title"] || input["hero.sectionLabel"]) {
+    hero.h1Title = String(input["hero.h1Title"] ?? input["hero.sectionLabel"]);
     confidence += 0.1;
   }
 

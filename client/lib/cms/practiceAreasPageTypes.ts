@@ -1,13 +1,10 @@
 // Type definitions for structured Practice Areas page content
+import type { SharedHeroContent } from "./sharedHero";
+import { defaultSharedHeroContent } from "./sharedHero";
+
 // Each section maps directly to a static component's data needs
 
-export interface PracticeAreasHeroContent {
-  sectionLabel: string; // "– Practice Areas" (H1)
-  tagline: string; // "Comprehensive Legal Expertise" (styled text)
-  description: string; // Description paragraph
-  phone: string;
-  phoneLabel: string;
-}
+export type PracticeAreasHeroContent = SharedHeroContent;
 
 export interface PracticeAreaGridItem {
   icon: string; // Lucide icon name
@@ -67,11 +64,7 @@ export interface PracticeAreasPageContent {
 // Default content - empty defaults, content comes exclusively from the CMS
 export const defaultPracticeAreasContent: PracticeAreasPageContent = {
   hero: {
-    sectionLabel: "",
-    tagline: "",
-    description: "",
-    phone: "",
-    phoneLabel: "",
+    ...defaultSharedHeroContent,
   },
   grid: {
     heading: "",

@@ -1,13 +1,10 @@
 // Type definitions for structured About page content
+import type { SharedHeroContent } from "./sharedHero";
+import { defaultSharedHeroContent } from "./sharedHero";
+
 // Each section maps directly to a static component's data needs
 
-export interface AboutHeroContent {
-  sectionLabel: string; // "– About Us" (H1)
-  tagline: string; // "Dedicated to Justice & Excellence" (styled paragraph)
-  description: string; // Description paragraph
-  phone: string;
-  phoneLabel: string;
-}
+export type AboutHeroContent = SharedHeroContent;
 
 export interface StoryContent {
   sectionLabel: string; // "– Our Story"
@@ -111,11 +108,7 @@ export interface AboutPageContent {
 // Default content - empty defaults, content comes exclusively from the CMS
 export const defaultAboutContent: AboutPageContent = {
   hero: {
-    sectionLabel: "",
-    tagline: "",
-    description: "",
-    phone: "",
-    phoneLabel: "",
+    ...defaultSharedHeroContent,
   },
   story: {
     sectionLabel: "",

@@ -65,7 +65,18 @@ const ICON_OPTIONS = [
 function getDefaultBlock(type: string): ContentBlock {
   switch (type) {
     case 'hero':
-      return { type: 'hero', sectionLabel: '– Practice Area', tagline: 'Page Title', description: '<p>Enter a description here...</p>' };
+      return {
+        type: 'hero',
+        h1Title: '– Practice Area',
+        headline: 'Page Title',
+        highlightedText: '',
+        description: '<p>Enter a description here...</p>',
+        backgroundImage: '',
+        heroImage: '',
+        heroImageAlt: '',
+        consultationButtonText: '',
+        consultationButtonLink: '',
+      };
     case 'heading':
       return { type: 'heading', level: 2, text: 'Section Heading' };
     case 'content-section':
@@ -245,12 +256,16 @@ function HeroFields({ block, onUpdate }: { block: Extract<ContentBlock, { type: 
   return (
     <div className="space-y-4">
       <div>
-        <Label>Section Label</Label>
-        <Input value={block.sectionLabel} onChange={(e) => onUpdate({ sectionLabel: e.target.value })} placeholder="– Practice Area" />
+        <Label>H1 Title</Label>
+        <Input value={block.h1Title || ''} onChange={(e) => onUpdate({ h1Title: e.target.value })} placeholder="– Practice Area" />
       </div>
       <div>
-        <Label>Tagline</Label>
-        <Input value={block.tagline} onChange={(e) => onUpdate({ tagline: e.target.value })} placeholder="Main heading text" />
+        <Label>Full Headline</Label>
+        <Input value={block.headline || ''} onChange={(e) => onUpdate({ headline: e.target.value })} placeholder="Main heading text" />
+      </div>
+      <div>
+        <Label>Highlighted Text</Label>
+        <Input value={block.highlightedText || ''} onChange={(e) => onUpdate({ highlightedText: e.target.value })} placeholder="Optional highlighted text" />
       </div>
       <div>
         <Label>Description</Label>
@@ -261,8 +276,20 @@ function HeroFields({ block, onUpdate }: { block: Extract<ContentBlock, { type: 
         <Input value={block.backgroundImage || ''} onChange={(e) => onUpdate({ backgroundImage: e.target.value })} placeholder="https://..." />
       </div>
       <div>
-        <Label>Background Image Alt Text</Label>
-        <Input value={block.backgroundImageAlt || ''} onChange={(e) => onUpdate({ backgroundImageAlt: e.target.value })} placeholder="Describe the background image" />
+        <Label>Hero Side Image URL</Label>
+        <Input value={block.heroImage || ''} onChange={(e) => onUpdate({ heroImage: e.target.value })} placeholder="https://..." />
+      </div>
+      <div>
+        <Label>Hero Side Image Alt Text</Label>
+        <Input value={block.heroImageAlt || ''} onChange={(e) => onUpdate({ heroImageAlt: e.target.value })} placeholder="Describe the hero image" />
+      </div>
+      <div>
+        <Label>Consultation Button Text</Label>
+        <Input value={block.consultationButtonText || ''} onChange={(e) => onUpdate({ consultationButtonText: e.target.value })} placeholder="Free Consultation" />
+      </div>
+      <div>
+        <Label>Consultation Button Link</Label>
+        <Input value={block.consultationButtonLink || ''} onChange={(e) => onUpdate({ consultationButtonLink: e.target.value })} placeholder="/contact" />
       </div>
     </div>
   );

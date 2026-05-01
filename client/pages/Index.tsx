@@ -8,14 +8,12 @@ import ProcessSection from "@site/components/home/ProcessSection";
 import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
 import FaqSection from "@site/components/home/FaqSection";
 import ContactUsSection from "@site/components/home/ContactUsSection";
+import PageHero from "@site/components/shared/PageHero";
 import { useHomeContent } from "@site/hooks/useHomeContent";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
-import { Loader2, Phone, MessageSquare } from "lucide-react";
-import RichText from "@site/components/shared/RichText";
+import { Loader2 } from "lucide-react";
 
 export default function Index() {
   const { content, meta, title, publishedAt, updatedAt, isLoading } = useHomeContent();
-  const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
 
   if (isLoading) {
     return (
@@ -41,118 +39,10 @@ export default function Index() {
         updatedTime={updatedAt}
       />
 
-      {/* Hero Section – negative top margin extends it under the transparent sticky header */}
-      <div className="relative overflow-hidden bg-brand-dark -mt-[7rem] min-h-[80vh] flex flex-col">
-        {heroContent.backgroundImage ? (
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.85) 65%, rgba(0,0,0,0.60) 100%), url(${heroContent.backgroundImage})`,
-            }}
-          />
-        ) : null}
-        <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-[3%] flex-1">
-            {/* Left Side: H1, Headline and CTAs */}
-            <div className="lg:w-[65.667%] flex flex-col justify-center pt-[9.5rem] md:pt-[10.5rem] pb-[36px] md:pb-[48px]">
-              <div className="mb-[20px] md:mb-[24px]">
-              {/* H1 Title - All caps, green, positioned ABOVE headline */}
-              {heroContent.h1Title && (
-                <h1 className="font-outfit text-[18px] md:text-[20px] font-medium tracking-wider uppercase text-accent mb-0 leading-none">
-                  {heroContent.h1Title}
-                </h1>
-              )}
-
-              <div className="relative">
-                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left" style={{ marginTop: '-0.44em' }}>
-                  {heroContent.highlightedText && heroContent.headline.includes(heroContent.highlightedText)
-                    ? (() => {
-                        const idx = heroContent.headline.indexOf(heroContent.highlightedText);
-                        const before = heroContent.headline.slice(0, idx);
-                        const match = heroContent.highlightedText;
-                        const after = heroContent.headline.slice(idx + match.length);
-                        return (
-                          <>
-                            {before}
-                            <span className="text-brand-accent">{match}</span>
-                            {after}
-                          </>
-                        );
-                      })()
-                    : (
-                      <>
-                        <span className="text-brand-accent">{heroContent.highlightedText}</span>
-                        <br />
-                        {heroContent.headline}
-                      </>
-                    )
-                  }
-                </p>
-              </div>
-              {heroContent.description ? (
-                <RichText
-                  html={heroContent.description}
-                  className="mt-[12px] max-w-[720px] font-inter text-[15px] md:text-[18px] leading-[24px] md:leading-[30px] text-white/85"
-                />
-              ) : null}
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="grid w-full max-w-[720px] grid-cols-2 gap-3">
-              {/* Phone Button - Green background with white text */}
-              <a
-                href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-                className="bg-accent hover:bg-accent/90 transition-all duration-300 p-[6px] group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="bg-white p-[10px] flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 md:w-6 md:h-6 text-accent" strokeWidth={1.5} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-inter text-[12px] md:text-[14px] leading-tight text-white pb-[4px] font-normal truncate">
-                      {phoneLabel}
-                    </h4>
-                    <p className="font-inter text-[16px] md:text-[24px] text-white leading-tight font-semibold truncate">
-                      {phoneDisplay}
-                    </p>
-                  </div>
-                </div>
-              </a>
-
-              {/* Free Consultation Button - White background with green text */}
-              {heroContent.consultationButtonText && (
-                <a
-                  href={heroContent.consultationButtonLink || "/contact"}
-                  className="bg-white hover:bg-gray-100 transition-all duration-300 p-[6px] group"
-                >
-                  <div className="flex items-center gap-3 h-full">
-                    <div className="bg-accent p-[10px] flex items-center justify-center flex-shrink-0">
-                      <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white" strokeWidth={1.5} />
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                      <p className="font-inter text-[14px] md:text-[22px] text-accent leading-tight font-semibold">
-                        {heroContent.consultationButtonText}
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              )}
-            </div>
-          </div>
-
-            {/* Right Side: Hero Image — self-stretch fills hero height; pt-[7rem] blocks the header zone */}
-            <div className="hidden lg:block lg:w-[31.3333%] self-stretch pt-[7rem]">
-              {heroContent.heroImage && (
-                <img
-                  src={heroContent.heroImage}
-                  alt={heroContent.heroImageAlt || "Hero"}
-                  className="block w-full h-full object-cover object-top"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        content={heroContent}
+        headingTag={content.headingTags?.["hero.h1Title"]}
+      />
 
       {/* Partner Badges Section - Bottom of Hero */}
       {partnerLogos.length > 0 && (

@@ -107,12 +107,12 @@ function validatePracticePage(
     }
   }
 
-  // Warn if no hero tagline
-  if (!record["hero.tagline"]) {
+  // Warn if no hero headline
+  if (!record["hero.headline"]) {
     issues.push({
       rowIndex,
-      field: "hero.tagline",
-      message: "No hero tagline provided — default will be used",
+      field: "hero.headline",
+      message: "No hero headline provided — default will be used",
       severity: "warning",
     });
     warningRows.add(rowIndex);
@@ -394,8 +394,8 @@ function validatePreparedPracticePage(
   if (!hero?.tagline) {
     issues.push({
       rowIndex,
-      field: "hero.tagline",
-      message: "No hero tagline provided",
+      field: "hero.headline",
+      message: "No hero headline provided",
       severity: "warning",
     });
     warningRows.add(rowIndex);

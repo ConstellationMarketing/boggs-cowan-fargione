@@ -48,14 +48,17 @@ const FIELD_ALIASES: Record<string, string[]> = {
     // Firecrawl
     "metadata.description", "metadatadescription",
   ],
-  "hero.tagline": ["tagline", "herotagline", "headline", "heroheadline"],
+  "hero.h1Title": ["h1title", "heroh1", "herotitle", "sectionlabel"],
+  "hero.headline": ["tagline", "herotagline", "headline", "heroheadline"],
+  "hero.highlightedText": ["highlightedtext", "herohighlight", "highlighttext", "accenttext"],
   "hero.description": [
     "herodescription", "herointro", "herobody", "intro", "introduction",
   ],
   "hero.backgroundImage": [
     "heroimage", "herobackground", "backgroundimage", "heroimg", "bannerimage",
   ],
-  "hero.backgroundImageAlt": ["heroimagealt", "backgroundimagealt"],
+  "hero.heroImage": ["herosideimage", "heroimage2", "heroimage", "sideimage"],
+  "hero.heroImageAlt": ["heroimagealt", "herosideimagealt", "sideimagealt"],
   body: [
     "body", "content", "articlecontent", "postbody", "html", "article",
     // WordPress API

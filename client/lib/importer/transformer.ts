@@ -111,11 +111,19 @@ function transformPracticePage(
   // Build the content object matching PracticeAreaPageContent
   const content: Record<string, unknown> = {
     hero: {
-      sectionLabel:
-        defaultPracticeAreaPageContent.hero.sectionLabel,
-      tagline: mapped["hero.tagline"]
-        ? String(mapped["hero.tagline"])
-        : defaultPracticeAreaPageContent.hero.tagline,
+      h1Title: mapped["hero.h1Title"]
+        ? String(mapped["hero.h1Title"])
+        : mapped["hero.sectionLabel"]
+          ? String(mapped["hero.sectionLabel"])
+          : title,
+      headline: mapped["hero.headline"]
+        ? String(mapped["hero.headline"])
+        : mapped["hero.tagline"]
+          ? String(mapped["hero.tagline"])
+          : defaultPracticeAreaPageContent.hero.headline,
+      highlightedText: mapped["hero.highlightedText"]
+        ? String(mapped["hero.highlightedText"])
+        : defaultPracticeAreaPageContent.hero.highlightedText,
       description: mapped["hero.description"]
         ? ensureHtml(String(mapped["hero.description"]))
         : defaultPracticeAreaPageContent.hero.description,
@@ -124,9 +132,20 @@ function transformPracticePage(
         : syncedMapped["featured_image"]
           ? String(syncedMapped["featured_image"])
           : "",
-      backgroundImageAlt: mapped["hero.backgroundImageAlt"]
-        ? String(mapped["hero.backgroundImageAlt"])
-        : "",
+      heroImage: mapped["hero.heroImage"]
+        ? String(mapped["hero.heroImage"])
+        : defaultPracticeAreaPageContent.hero.heroImage,
+      heroImageAlt: mapped["hero.heroImageAlt"]
+        ? String(mapped["hero.heroImageAlt"])
+        : mapped["hero.backgroundImageAlt"]
+          ? String(mapped["hero.backgroundImageAlt"])
+          : defaultPracticeAreaPageContent.hero.heroImageAlt,
+      consultationButtonText: mapped["hero.consultationButtonText"]
+        ? String(mapped["hero.consultationButtonText"])
+        : defaultPracticeAreaPageContent.hero.consultationButtonText,
+      consultationButtonLink: mapped["hero.consultationButtonLink"]
+        ? String(mapped["hero.consultationButtonLink"])
+        : defaultPracticeAreaPageContent.hero.consultationButtonLink,
     },
     socialProof: {
       mode: "awards" as const,

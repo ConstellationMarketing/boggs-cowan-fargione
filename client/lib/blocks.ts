@@ -3,10 +3,18 @@
 export type ContentBlock =
   | {
       type: "hero";
-      sectionLabel: string;
-      tagline: string;
+      h1Title?: string;
+      headline?: string;
+      highlightedText?: string;
       description: string;
       backgroundImage?: string;
+      heroImage?: string;
+      heroImageAlt?: string;
+      consultationButtonText?: string;
+      consultationButtonLink?: string;
+      /** Legacy fields preserved for older stored hero blocks. */
+      sectionLabel?: string;
+      tagline?: string;
       backgroundImageAlt?: string;
     }
   | { type: "heading"; level: 1 | 2 | 3; text: string }

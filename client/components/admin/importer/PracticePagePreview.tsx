@@ -21,7 +21,7 @@ export default function PracticePagePreview({ record }: PracticePagePreviewProps
           <div className="absolute inset-0 opacity-30">
             <img
               src={String(hero.backgroundImage)}
-              alt={String(hero.backgroundImageAlt ?? "")}
+              alt={String(hero.heroImageAlt ?? hero.backgroundImageAlt ?? "")}
               className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
@@ -31,10 +31,10 @@ export default function PracticePagePreview({ record }: PracticePagePreviewProps
         )}
         <div className="relative z-10">
           <p className="text-xs text-amber-400 uppercase tracking-wider mb-1">
-            {String(hero?.sectionLabel ?? "Practice Area")}
+            {String(hero?.h1Title ?? hero?.sectionLabel ?? "Practice Area")}
           </p>
           <h3 className="text-lg font-bold mb-2">
-            {String(hero?.tagline ?? record.title)}
+            {String(hero?.headline ?? hero?.tagline ?? record.title)}
           </h3>
           {hero?.description && (
             <div

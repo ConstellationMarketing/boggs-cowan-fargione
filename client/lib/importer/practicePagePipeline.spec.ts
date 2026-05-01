@@ -161,9 +161,9 @@ describe("Practice page full pipeline (prepareRecords)", () => {
     expect(result.title).toBe("Personal Injury Attorney");
   });
 
-  it("title → hero.sectionLabel (H1 primary heading)", () => {
+  it("title → hero.h1Title", () => {
     const hero = (result.content as Record<string, any>).hero;
-    expect(hero.sectionLabel).toBe("Personal Injury Attorney");
+    expect(hero.h1Title).toBe("Personal Injury Attorney");
   });
 
   it("hero description remains empty", () => {
@@ -171,9 +171,9 @@ describe("Practice page full pipeline (prepareRecords)", () => {
     expect(hero.description).toBe("");
   });
 
-  it("hero tagline remains empty (not auto-filled from title)", () => {
+  it("hero headline remains empty (not auto-filled from title)", () => {
     const hero = (result.content as Record<string, any>).hero;
-    expect(hero.tagline).toBe("");
+    expect(hero.headline).toBe("");
   });
 
   it("featured_image → hero background image", () => {
@@ -287,7 +287,7 @@ describe("Practice page full pipeline (prepareRecords)", () => {
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// 5. hero.sectionLabel routing
+// 5. hero.h1Title routing
 // ---------------------------------------------------------------------------
 
 describe("practice image syncing", () => {
@@ -305,38 +305,38 @@ describe("practice image syncing", () => {
   });
 });
 
-describe("hero.sectionLabel H1 routing", () => {
-  it("defaults hero.sectionLabel to title when no explicit mapping", () => {
+describe("hero.h1Title routing", () => {
+  it("defaults hero.h1Title to title when no explicit mapping", () => {
     const source: SourceRecord = { title: "Car Accident Lawyer" };
     const config = autoMapFields(Object.keys(source), "practice");
     const prepared = prepareRecords([source], config, "practice");
     const p = prepared[0].current as TransformedPracticePage;
     const hero = (p.content as Record<string, any>).hero;
-    expect(hero.sectionLabel).toBe("Car Accident Lawyer");
+    expect(hero.h1Title).toBe("Car Accident Lawyer");
   });
 
-  it("uses explicit hero.sectionLabel mapping when provided", () => {
+  it("uses explicit hero.h1Title mapping when provided", () => {
     const source: SourceRecord = {
       title: "Car Accident Lawyer",
       hero_label: "Custom Hero Label",
     };
     const config = autoMapFields(Object.keys(source), "practice");
-    // Manually add hero.sectionLabel mapping
+    // Manually add hero.h1Title mapping
     config.mappings.push({
-      targetField: "hero.sectionLabel",
+      targetField: "hero.h1Title",
       sourceColumn: "hero_label",
       transform: "none",
     });
     const prepared = prepareRecords([source], config, "practice");
     const p = prepared[0].current as TransformedPracticePage;
     const hero = (p.content as Record<string, any>).hero;
-    expect(hero.sectionLabel).toBe("Custom Hero Label");
+    expect(hero.h1Title).toBe("Custom Hero Label");
   });
 
-  it("template field label for hero.sectionLabel indicates H1", async () => {
+  it("template field label for hero.h1Title indicates H1", async () => {
     const { getMappableFields } = await import("./templateFields");
     const fields = getMappableFields("practice");
-    const field = fields.find((f: { key: string }) => f.key === "hero.sectionLabel");
+    const field = fields.find((f: { key: string }) => f.key === "hero.h1Title");
     expect(field).toBeDefined();
     expect(field.label).toContain("H1");
     expect(field.label).toContain("Title");
@@ -583,9 +583,9 @@ describe("Full pipeline with H1, intro, and FAQ", () => {
     }
   });
 
-  it("hero.sectionLabel comes from title, not body H1", () => {
+  it("hero.h1Title comes from title, not body H1", () => {
     const hero = (result.content as Record<string, any>).hero;
-    expect(hero.sectionLabel).toBe("Personal Injury Attorney");
+    expect(hero.h1Title).toBe("Personal Injury Attorney");
   });
 });
 

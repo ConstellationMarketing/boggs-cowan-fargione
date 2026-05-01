@@ -197,8 +197,8 @@ function preparePracticePage(
   // -----------------------------------------------------------------------
   // Step 0: Hero Assembly
   // -----------------------------------------------------------------------
-  // - title → hero.sectionLabel (H1) — the primary page heading
-  // - tagline → only from explicit mapping, empty otherwise
+  // - title → hero.h1Title (small H1 title above headline)
+  // - headline → only from explicit mapping, empty otherwise
   // - description → always empty by default
   // - featured_image → hero background
   const heroImage = syncedMapped["hero.backgroundImage"]
@@ -298,20 +298,36 @@ function preparePracticePage(
 
   const content: Record<string, unknown> = {
     hero: {
-      // For Practice Pages, sectionLabel is the primary heading (H1).
-      // Default to the page title when no explicit hero.sectionLabel mapping.
-      sectionLabel: mapped["hero.sectionLabel"]
-        ? String(mapped["hero.sectionLabel"])
-        : title,
-      tagline: mapped["hero.tagline"]
-        ? String(mapped["hero.tagline"])
+      h1Title: mapped["hero.h1Title"]
+        ? String(mapped["hero.h1Title"])
+        : mapped["hero.sectionLabel"]
+          ? String(mapped["hero.sectionLabel"])
+          : title,
+      headline: mapped["hero.headline"]
+        ? String(mapped["hero.headline"])
+        : mapped["hero.tagline"]
+          ? String(mapped["hero.tagline"])
+          : "",
+      highlightedText: mapped["hero.highlightedText"]
+        ? String(mapped["hero.highlightedText"])
         : "",
       description: mapped["hero.description"]
         ? ensureHtml(String(mapped["hero.description"]))
         : "",
       backgroundImage: heroImage,
-      backgroundImageAlt: mapped["hero.backgroundImageAlt"]
-        ? String(mapped["hero.backgroundImageAlt"])
+      heroImage: mapped["hero.heroImage"]
+        ? String(mapped["hero.heroImage"])
+        : "",
+      heroImageAlt: mapped["hero.heroImageAlt"]
+        ? String(mapped["hero.heroImageAlt"])
+        : mapped["hero.backgroundImageAlt"]
+          ? String(mapped["hero.backgroundImageAlt"])
+          : "",
+      consultationButtonText: mapped["hero.consultationButtonText"]
+        ? String(mapped["hero.consultationButtonText"])
+        : "",
+      consultationButtonLink: mapped["hero.consultationButtonLink"]
+        ? String(mapped["hero.consultationButtonLink"])
         : "",
     },
     socialProof: {
@@ -635,8 +651,8 @@ export function quickValidateRecord(
     if (!hero?.tagline) {
       warnings.push({
         rowIndex,
-        field: "hero.tagline",
-        message: "No hero tagline provided",
+        field: "hero.headline",
+        message: "No hero headline provided",
         severity: "warning",
       });
     }

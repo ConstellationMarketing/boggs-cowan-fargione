@@ -46,18 +46,53 @@ function HeroSection({ content, update }: SectionProps) {
   return (
     <Section title="Hero Section">
       <div className="grid gap-4">
-        <div>
-          <Label>Section Label</Label>
-          <Input value={hero.sectionLabel} onChange={(e) => set({ sectionLabel: e.target.value })} />
-        </div>
         <HeadingField
-          label="Tagline"
-          value={hero.tagline}
-          onChange={(v) => set({ tagline: v })}
-          tag={ht.get("hero.tagline")}
-          onTagChange={(t) => ht.set("hero.tagline", t)}
+          label="H1 Title (appears above headline in green)"
+          value={hero.h1Title}
+          onChange={(v) => set({ h1Title: v })}
+          tag={ht.get("hero.h1Title") === "h2" ? "h1" : ht.get("hero.h1Title")}
+          onTagChange={(t) => ht.set("hero.h1Title", t)}
         />
-        <RichTextField label="Description" value={hero.description} onChange={(v) => set({ description: v })} />
+        <div>
+          <Label>Full Headline</Label>
+          <Input value={hero.headline} onChange={(e) => set({ headline: e.target.value })} />
+        </div>
+        <div>
+          <Label>Highlighted Text</Label>
+          <Input value={hero.highlightedText} onChange={(e) => set({ highlightedText: e.target.value })} />
+        </div>
+        <div>
+          <Label>Hero Description</Label>
+          <Textarea value={hero.description} onChange={(e) => set({ description: e.target.value })} rows={4} />
+        </div>
+        <ImageField
+          label="Hero Background Image"
+          value={hero.backgroundImage}
+          onChange={(url) => set({ backgroundImage: url })}
+          folder="hero"
+        />
+        <ImageField
+          label="Hero Side Image"
+          value={hero.heroImage}
+          onChange={(url) => set({ heroImage: url })}
+          altValue={hero.heroImageAlt}
+          onChangeWithAlt={(heroImage, heroImageAlt) => set({ heroImage, heroImageAlt })}
+          folder="hero"
+        />
+        <div>
+          <Label>Hero Image Alt Text</Label>
+          <Input value={hero.heroImageAlt} onChange={(e) => set({ heroImageAlt: e.target.value })} />
+        </div>
+        <div className="border-t pt-4 mt-4 space-y-4">
+          <div>
+            <Label>Consultation Button Text</Label>
+            <Input value={hero.consultationButtonText} onChange={(e) => set({ consultationButtonText: e.target.value })} />
+          </div>
+          <div>
+            <Label>Consultation Button Link</Label>
+            <Input value={hero.consultationButtonLink} onChange={(e) => set({ consultationButtonLink: e.target.value })} placeholder="/contact" />
+          </div>
+        </div>
         <p className="text-xs text-gray-500 italic">Phone number is managed in Site Settings &gt; Contact Info</p>
       </div>
     </Section>

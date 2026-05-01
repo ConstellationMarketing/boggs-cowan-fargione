@@ -33,33 +33,15 @@ export default function PracticePageView({
         updatedTime={updatedAt}
       />
 
-      <div className="relative -mt-[180px] bg-brand-dark">
-        {content.hero.backgroundImage && (
-          <>
-            <img
-              src={content.hero.backgroundImage}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
-            />
-          </>
-        )}
+      <PracticeAreaHero
+        content={content.hero}
+        headingTags={content.headingTags}
+      />
 
-        <div className="h-[180px]" />
-
-        <PracticeAreaHero
-          content={content.hero}
-          headingTags={content.headingTags}
-        />
-
-        <PracticeAreaSocialProof
-          content={content.socialProof}
-          headingTags={content.headingTags}
-        />
-      </div>
+      <PracticeAreaSocialProof
+        content={content.socialProof}
+        headingTags={content.headingTags}
+      />
 
       {content.contentSections.map((section, index) => (
         <PracticeAreaContentSection

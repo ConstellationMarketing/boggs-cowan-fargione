@@ -1,12 +1,9 @@
 // Each section maps directly to a static component's data needs
 
-export interface PracticeAreaHeroContent {
-  sectionLabel: string;
-  tagline: string;
-  description: string;
-  backgroundImage?: string;
-  backgroundImageAlt?: string;
-}
+import type { SharedHeroContent } from "./sharedHero";
+import { defaultSharedHeroContent } from "./sharedHero";
+
+export type PracticeAreaHeroContent = SharedHeroContent;
 
 export interface PracticeAreaTestimonialItem extends Record<string, unknown> {
   text: string;
@@ -89,11 +86,7 @@ export function normalizePracticeAreaContentSections(
 // Default content - empty defaults, content comes exclusively from the CMS
 export const defaultPracticeAreaPageContent: PracticeAreaPageContent = {
   hero: {
-    sectionLabel: "",
-    tagline: "",
-    description: "",
-    backgroundImage: "",
-    backgroundImageAlt: "",
+    ...defaultSharedHeroContent,
   },
   socialProof: {
     mode: "none",

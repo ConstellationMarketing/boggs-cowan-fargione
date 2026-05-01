@@ -435,11 +435,15 @@ function flattenRecord(
     const content = p.content as Record<string, unknown>;
     const hero = content?.hero as Record<string, unknown>;
     if (hero) {
-      flat["hero.sectionLabel"] = hero.sectionLabel;
-      flat["hero.tagline"] = hero.tagline;
+      flat["hero.h1Title"] = hero.h1Title ?? hero.sectionLabel;
+      flat["hero.headline"] = hero.headline ?? hero.tagline;
+      flat["hero.highlightedText"] = hero.highlightedText;
       flat["hero.description"] = hero.description;
       flat["hero.backgroundImage"] = hero.backgroundImage;
-      flat["hero.backgroundImageAlt"] = hero.backgroundImageAlt;
+      flat["hero.heroImage"] = hero.heroImage;
+      flat["hero.heroImageAlt"] = hero.heroImageAlt ?? hero.backgroundImageAlt;
+      flat["hero.consultationButtonText"] = hero.consultationButtonText;
+      flat["hero.consultationButtonLink"] = hero.consultationButtonLink;
     }
   } else {
     const b = record as TransformedBlogPost;

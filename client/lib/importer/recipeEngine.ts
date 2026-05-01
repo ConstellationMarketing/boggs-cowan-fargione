@@ -379,18 +379,34 @@ function buildPracticeRecord(
         : "";
 
   const defaultHero = {
-    // For Practice Pages, sectionLabel is the primary heading (H1).
-    // Default to the page title when no explicit hero.sectionLabel mapping.
-    sectionLabel: String(
-      mapped["hero.sectionLabel"] ?? title,
+    h1Title: String(
+      mapped["hero.h1Title"] ?? mapped["hero.sectionLabel"] ?? title,
     ),
-    tagline: mapped["hero.tagline"] ? String(mapped["hero.tagline"]) : "",
+    headline: mapped["hero.headline"]
+      ? String(mapped["hero.headline"])
+      : mapped["hero.tagline"]
+        ? String(mapped["hero.tagline"])
+        : "",
+    highlightedText: mapped["hero.highlightedText"]
+      ? String(mapped["hero.highlightedText"])
+      : "",
     description: mapped["hero.description"]
       ? ensureHtml(String(mapped["hero.description"]))
       : "",
     backgroundImage: defaultHeroImage,
-    backgroundImageAlt: mapped["hero.backgroundImageAlt"]
-      ? String(mapped["hero.backgroundImageAlt"])
+    heroImage: mapped["hero.heroImage"]
+      ? String(mapped["hero.heroImage"])
+      : "",
+    heroImageAlt: mapped["hero.heroImageAlt"]
+      ? String(mapped["hero.heroImageAlt"])
+      : mapped["hero.backgroundImageAlt"]
+        ? String(mapped["hero.backgroundImageAlt"])
+        : "",
+    consultationButtonText: mapped["hero.consultationButtonText"]
+      ? String(mapped["hero.consultationButtonText"])
+      : "",
+    consultationButtonLink: mapped["hero.consultationButtonLink"]
+      ? String(mapped["hero.consultationButtonLink"])
       : "",
   };
 
@@ -455,15 +471,24 @@ function buildPracticeRecord(
   // Hero: recipe outputs override defaults (explicit values win)
   const heroOutput = outputs["hero"] as Record<string, unknown> | undefined;
   const hero = {
-    sectionLabel: String(
-      heroOutput?.sectionLabel ??
+    h1Title: String(
+      heroOutput?.h1Title ??
+        heroOutput?.sectionLabel ??
+        outputs["hero.h1Title"] ??
         outputs["hero.sectionLabel"] ??
-        defaultHero.sectionLabel,
+        defaultHero.h1Title,
     ),
-    tagline: String(
-      heroOutput?.tagline ??
+    headline: String(
+      heroOutput?.headline ??
+        heroOutput?.tagline ??
+        outputs["hero.headline"] ??
         outputs["hero.tagline"] ??
-        defaultHero.tagline,
+        defaultHero.headline,
+    ),
+    highlightedText: String(
+      heroOutput?.highlightedText ??
+        outputs["hero.highlightedText"] ??
+        defaultHero.highlightedText,
     ),
     description: String(
       heroOutput?.description ??
@@ -475,10 +500,27 @@ function buildPracticeRecord(
         outputs["hero.backgroundImage"] ??
         defaultHero.backgroundImage,
     ),
-    backgroundImageAlt: String(
-      heroOutput?.backgroundImageAlt ??
+    heroImage: String(
+      heroOutput?.heroImage ??
+        outputs["hero.heroImage"] ??
+        defaultHero.heroImage,
+    ),
+    heroImageAlt: String(
+      heroOutput?.heroImageAlt ??
+        heroOutput?.backgroundImageAlt ??
+        outputs["hero.heroImageAlt"] ??
         outputs["hero.backgroundImageAlt"] ??
-        defaultHero.backgroundImageAlt,
+        defaultHero.heroImageAlt,
+    ),
+    consultationButtonText: String(
+      heroOutput?.consultationButtonText ??
+        outputs["hero.consultationButtonText"] ??
+        defaultHero.consultationButtonText,
+    ),
+    consultationButtonLink: String(
+      heroOutput?.consultationButtonLink ??
+        outputs["hero.consultationButtonLink"] ??
+        defaultHero.consultationButtonLink,
     ),
   };
 
