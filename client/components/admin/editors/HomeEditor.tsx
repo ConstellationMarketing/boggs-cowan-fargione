@@ -19,7 +19,6 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
       <PracticeAreasIntroSection content={content} update={update} />
       <PracticeAreasItemsSection content={content} update={update} />
       <WhyChooseUsSection content={content} update={update} />
-      <TestimonialsSection content={content} update={update} />
       <ProcessSection content={content} update={update} />
       <GoogleReviewsSection content={content} update={update} />
       <FaqSectionEditor content={content} update={update} />
@@ -470,74 +469,6 @@ function WhyChooseUsSection({ content, update }: SectionProps) {
 }
 
 /* ------------------------------------------------------------------ */
-function TestimonialsSection({ content, update }: SectionProps) {
-  const t = content.testimonials;
-  const set = (patch: Partial<typeof t>) => update("testimonials", { ...t, ...patch });
-  const ht = useHeadingTag(content, update);
-
-  return (
-    <Section title="Testimonials" defaultOpen={false}>
-      <div className="grid gap-4">
-        <HeadingField
-          label="Section Label"
-          value={t.sectionLabel}
-          onChange={(v) => set({ sectionLabel: v })}
-          tag={ht.get("testimonials.sectionLabel")}
-          onTagChange={(t2) => ht.set("testimonials.sectionLabel", t2)}
-        />
-        <div>
-          <Label>Heading</Label>
-          <Input value={t.heading} onChange={(e) => set({ heading: e.target.value })} />
-        </div>
-        <ImageField
-          label="Background Image"
-          value={t.backgroundImage}
-          onChange={(url) => set({ backgroundImage: url })}
-          altValue={t.backgroundImageAlt || ""}
-          onChangeWithAlt={(backgroundImage, backgroundImageAlt) =>
-            set({ backgroundImage, backgroundImageAlt })
-          }
-          folder="backgrounds"
-        />
-        <div>
-          <Label>Background Image Alt Text</Label>
-          <Input value={t.backgroundImageAlt || ""} onChange={(e) => set({ backgroundImageAlt: e.target.value })} placeholder="Describe the background image" />
-        </div>
-        <ArrayEditor
-          items={t.items}
-          onChange={(items) => set({ items })}
-          itemLabel="Testimonial"
-          newItem={() => ({ text: "", author: "", ratingImage: "", ratingImageAlt: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <div>
-                <Label>Author</Label>
-                <Input value={item.author} onChange={(e) => upd({ ...item, author: e.target.value })} />
-              </div>
-              <RichTextField label="Text" value={item.text} onChange={(v) => upd({ ...item, text: v })} />
-              <ImageField
-                label="Rating Image"
-                value={item.ratingImage}
-                onChange={(url) => upd({ ...item, ratingImage: url })}
-                altValue={item.ratingImageAlt || ""}
-                onChangeWithAlt={(ratingImage, ratingImageAlt) =>
-                  upd({ ...item, ratingImage, ratingImageAlt })
-                }
-                folder="logos"
-              />
-              <div>
-                <Label>Rating Image Alt Text</Label>
-                <Input value={item.ratingImageAlt || ""} onChange={(e) => upd({ ...item, ratingImageAlt: e.target.value })} placeholder="e.g. 5 star rating" />
-              </div>
-            </div>
-          )}
-        />
-      </div>
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 function ProcessSection({ content, update }: SectionProps) {
   const p = content.process;
   const set = (patch: Partial<typeof p>) => update("process", { ...p, ...patch });
@@ -554,13 +485,14 @@ function ProcessSection({ content, update }: SectionProps) {
           onTagChange={(t) => ht.set("process.sectionLabel", t)}
         />
         <div>
-          <Label>Heading Line 1</Label>
-          <Input value={p.headingLine1} onChange={(e) => set({ headingLine1: e.target.value })} />
+          <Label>Headline</Label>
+          <Input value={p.heading} onChange={(e) => set({ heading: e.target.value })} />
         </div>
-        <div>
-          <Label>Heading Line 2</Label>
-          <Input value={p.headingLine2} onChange={(e) => set({ headingLine2: e.target.value })} />
-        </div>
+        <RichTextField
+          label="Description"
+          value={p.description}
+          onChange={(value) => set({ description: value })}
+        />
         <ArrayEditor
           items={p.steps}
           onChange={(items) => set({ steps: items })}

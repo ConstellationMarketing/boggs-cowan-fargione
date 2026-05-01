@@ -99,8 +99,8 @@ export interface ProcessStep {
 
 export interface ProcessContent {
   sectionLabel: string;
-  headingLine1: string;
-  headingLine2: string;
+  heading: string;
+  description: string;
   steps: ProcessStep[];
 }
 
@@ -218,8 +218,8 @@ export const defaultHomeContent: HomePageContent = {
   },
   process: {
     sectionLabel: "",
-    headingLine1: "",
-    headingLine2: "",
+    heading: "",
+    description: "",
     steps: [],
   },
   googleReviews: {

@@ -547,6 +547,15 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
     process: {
       ...defaults.process,
       ...cmsContent.process,
+      heading: typeof cmsContent.process?.heading === "string" && cmsContent.process.heading.trim()
+        ? cmsContent.process.heading
+        : [
+            (cmsContent.process as { headingLine1?: unknown } | undefined)?.headingLine1,
+            (cmsContent.process as { headingLine2?: unknown } | undefined)?.headingLine2,
+          ]
+            .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+            .join(" "),
+      description: typeof cmsContent.process?.description === "string" ? cmsContent.process.description : defaults.process.description,
       steps: cmsContent.process?.steps?.length ? cmsContent.process.steps : defaults.process.steps,
     },
     googleReviews: {

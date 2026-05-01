@@ -1,4 +1,4 @@
-import type { ProcessContent, ProcessStep } from "@site/lib/cms/homePageTypes";
+import type { ProcessContent } from "@site/lib/cms/homePageTypes";
 import RichText from "@site/components/shared/RichText";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
 
@@ -8,80 +8,98 @@ interface ProcessSectionProps {
 }
 
 export default function ProcessSection({ content, headingTags }: ProcessSectionProps) {
-  // Guard: if no steps, don't render
-  if (!content || !content.steps || content.steps.length === 0) {
+  if (!content) {
     return null;
   }
 
   const data = content;
-  const steps = data.steps;
+  const steps = (Array.isArray(data.steps) ? data.steps : []).filter(
+    (step) => step && (step.number || step.title || step.description),
+  );
+
+  if (steps.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="bg-brand-dark pt-[30px] pb-[60px]">
-      {/* Header Section */}
-      <div className="max-w-[1080px] mx-auto w-[80%] py-[27px]">
-        {data.sectionLabel && (
-          <div className="text-center mb-[10px]">
+    <section className="bg-brand-dark py-[48px] md:py-[80px]">
+      <div className="mx-auto w-[92%] max-w-[1200px]">
+        <div className="mx-auto max-w-[760px] text-center">
+          {data.sectionLabel ? (
             <DynamicHeading
               tag={headingTags?.["process.sectionLabel"]}
               defaultTag="h2"
-              className="font-inter text-[24px] leading-[36px] text-brand-accent"
+              className="mb-3 font-inter text-[18px] font-semibold uppercase tracking-[0.08em] text-brand-accent md:text-[24px]"
             >
               {data.sectionLabel}
             </DynamicHeading>
+          ) : null}
+
+          {data.heading ? (
+            <p className="font-playfair text-[34px] leading-[1.08] text-white md:text-[52px]">
+              {data.heading}
+            </p>
+          ) : null}
+
+          {data.description ? (
+            <RichText
+              html={data.description}
+              className="mt-3 font-inter text-[16px] leading-[1.7] text-white/80 [&_p]:my-0 [&_p+p]:mt-4 md:text-[19px]"
+            />
+          ) : null}
+        </div>
+
+        <div className="relative mx-auto mt-12 max-w-[980px] md:mt-16">
+          <div className="absolute bottom-0 left-[11px] top-0 w-px bg-brand-accent md:left-1/2 md:-translate-x-1/2" />
+
+          <div className="space-y-10 md:space-y-0">
+            {steps.map((step, index) => {
+              const isRight = index % 2 === 1;
+              const stepLabel = step.number?.trim() || `STEP ${index + 1}`;
+
+              return (
+                <div
+                  key={`${step.title}-${index}`}
+                  className="relative md:grid md:grid-cols-2 md:gap-x-14"
+                >
+                  <div
+                    className={[
+                      "relative pl-10 md:pl-0",
+                      isRight
+                        ? "md:col-start-2 md:pb-14 md:pt-10 md:text-left"
+                        : "md:col-start-1 md:pb-14 md:pt-10 md:text-right",
+                    ].join(" ")}
+                  >
+                    <span
+                      className={[
+                        "inline-flex min-h-[28px] items-center bg-brand-accent px-3 font-inter text-[12px] font-semibold uppercase tracking-[0.06em] text-white",
+                        !isRight ? "md:ml-auto" : "",
+                      ].join(" ")}
+                    >
+                      {stepLabel}
+                    </span>
+
+                    {step.title ? (
+                      <h3 className="mt-3 font-inter text-[28px] font-semibold uppercase leading-tight text-white md:text-[34px]">
+                        {step.title}
+                      </h3>
+                    ) : null}
+
+                    {step.description ? (
+                      <RichText
+                        html={step.description}
+                        className="mt-3 font-inter text-[16px] leading-[1.6] text-white/85 [&_p]:my-0 [&_p+p]:mt-4 md:text-[19px]"
+                      />
+                    ) : null}
+                  </div>
+
+                  <span className="absolute left-[11px] top-2.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-brand-accent bg-brand-dark md:left-1/2" />
+                </div>
+              );
+            })}
           </div>
-        )}
-        <div className="text-center">
-          {data.headingLine1 && (
-            <p className="font-playfair text-[28px] md:text-[40px] lg:text-[54px] leading-tight md:leading-[48.6px] text-white pb-[10px]">
-              {data.headingLine1}
-            </p>
-          )}
-          {data.headingLine2 && (
-            <p className="font-playfair text-[28px] md:text-[40px] lg:text-[54px] leading-tight md:leading-[48.6px] text-white pb-[10px]">
-              {data.headingLine2}
-            </p>
-          )}
         </div>
       </div>
-
-      {/* Steps Grid */}
-      <div className="max-w-[1600px] mx-auto w-[80%] flex flex-col md:flex-row gap-[3%]">
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            className={`md:w-[31.3333%] bg-[rgb(30,50,49)] p-[20px] ${
-              index < steps.length - 1 ? "mb-4 md:mb-0" : ""
-            }`}
-          >
-            {/* Step Number */}
-            {step.number && (
-              <div className="mb-[20px]">
-                <p
-                  className="font-inter text-[24px] leading-[36px] text-brand-accent"
-                >
-                  {step.number}
-                </p>
-              </div>
-            )}
-
-            {/* Step Content */}
-            <div className="mb-[30px]">
-              {step.title && (
-                <h3 className="font-inter text-[32px] leading-[32px] text-white pb-[10px]">
-                  {step.title}
-                </h3>
-              )}
-              {step.description && (
-                <RichText
-                  html={step.description}
-                  className="font-inter text-[20px] leading-[30px] text-white"
-                />
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }
