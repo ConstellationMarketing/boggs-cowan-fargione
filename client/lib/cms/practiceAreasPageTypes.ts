@@ -6,13 +6,18 @@ import { defaultSharedHeroContent } from "./sharedHero";
 
 export type PracticeAreasHeroContent = SharedHeroContent;
 
+export interface PracticeAreaSubItem {
+  title: string;
+  description: string;
+  link: string;
+}
+
 export interface PracticeAreaGridItem {
   icon: string; // Lucide icon name
   title: string; // "Personal Injury"
-  description: string; // Description text
-  image: string; // Background image URL
-  imageAlt: string; // Image alt text
-  link: string; // Link to detail page
+  description: string; // Rich text description for the main practice
+  link: string; // Link to main practice page
+  subPractices: PracticeAreaSubItem[];
 }
 
 export interface PracticeAreasGridContent {

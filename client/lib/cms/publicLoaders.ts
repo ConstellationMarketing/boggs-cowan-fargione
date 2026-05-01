@@ -758,7 +758,26 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
     grid: {
       ...defaults.grid,
       ...cmsContent.grid,
-      areas: cmsContent.grid?.areas?.length ? cmsContent.grid.areas : defaults.grid.areas,
+      areas: cmsContent.grid?.areas?.length
+        ? cmsContent.grid.areas.map((area) => ({
+            ...area,
+            subPractices: Array.isArray(area.subPractices)
+              ? area.subPractices.map((subPractice) => {
+                  const legacySubPractice = subPractice as unknown as { text?: unknown };
+
+                  return {
+                    title: typeof subPractice.title === "string"
+                      ? subPractice.title
+                      : typeof legacySubPractice.text === "string"
+                        ? legacySubPractice.text
+                        : "",
+                    description: typeof subPractice.description === "string" ? subPractice.description : "",
+                    link: typeof subPractice.link === "string" ? subPractice.link : "",
+                  };
+                })
+              : [],
+          }))
+        : defaults.grid.areas,
     },
     whyChoose: {
       ...defaults.whyChoose,

@@ -116,37 +116,56 @@ function GridSection({ content, update }: SectionProps) {
           items={grid.areas}
           onChange={(items) => set({ areas: items })}
           itemLabel="Practice Area"
-          newItem={() => ({ icon: "FileText", title: "", description: "", image: "", imageAlt: "", link: "/practice-areas" })}
+          newItem={() => ({ icon: "Scale", title: "", description: "", link: "/practice-areas/", subPractices: [] })}
           renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
+            <div className="grid gap-4">
               <div className="grid grid-cols-4 gap-3">
                 <div>
                   <Label>Icon</Label>
                   <Input value={item.icon} onChange={(e) => upd({ ...item, icon: e.target.value })} placeholder="Lucide icon name" />
                 </div>
                 <div className="col-span-3">
-                  <Label>Title</Label>
+                  <Label>Main Practice Title</Label>
                   <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
                 </div>
               </div>
-              <RichTextField label="Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
-              <ImageField
-                label="Background Image"
-                value={item.image}
-                onChange={(url) => upd({ ...item, image: url })}
-                altValue={item.imageAlt}
-                onChangeWithAlt={(image, imageAlt) =>
-                  upd({ ...item, image, imageAlt })
-                }
-                folder="practice-areas"
-              />
+              <RichTextField label="Main Practice Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
               <div>
-                <Label>Image Alt Text</Label>
-                <Input value={item.imageAlt} onChange={(e) => upd({ ...item, imageAlt: e.target.value })} placeholder="Describe the background image" />
+                <Label>Main Practice Link</Label>
+                <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} placeholder="/practice-areas/personal-injury/" />
               </div>
-              <div>
-                <Label>Link</Label>
-                <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} />
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-3">Sub-practices</h4>
+                <ArrayEditor
+                  items={item.subPractices || []}
+                  onChange={(subPractices) => upd({ ...item, subPractices })}
+                  itemLabel="Sub-practice"
+                  newItem={() => ({ title: "", description: "", link: "" })}
+                  renderItem={(subPractice, _, updateSubPractice) => (
+                    <div className="grid gap-3">
+                      <div>
+                        <Label>Sub-practice Title</Label>
+                        <Input
+                          value={subPractice.title}
+                          onChange={(e) => updateSubPractice({ ...subPractice, title: e.target.value })}
+                        />
+                      </div>
+                      <RichTextField
+                        label="Sub-practice Description"
+                        value={subPractice.description}
+                        onChange={(value) => updateSubPractice({ ...subPractice, description: value })}
+                      />
+                      <div>
+                        <Label>Sub-practice Link</Label>
+                        <Input
+                          value={subPractice.link}
+                          onChange={(e) => updateSubPractice({ ...subPractice, link: e.target.value })}
+                          placeholder="/practice-areas/motor-vehicle-accidents/"
+                        />
+                      </div>
+                    </div>
+                  )}
+                />
               </div>
             </div>
           )}

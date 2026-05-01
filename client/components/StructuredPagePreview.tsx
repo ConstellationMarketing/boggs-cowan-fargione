@@ -266,37 +266,47 @@ function ContactPreview({ content }: { content: ContactPageContent }) {
 }
 
 function PracticeAreasPreview({ content }: { content: PracticeAreasPageContent }) {
+  const page = content as unknown as Record<string, unknown>;
+  const hero = (page.hero as Record<string, unknown> | undefined) ?? {};
+  const grid = (page.grid as Record<string, unknown> | undefined) ?? {};
+  const cta = (page.cta as Record<string, unknown> | undefined) ?? {};
+  const areas = Array.isArray(grid.areas) ? grid.areas as Array<Record<string, unknown>> : [];
+  const secondaryButton = (cta.secondaryButton as Record<string, unknown> | undefined) ?? {};
+
   return (
     <div className="space-y-4">
       <PreviewSection title="Hero">
-        <PreviewField label="Title" value={content.hero.title} />
-        <PreviewImage src={content.hero.backgroundImage} alt="Hero" />
+        <PreviewField label="H1 Title" value={typeof hero.h1Title === "string" ? hero.h1Title : null} />
+        <PreviewField label="Headline" value={typeof hero.headline === "string" ? hero.headline : null} />
+        <PreviewImage src={typeof hero.backgroundImage === "string" ? hero.backgroundImage : undefined} alt="Hero" />
       </PreviewSection>
 
-      <PreviewSection title="Introduction">
-        <p className="text-sm text-gray-600">{content.intro}</p>
-      </PreviewSection>
+      <PreviewSection title="Practice Areas Grid">
+        <PreviewField label="Heading" value={typeof grid.heading === "string" ? grid.heading : null} />
+        <div
+          className="text-sm text-gray-600 space-y-2"
+          dangerouslySetInnerHTML={{ __html: typeof grid.description === "string" ? grid.description : "" }}
+        />
+        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+          {areas.map((area, index) => {
+            const subPractices = Array.isArray(area.subPractices)
+              ? area.subPractices as Array<Record<string, unknown>>
+              : [];
 
-      <PreviewSection title="Practice Areas">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {content.areas.map((a, i) => (
-            <div key={i} className="bg-gray-50 rounded p-3">
-              <p className="font-medium text-gray-800">{a.name}</p>
-              <p className="text-sm text-gray-600 mt-1">{a.description}</p>
-            </div>
-          ))}
+            return (
+              <div key={index} className="rounded bg-gray-50 p-3">
+                <p className="font-medium text-gray-800">{typeof area.title === "string" ? area.title : "Untitled practice"}</p>
+                <p className="text-sm text-gray-600 mt-1">Sub-practices: {subPractices.length}</p>
+              </div>
+            );
+          })}
         </div>
       </PreviewSection>
 
-      <PreviewSection title="Understanding Your Options">
-        <PreviewField label="Heading" value={content.options.heading} />
-        <p className="text-sm text-gray-600 mt-1">{content.options.text}</p>
-        <PreviewImage src={content.options.image} alt="Options" />
-      </PreviewSection>
-
       <PreviewSection title="CTA">
-        <PreviewField label="Heading" value={content.cta.heading} />
-        <PreviewField label="Phone" value={content.cta.phone} />
+        <PreviewField label="Heading" value={typeof cta.heading === "string" ? cta.heading : null} />
+        <PreviewField label="Secondary Label" value={typeof secondaryButton.label === "string" ? secondaryButton.label : null} />
+        <PreviewField label="Secondary Link" value={typeof secondaryButton.link === "string" ? secondaryButton.link : null} />
       </PreviewSection>
     </div>
   );

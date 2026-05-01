@@ -1,59 +1,16 @@
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
-import PracticeAreaCard from "@site/components/practice/PracticeAreaCard";
+import PracticeAreasOverviewGrid from "@site/components/practice/PracticeAreasOverviewGrid";
 import CallBox from "@site/components/shared/CallBox";
 import PageHero from "@site/components/shared/PageHero";
-import {
-  Phone,
-  Calendar,
-  Scale,
-  Car,
-  Briefcase,
-  Users,
-  Home,
-  DollarSign,
-  FileText,
-  Heart,
-  Shield,
-  TrendingUp,
-  Stethoscope,
-  Building,
-  type LucideIcon,
-} from "lucide-react";
+import { Phone, Calendar, Loader2 } from "lucide-react";
 import { usePracticeAreasContent } from "@site/hooks/usePracticeAreasContent";
 import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
-import { Loader2 } from "lucide-react";
-
-// Icon mapping for practice areas
-const iconMap: Record<string, LucideIcon> = {
-  Car,
-  Stethoscope,
-  Briefcase,
-  Heart,
-  Building,
-  Shield,
-  Scale,
-  FileText,
-  Users,
-  Home,
-  DollarSign,
-  TrendingUp,
-};
 
 export default function PracticeAreas() {
   const { content, meta, title, publishedAt, updatedAt, isLoading } = usePracticeAreasContent();
   const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
-
-  // Map practice areas from CMS content with icon components
-  const practiceAreas = content.grid.areas.map((area) => ({
-    icon: iconMap[area.icon] || Scale,
-    title: area.title,
-    description: area.description,
-    image: area.image,
-    imageAlt: area.imageAlt,
-    link: area.link,
-  }));
 
   // Map why choose items from CMS content
   const whyChooseOurPractice = content.whyChoose.items;
@@ -83,26 +40,12 @@ export default function PracticeAreas() {
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
       />
 
-      {/* Practice Areas Grid Section */}
-      <div className="bg-white py-[40px] md:py-[60px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
-          <div className="text-center mb-[30px] md:mb-[50px]">
-            <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black">
-              {content.grid.heading}
-            </h2>
-            <RichText
-              html={content.grid.description}
-              className="font-outfit text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-black/80 mt-[15px] max-w-[800px] mx-auto"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {practiceAreas.map((area, index) => (
-              <PracticeAreaCard key={index} {...area} />
-            ))}
-          </div>
-        </div>
-      </div>
+      <PracticeAreasOverviewGrid
+        heading={content.grid.heading}
+        description={content.grid.description}
+        areas={content.grid.areas}
+        headingTag={content.headingTags?.["grid.heading"]}
+      />
 
       {/* Why Choose Our Practice Section */}
       <div className="bg-brand-dark py-[40px] md:py-[60px]">
