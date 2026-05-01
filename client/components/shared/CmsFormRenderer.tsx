@@ -218,12 +218,14 @@ function renderFieldLabel(field: FormFieldDef, variant: "default" | "contactSect
     return null;
   }
 
+  const labelText = field.label.replace(/\*+\s*$/g, "").trim();
+
   return (
     <label
       htmlFor={field.id}
       className="mb-2 block font-inter text-[15px] font-medium leading-tight text-white"
     >
-      {field.label}
+      {labelText}
       {field.required ? " *" : ""}
     </label>
   );
