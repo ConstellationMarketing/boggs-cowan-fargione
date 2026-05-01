@@ -137,7 +137,7 @@ export default function PageHero({
           </div>
 
           {heroImage ? (
-            <div className="w-full pb-[24px] lg:hidden">
+            <div className="mt-auto w-full lg:hidden">
               <img
                 src={heroImage}
                 alt={content.heroImageAlt || "Hero"}

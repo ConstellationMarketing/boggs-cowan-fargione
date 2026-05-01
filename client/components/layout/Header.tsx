@@ -47,8 +47,8 @@ export default function Header() {
                   className={cn(
                     "block max-w-full brightness-0 invert transition-all duration-300",
                     isScrolled
-                      ? "w-[160px] sm:w-[190px] md:w-[240px] lg:w-[280px]"
-                      : "w-[190px] sm:w-[220px] md:w-[280px] lg:w-[380px]"
+                      ? "w-[175px] sm:w-[205px] md:w-[240px] lg:w-[280px]"
+                      : "w-[210px] sm:w-[245px] md:w-[280px] lg:w-[380px]"
                   )}
                   width={380}
                   height={62}
