@@ -78,6 +78,7 @@ export default function AboutUs() {
         content={content.story}
         headingTag={content.headingTags?.["story.heading"]}
         credentialsPlacement="below"
+        contentAlignment="center"
       />
 
 

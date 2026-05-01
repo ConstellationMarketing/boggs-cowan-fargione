@@ -8,6 +8,7 @@ interface AboutSectionProps {
   content?: AboutContent;
   headingTag?: string;
   credentialsPlacement?: "side" | "below";
+  contentAlignment?: "start" | "center";
 }
 
 function CredentialList({ title, items }: { title: string; items: string[] }) {
@@ -44,6 +45,7 @@ export default function AboutSection({
   content,
   headingTag,
   credentialsPlacement = "side",
+  contentAlignment = "start",
 }: AboutSectionProps) {
   if (!content) {
     return null;
@@ -110,7 +112,7 @@ export default function AboutSection({
             ) : null}
           </div>
 
-          <div className="pt-1">
+          <div className={`pt-1 ${contentAlignment === "center" ? "self-center" : ""}`}>
             {data.sectionLabel ? (
               <p className="font-inter text-brand-accent text-[18px] md:text-[24px] font-semibold uppercase tracking-[0.08em] mb-3 md:mb-4">
                 {data.sectionLabel}
