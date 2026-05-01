@@ -282,7 +282,7 @@ function TeamSection({ content, update }: SectionProps) {
               </div>
               <ArrayEditor
                 items={(item.credentials || []).map((text, index) => ({ id: `${index}`, text }))}
-                onChange={(items) => upd({ ...item, credentials: items.map((entry) => entry.text).filter(Boolean) })}
+                onChange={(items) => upd({ ...item, credentials: items.map((entry) => entry.text) })}
                 itemLabel="Credential"
                 newItem={() => ({ id: String(Date.now()), text: "" })}
                 renderItem={(credential, _, updateCredential) => (
