@@ -44,10 +44,10 @@ export default function FaqSection({ content }: FaqSectionProps) {
       </div>
 
       {/* Content Section */}
-      <div className="max-w-[1600px] mx-auto w-[95%] md:w-[85%] lg:w-[80%] py-[20px] md:py-[27px] flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-[5.5%]">
+      <div className="max-w-[1600px] mx-auto w-[95%] md:w-[85%] lg:w-[80%] py-[20px] md:py-[27px] flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-[4%]">
         {/* Left Side - Image */}
         {data.videoThumbnail && (
-          <div className="lg:w-[47.25%]">
+          <div className="lg:w-[42%]">
             <img
               src={data.videoThumbnail}
               alt={data.videoThumbnailAlt || "Frequently Asked Questions"}
@@ -60,7 +60,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
         )}
 
         {/* Right Side - Custom Accordion */}
-        <div className={`${data.videoThumbnail ? "lg:w-[47.25%]" : "w-full"}`}>
+        <div className={`${data.videoThumbnail ? "lg:w-[54%]" : "w-full"}`}>
           {faqs.map((faq, index) => (
             <div
               key={index}
