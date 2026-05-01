@@ -9,6 +9,10 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 function getSupabase(accessToken?: string) {
+  if (!supabaseUrl || !supabaseAnonKey || !/^https?:\/\//.test(supabaseUrl)) {
+    throw new Error("Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
+  }
+
   const client = createClient(supabaseUrl, supabaseAnonKey, {
     global: accessToken
       ? { headers: { Authorization: `Bearer ${accessToken}` } }

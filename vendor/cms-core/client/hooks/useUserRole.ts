@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
 export type UserRole = "admin" | "editor" | null;
 
@@ -25,6 +25,17 @@ export function useUserRole(): UseUserRoleResult {
 
   useEffect(() => {
     let isMounted = true;
+
+    if (!isSupabaseConfigured) {
+      setRole(null);
+      setUserId(null);
+      setUserEmail(null);
+      setError(null);
+      setIsLoading(false);
+      return () => {
+        isMounted = false;
+      };
+    }
 
     async function fetchUserRole() {
       try {
