@@ -16,7 +16,7 @@ export default function PracticeAreasEditor({ content, onChange }: PracticeAreas
       <HeroSection content={content} update={update} />
       <GridSection content={content} update={update} />
       <GlobalSectionInfo sectionTitle="Why Choose Us" managedIn="Home" />
-      <GlobalSectionInfo sectionTitle="Call to Action" managedIn="About Us" />
+      <ApproachSection content={content} update={update} />
     </div>
   );
 }
@@ -116,7 +116,7 @@ function GridSection({ content, update }: SectionProps) {
           items={grid.areas}
           onChange={(items) => set({ areas: items })}
           itemLabel="Practice Area"
-          newItem={() => ({ icon: "Scale", title: "", description: "", link: "/practice-areas/", subPractices: [] })}
+          newItem={() => ({ icon: "Scale", title: "", description: "", link: "/practice-areas/", linkText: "View Practice", subPractices: [] })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-4">
               <div className="grid grid-cols-4 gap-3">
@@ -130,9 +130,15 @@ function GridSection({ content, update }: SectionProps) {
                 </div>
               </div>
               <RichTextField label="Main Practice Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
-              <div>
-                <Label>Main Practice Link</Label>
-                <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} placeholder="/practice-areas/personal-injury/" />
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div>
+                  <Label>Main Practice Link</Label>
+                  <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} placeholder="/practice-areas/personal-injury/" />
+                </div>
+                <div>
+                  <Label>Main Practice Link Text</Label>
+                  <Input value={item.linkText || ""} onChange={(e) => upd({ ...item, linkText: e.target.value })} placeholder="View Practice" />
+                </div>
               </div>
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Sub-practices</h4>
@@ -169,6 +175,33 @@ function GridSection({ content, update }: SectionProps) {
               </div>
             </div>
           )}
+        />
+      </div>
+    </Section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function ApproachSection({ content, update }: SectionProps) {
+  const approach = content.approach;
+  const set = (patch: Partial<typeof approach>) => update("approach", { ...approach, ...patch });
+  const ht = useHeadingTag(content, update);
+
+  return (
+    <Section title="Our Approach" defaultOpen={false}>
+      <div className="grid gap-4">
+        <HeadingField
+          label="Title"
+          value={approach.heading}
+          onChange={(v) => set({ heading: v })}
+          tag={ht.get("approach.heading")}
+          onTagChange={(t) => ht.set("approach.heading", t)}
+        />
+        <RichTextField
+          label="Body"
+          value={approach.description}
+          onChange={(v) => set({ description: v })}
+          placeholder="Add at least 3 paragraphs describing your approach to these practice areas."
         />
       </div>
     </Section>

@@ -282,6 +282,7 @@ const PRACTICE_AREAS_CONTENT_KEYS: (keyof PracticeAreasPageContent)[] = [
   "hero",
   "grid",
   "whyChoose",
+  "approach",
   "cta",
 ];
 
@@ -761,6 +762,9 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
       areas: cmsContent.grid?.areas?.length
         ? cmsContent.grid.areas.map((area) => ({
             ...area,
+            linkText: typeof area.linkText === "string" && area.linkText.trim().length > 0
+              ? area.linkText
+              : "View Practice",
             subPractices: Array.isArray(area.subPractices)
               ? area.subPractices.map((subPractice) => {
                   const legacySubPractice = subPractice as unknown as { text?: unknown };
@@ -783,6 +787,10 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
       ...defaults.whyChoose,
       ...cmsContent.whyChoose,
       items: cmsContent.whyChoose?.items?.length ? cmsContent.whyChoose.items : defaults.whyChoose.items,
+    },
+    approach: {
+      ...defaults.approach,
+      ...cmsContent.approach,
     },
     cta: {
       ...defaults.cta,

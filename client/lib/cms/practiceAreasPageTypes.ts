@@ -17,6 +17,7 @@ export interface PracticeAreaGridItem {
   title: string; // "Personal Injury"
   description: string; // Rich text description for the main practice
   link: string; // Link to main practice page
+  linkText: string;
   subPractices: PracticeAreaSubItem[];
 }
 
@@ -42,6 +43,11 @@ export interface WhyChooseContent {
   items: WhyChooseItem[];
 }
 
+export interface PracticeAreasApproachContent {
+  heading: string;
+  description: string;
+}
+
 export interface CTAContent {
   heading: string; // "Ready to Discuss Your Case?"
   description: string; // Subtitle text
@@ -61,6 +67,7 @@ export interface PracticeAreasPageContent {
   hero: PracticeAreasHeroContent;
   grid: PracticeAreasGridContent;
   whyChoose: WhyChooseContent;
+  approach: PracticeAreasApproachContent;
   cta: CTAContent;
   /** Maps heading keys (e.g. "grid.heading") to HTML tag names (e.g. "h2") */
   headingTags?: Record<string, string>;
@@ -84,6 +91,10 @@ export const defaultPracticeAreasContent: PracticeAreasPageContent = {
     imageAlt: "",
     description: "",
     items: [],
+  },
+  approach: {
+    heading: "",
+    description: "",
   },
   cta: {
     heading: "",

@@ -53,8 +53,7 @@ function isPracticeAreasContent(c: unknown): c is PracticeAreasPageContent {
     typeof c === "object" &&
     c !== null &&
     "hero" in c &&
-    "areas" in c &&
-    "options" in c
+    "grid" in c
   );
 }
 
@@ -269,9 +268,8 @@ function PracticeAreasPreview({ content }: { content: PracticeAreasPageContent }
   const page = content as unknown as Record<string, unknown>;
   const hero = (page.hero as Record<string, unknown> | undefined) ?? {};
   const grid = (page.grid as Record<string, unknown> | undefined) ?? {};
-  const cta = (page.cta as Record<string, unknown> | undefined) ?? {};
+  const approach = (page.approach as Record<string, unknown> | undefined) ?? {};
   const areas = Array.isArray(grid.areas) ? grid.areas as Array<Record<string, unknown>> : [];
-  const secondaryButton = (cta.secondaryButton as Record<string, unknown> | undefined) ?? {};
 
   return (
     <div className="space-y-4">
@@ -296,6 +294,7 @@ function PracticeAreasPreview({ content }: { content: PracticeAreasPageContent }
             return (
               <div key={index} className="rounded bg-gray-50 p-3">
                 <p className="font-medium text-gray-800">{typeof area.title === "string" ? area.title : "Untitled practice"}</p>
+                <p className="text-sm text-gray-600 mt-1">Main CTA: {typeof area.linkText === "string" && area.linkText ? area.linkText : "View Practice"}</p>
                 <p className="text-sm text-gray-600 mt-1">Sub-practices: {subPractices.length}</p>
               </div>
             );
@@ -303,10 +302,12 @@ function PracticeAreasPreview({ content }: { content: PracticeAreasPageContent }
         </div>
       </PreviewSection>
 
-      <PreviewSection title="CTA">
-        <PreviewField label="Heading" value={typeof cta.heading === "string" ? cta.heading : null} />
-        <PreviewField label="Secondary Label" value={typeof secondaryButton.label === "string" ? secondaryButton.label : null} />
-        <PreviewField label="Secondary Link" value={typeof secondaryButton.link === "string" ? secondaryButton.link : null} />
+      <PreviewSection title="Our Approach">
+        <PreviewField label="Heading" value={typeof approach.heading === "string" ? approach.heading : null} />
+        <div
+          className="text-sm text-gray-600 space-y-2"
+          dangerouslySetInnerHTML={{ __html: typeof approach.description === "string" ? approach.description : "" }}
+        />
       </PreviewSection>
     </div>
   );

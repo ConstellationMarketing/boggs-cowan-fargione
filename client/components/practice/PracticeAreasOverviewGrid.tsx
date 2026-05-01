@@ -93,7 +93,7 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                       to={area.link}
                       className="inline-flex min-h-[46px] items-center justify-center bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
                     >
-                      View Practice
+                      {area.linkText || "View Practice"}
                     </Link>
                   </div>
                 ) : null}
