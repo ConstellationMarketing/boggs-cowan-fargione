@@ -104,16 +104,21 @@ function FormSection({ content, update }: SectionProps) {
   const ht = useHeadingTag(content, update);
 
   return (
-    <Section title="Contact Form" defaultOpen={false}>
+    <Section title="Contact Section" defaultOpen={false}>
       <div className="grid gap-4">
         <HeadingField
-          label="Heading"
-          value={form.heading}
-          onChange={(v) => set({ heading: v })}
-          tag={ht.get("form.heading")}
-          onTagChange={(t) => ht.set("form.heading", t)}
+          label="Section Label"
+          value={form.sectionLabel}
+          onChange={(v) => set({ sectionLabel: v })}
+          tag={ht.get("form.sectionLabel")}
+          onTagChange={(t) => ht.set("form.sectionLabel", t)}
         />
-        <RichTextField label="Subtext" value={form.subtext} onChange={(v) => set({ subtext: v })} />
+        <div>
+          <Label>Heading</Label>
+          <Input value={form.heading} onChange={(e) => set({ heading: e.target.value })} />
+        </div>
+        <RichTextField label="Description" value={form.description} onChange={(v) => set({ description: v })} />
+        <p className="text-xs text-gray-500 italic">This section uses the existing Contact Form from Forms and renders a centered single-column layout on the contact page.</p>
       </div>
     </Section>
   );

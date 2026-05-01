@@ -243,11 +243,12 @@ function ContactPreview({ content }: { content: ContactPageContent }) {
         <PreviewImage src={typeof hero.backgroundImage === "string" ? hero.backgroundImage : undefined} alt="Hero" />
       </PreviewSection>
 
-      <PreviewSection title="Contact Form">
+      <PreviewSection title="Contact Section">
+        <PreviewField label="Section Label" value={typeof form.sectionLabel === "string" ? form.sectionLabel : null} />
         <PreviewField label="Heading" value={typeof form.heading === "string" ? form.heading : null} />
         <div
           className="text-sm text-gray-600 space-y-2"
-          dangerouslySetInnerHTML={{ __html: typeof form.subtext === "string" ? form.subtext : "" }}
+          dangerouslySetInnerHTML={{ __html: typeof form.description === "string" ? form.description : "" }}
         />
       </PreviewSection>
     </div>

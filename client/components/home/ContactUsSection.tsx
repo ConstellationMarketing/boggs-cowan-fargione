@@ -4,11 +4,12 @@ import DynamicHeading from "@site/components/shared/DynamicHeading";
 import CmsFormRenderer from "@site/components/shared/CmsFormRenderer";
 
 interface ContactUsSectionProps {
-  content?: ContactContent;
+  content?: Pick<ContactContent, "sectionLabel" | "heading" | "description">;
   headingTag?: string;
+  sectionId?: string;
 }
 
-export default function ContactUsSection({ content, headingTag }: ContactUsSectionProps) {
+export default function ContactUsSection({ content, headingTag, sectionId }: ContactUsSectionProps) {
   if (!content || (!content.heading && !content.sectionLabel && !content.description)) {
     return null;
   }
@@ -16,7 +17,7 @@ export default function ContactUsSection({ content, headingTag }: ContactUsSecti
   const data = content;
 
   return (
-    <section className="bg-brand-dark py-[48px] md:py-[80px]">
+    <section id={sectionId} className="bg-brand-dark py-[48px] md:py-[80px]">
       <div className="mx-auto w-[92%] max-w-[1040px]">
         <div className="mx-auto max-w-[760px] text-center">
           {data.sectionLabel ? (

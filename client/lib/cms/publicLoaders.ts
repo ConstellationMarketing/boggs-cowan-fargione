@@ -686,9 +686,19 @@ export function mergeContactContentWithDefaults(cmsContent: Partial<ContactPageC
     return defaults;
   }
 
+  const legacyForm = cmsContent.form as { subtext?: unknown } | undefined;
+
   return {
     hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
-    form: { ...defaults.form, ...cmsContent.form },
+    form: {
+      ...defaults.form,
+      ...cmsContent.form,
+      description: typeof cmsContent.form?.description === "string"
+        ? cmsContent.form.description
+        : typeof legacyForm?.subtext === "string"
+          ? legacyForm.subtext
+          : defaults.form.description,
+    },
     headingTags: cmsContent.headingTags ?? defaults.headingTags,
   };
 }
