@@ -76,6 +76,7 @@ export default function AboutUs() {
       <AboutSection
         content={content.story}
         headingTag={content.headingTags?.["story.heading"]}
+        credentialsPlacement="below"
       />
 
       {/* Mission & Vision Section */}

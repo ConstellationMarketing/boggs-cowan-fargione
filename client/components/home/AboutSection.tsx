@@ -7,6 +7,7 @@ import RichText from "@site/components/shared/RichText";
 interface AboutSectionProps {
   content?: AboutContent;
   headingTag?: string;
+  credentialsPlacement?: "side" | "below";
 }
 
 function CredentialList({ title, items }: { title: string; items: string[] }) {
@@ -39,7 +40,11 @@ function CredentialList({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export default function AboutSection({ content, headingTag }: AboutSectionProps) {
+export default function AboutSection({
+  content,
+  headingTag,
+  credentialsPlacement = "side",
+}: AboutSectionProps) {
   if (!content) {
     return null;
   }
@@ -129,7 +134,7 @@ export default function AboutSection({ content, headingTag }: AboutSectionProps)
               />
             ) : null}
 
-            {hasCredentials ? (
+            {hasCredentials && credentialsPlacement === "side" ? (
               <div className="mt-7 md:mt-9 rounded-xl border border-black/10 bg-white p-5 md:p-7 shadow-[0_12px_40px_rgba(0,0,0,0.06)]">
                 {data.credentialsTitle ? (
                   <h3 className="font-playfair text-brand-accent text-[26px] md:text-[32px] leading-tight mb-5 border-b border-black/10 pb-3">
@@ -160,6 +165,29 @@ export default function AboutSection({ content, headingTag }: AboutSectionProps)
             </div>
           </div>
         </div>
+
+        {hasCredentials && credentialsPlacement === "below" ? (
+          <div className="mt-8 md:mt-10 flex justify-center">
+            <div className="w-full max-w-[860px] rounded-xl border border-black/10 bg-white p-5 md:p-7 shadow-[0_12px_40px_rgba(0,0,0,0.06)]">
+              {data.credentialsTitle ? (
+                <h3 className="font-playfair text-brand-accent text-[26px] md:text-[32px] leading-tight mb-5 border-b border-black/10 pb-3 text-center">
+                  {data.credentialsTitle}
+                </h3>
+              ) : null}
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <CredentialList
+                  title={data.admissionsTitle}
+                  items={admissionsItems}
+                />
+                <CredentialList
+                  title={data.membershipsTitle}
+                  items={membershipsItems}
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </section>
   );
