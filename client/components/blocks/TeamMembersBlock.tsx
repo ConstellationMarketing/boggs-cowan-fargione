@@ -20,7 +20,7 @@ export default function TeamMembersBlock({ block }: TeamMembersBlockProps) {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
           {block.members.map((member, index) => (
             <TeamMemberCard
               key={index}
@@ -29,6 +29,7 @@ export default function TeamMembersBlock({ block }: TeamMembersBlockProps) {
               bio={member.bio}
               image={member.image}
               imageAlt={member.imageAlt}
+              credentials={member.credentials}
               specialties={member.specialties}
             />
           ))}

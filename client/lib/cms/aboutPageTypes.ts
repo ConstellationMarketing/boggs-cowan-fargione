@@ -14,7 +14,7 @@ export interface TeamMember {
   bio: string;
   image: string;
   imageAlt: string;
-  specialties: string[];
+  credentials: string[];
 }
 
 export interface TeamContent {

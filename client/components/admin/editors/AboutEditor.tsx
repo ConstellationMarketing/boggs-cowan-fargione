@@ -252,7 +252,7 @@ function TeamSection({ content, update }: SectionProps) {
           items={team.members}
           onChange={(items) => set({ members: items })}
           itemLabel="Member"
-          newItem={() => ({ name: "", title: "", bio: "", image: "", imageAlt: "", specialties: [] })}
+          newItem={() => ({ name: "", title: "", bio: "", image: "", imageAlt: "", credentials: [] })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-3">
               <div className="grid grid-cols-2 gap-3">
@@ -280,13 +280,22 @@ function TeamSection({ content, update }: SectionProps) {
                 <Label>Photo Alt Text</Label>
                 <Input value={item.imageAlt} onChange={(e) => upd({ ...item, imageAlt: e.target.value })} placeholder="Describe the photo" />
               </div>
-              <div>
-                <Label>Specialties (comma-separated)</Label>
-                <Input
-                  value={item.specialties.join(", ")}
-                  onChange={(e) => upd({ ...item, specialties: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
-                />
-              </div>
+              <ArrayEditor
+                items={(item.credentials || []).map((text, index) => ({ id: `${index}`, text }))}
+                onChange={(items) => upd({ ...item, credentials: items.map((entry) => entry.text).filter(Boolean) })}
+                itemLabel="Credential"
+                newItem={() => ({ id: String(Date.now()), text: "" })}
+                renderItem={(credential, _, updateCredential) => (
+                  <div>
+                    <Label>Credential</Label>
+                    <Input
+                      value={credential.text}
+                      onChange={(e) => updateCredential({ ...credential, text: e.target.value })}
+                      placeholder="Bar admissions, honors, education, etc."
+                    />
+                  </div>
+                )}
+              />
             </div>
           )}
         />

@@ -84,7 +84,7 @@ function getDefaultBlock(type: string): ContentBlock {
     case 'cta':
       return { type: 'cta', heading: 'Ready to Get Started?', description: '<p>Contact us today for a free consultation.</p>' };
     case 'team-members':
-      return { type: 'team-members', sectionLabel: '– Our Team', heading: 'Meet Our Attorneys', members: [{ name: 'Attorney Name', title: 'Partner', bio: '<p>Bio...</p>', image: '/placeholder.svg', imageAlt: '', specialties: [] }] };
+      return { type: 'team-members', sectionLabel: '– Our Team', heading: 'Meet Our Attorneys', members: [{ name: 'Attorney Name', title: 'Partner', bio: '<p>Bio...</p>', image: '/placeholder.svg', imageAlt: '', credentials: [] }] };
     case 'testimonials':
       return { type: 'testimonials', sectionLabel: '– Testimonials', heading: 'What Our Clients Say', backgroundImageAlt: '', items: [{ text: 'Great service and results!', author: 'Client', ratingImage: '/images/logos/rating-stars.png', ratingImageAlt: '' }] };
     case 'contact-section':
@@ -402,7 +402,7 @@ function TeamMembersFields({ block, onUpdate }: { block: Extract<ContentBlock, {
   };
 
   const addMember = () => {
-    onUpdate({ members: [...block.members, { name: 'New Member', title: 'Title', bio: '<p>Bio...</p>', image: '/placeholder.svg', imageAlt: '', specialties: [] }] });
+    onUpdate({ members: [...block.members, { name: 'New Member', title: 'Title', bio: '<p>Bio...</p>', image: '/placeholder.svg', imageAlt: '', credentials: [] }] });
   };
 
   const removeMember = (idx: number) => {
@@ -450,8 +450,8 @@ function TeamMembersFields({ block, onUpdate }: { block: Extract<ContentBlock, {
             <RichTextEditor value={member.bio} onChange={(html) => updateMember(idx, { bio: html })} placeholder="Member bio..." />
           </div>
           <div>
-            <Label className="text-xs text-gray-500">Specialties (comma-separated)</Label>
-            <Input value={(member.specialties || []).join(', ')} onChange={(e) => updateMember(idx, { specialties: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} placeholder="Criminal Law, Civil Rights" />
+            <Label className="text-xs text-gray-500">Credentials (comma-separated)</Label>
+            <Input value={((member.credentials && member.credentials.length > 0 ? member.credentials : member.specialties) || []).join(', ')} onChange={(e) => updateMember(idx, { credentials: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} placeholder="Bar admissions, honors, education" />
           </div>
         </div>
       ))}

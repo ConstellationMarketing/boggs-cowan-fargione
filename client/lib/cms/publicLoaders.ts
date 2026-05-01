@@ -634,7 +634,20 @@ export function mergeAboutContentWithDefaults(cmsContent: Partial<AboutPageConte
     team: {
       ...defaults.team,
       ...cmsContent.team,
-      members: cmsContent.team?.members?.length ? cmsContent.team.members : defaults.team.members,
+      members: cmsContent.team?.members?.length
+        ? cmsContent.team.members.map((member) => {
+            const legacyMember = member as unknown as { specialties?: unknown };
+
+            return {
+              ...member,
+              credentials: Array.isArray(member.credentials) && member.credentials.length > 0
+                ? member.credentials
+                : Array.isArray(legacyMember.specialties)
+                  ? legacyMember.specialties.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+                  : defaults.team.members[0]?.credentials || [],
+            };
+          })
+        : defaults.team.members,
     },
     values: {
       ...defaults.values,

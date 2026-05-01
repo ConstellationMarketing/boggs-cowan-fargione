@@ -39,6 +39,7 @@ export type ContentBlock =
         bio: string;
         image: string;
         imageAlt?: string;
+        credentials?: string[];
         specialties?: string[];
       }>;
     }
