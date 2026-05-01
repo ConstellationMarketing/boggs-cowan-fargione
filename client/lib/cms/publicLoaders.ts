@@ -270,12 +270,7 @@ const ABOUT_CONTENT_KEYS: (keyof AboutPageContent)[] = [
 
 const CONTACT_CONTENT_KEYS: (keyof ContactPageContent)[] = [
   "hero",
-  "contactMethods",
   "form",
-  "officeHours",
-  "process",
-  "visitOffice",
-  "cta",
 ];
 
 const PRACTICE_AREAS_CONTENT_KEYS: (keyof PracticeAreasPageContent)[] = [
@@ -693,59 +688,8 @@ export function mergeContactContentWithDefaults(cmsContent: Partial<ContactPageC
 
   return {
     hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
-    contactMethods: {
-      ...defaults.contactMethods,
-      ...cmsContent.contactMethods,
-      methods: cmsContent.contactMethods?.methods?.length ? cmsContent.contactMethods.methods : defaults.contactMethods.methods,
-    },
     form: { ...defaults.form, ...cmsContent.form },
-    officeHours: {
-      ...defaults.officeHours,
-      ...cmsContent.officeHours,
-      items: cmsContent.officeHours?.items?.length ? cmsContent.officeHours.items : defaults.officeHours.items,
-    },
-    process: {
-      ...defaults.process,
-      ...cmsContent.process,
-      steps: cmsContent.process?.steps?.length ? cmsContent.process.steps : defaults.process.steps,
-    },
-    visitOffice: { ...defaults.visitOffice, ...cmsContent.visitOffice },
-    cta: {
-      ...defaults.cta,
-      ...cmsContent.cta,
-      primaryButton: {
-        ...defaults.cta.primaryButton,
-        ...cmsContent.cta?.primaryButton,
-      },
-      secondaryButton: {
-        ...defaults.cta.secondaryButton,
-        ...cmsContent.cta?.secondaryButton,
-      },
-    },
     headingTags: cmsContent.headingTags ?? defaults.headingTags,
-  };
-}
-
-export function applyPracticeSharedSectionsToContact(content: ContactPageContent, sharedSections: PracticeSharedSections | null): ContactPageContent {
-  if (!sharedSections?.cta) {
-    return content;
-  }
-
-  return {
-    ...content,
-    cta: {
-      ...content.cta,
-      heading: sharedSections.cta.heading || content.cta.heading,
-      description: sharedSections.cta.description || content.cta.description,
-      primaryButton: {
-        ...content.cta.primaryButton,
-        ...sharedSections.cta.primaryButton,
-      },
-      secondaryButton: {
-        ...content.cta.secondaryButton,
-        ...sharedSections.cta.secondaryButton,
-      },
-    },
   };
 }
 
@@ -909,20 +853,15 @@ export function shapeAboutPageDocument(row: CmsPageRow | null): PreloadedPageDoc
   };
 }
 
-export function shapeContactPageDocument(row: CmsPageRow | null, sharedSections: PracticeSharedSections | null = null): PreloadedPageDocument<ContactPageContent> | null {
+export function shapeContactPageDocument(row: CmsPageRow | null): PreloadedPageDocument<ContactPageContent> | null {
   if (!row) {
     return null;
   }
 
-  const content = applyPracticeSharedSectionsToContact(
-    normalizeContactPageContent(row.content),
-    sharedSections,
-  );
-
   return {
     urlPath: normalizeCmsUrlPath(row.url_path || "/contact/"),
     title: row.title || "",
-    content,
+    content: normalizeContactPageContent(row.content),
     meta: shapePageMeta(row),
     publishedAt: row.published_at ?? null,
     updatedAt: row.updated_at ?? null,
@@ -1066,14 +1005,10 @@ export async function loadAboutPageDocument() {
 }
 
 export async function loadContactPageDocument() {
-  const [row, sharedSections] = await Promise.all([
-    fetchPublishedPageRow("/contact/", PAGE_PUBLIC_SELECT),
-    loadAboutSharedSections(),
-  ]);
+  const row = await fetchPublishedPageRow("/contact/", PAGE_PUBLIC_SELECT);
 
   return {
-    document: shapeContactPageDocument(row, sharedSections),
-    sharedSections,
+    document: shapeContactPageDocument(row),
   };
 }
 

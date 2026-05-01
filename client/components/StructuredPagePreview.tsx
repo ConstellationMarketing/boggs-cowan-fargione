@@ -42,9 +42,7 @@ function isContactContent(c: unknown): c is ContactPageContent {
     typeof c === "object" &&
     c !== null &&
     "hero" in c &&
-    "info" in c &&
-    "form" in c &&
-    "officeHours" in c
+    "form" in c
   );
 }
 
@@ -233,32 +231,24 @@ function AboutPreview({ content }: { content: AboutPageContent }) {
 }
 
 function ContactPreview({ content }: { content: ContactPageContent }) {
+  const page = content as unknown as Record<string, unknown>;
+  const hero = (page.hero as Record<string, unknown> | undefined) ?? {};
+  const form = (page.form as Record<string, unknown> | undefined) ?? {};
+
   return (
     <div className="space-y-4">
       <PreviewSection title="Hero">
-        <PreviewField label="Title" value={content.hero.title} />
-        <PreviewField label="Subtitle" value={content.hero.subtitle} />
-        <PreviewImage src={content.hero.backgroundImage} alt="Hero" />
+        <PreviewField label="H1 Title" value={typeof hero.h1Title === "string" ? hero.h1Title : null} />
+        <PreviewField label="Headline" value={typeof hero.headline === "string" ? hero.headline : null} />
+        <PreviewImage src={typeof hero.backgroundImage === "string" ? hero.backgroundImage : undefined} alt="Hero" />
       </PreviewSection>
 
-      <PreviewSection title="Contact Info">
-        <PreviewField label="Phone" value={content.info.phone} />
-        <PreviewField label="Note" value={content.info.phoneNote} />
-        <PreviewField label="Address" value={content.info.address.join(", ")} />
-      </PreviewSection>
-
-      <PreviewSection title="Office Hours">
-        {content.officeHours.map((h, i) => (
-          <PreviewField key={i} label={h.label} value={h.hours} />
-        ))}
-        {content.hoursNote && (
-          <p className="text-sm text-gray-500 mt-1 italic">{content.hoursNote}</p>
-        )}
-      </PreviewSection>
-
-      <PreviewSection title="CTA">
-        <PreviewField label="Heading" value={content.cta.heading} />
-        <PreviewField label="Phone" value={content.cta.phone} />
+      <PreviewSection title="Contact Form">
+        <PreviewField label="Heading" value={typeof form.heading === "string" ? form.heading : null} />
+        <div
+          className="text-sm text-gray-600 space-y-2"
+          dangerouslySetInnerHTML={{ __html: typeof form.subtext === "string" ? form.subtext : "" }}
+        />
       </PreviewSection>
     </div>
   );
