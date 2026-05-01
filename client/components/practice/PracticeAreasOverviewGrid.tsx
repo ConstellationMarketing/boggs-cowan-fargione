@@ -59,7 +59,7 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
           </div>
         )}
 
-        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:gap-8">
           {areas.map((area, index) => {
             const Icon = resolvePracticeAreaIcon(area.icon);
             const subPractices = Array.isArray(area.subPractices)

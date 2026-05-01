@@ -15,7 +15,7 @@ export default function PracticeAreasEditor({ content, onChange }: PracticeAreas
     <div className="space-y-6">
       <HeroSection content={content} update={update} />
       <GridSection content={content} update={update} />
-      <GlobalSectionInfo sectionTitle="Why Choose Us" managedIn="About Us" />
+      <GlobalSectionInfo sectionTitle="Why Choose Us" managedIn="Home" />
       <GlobalSectionInfo sectionTitle="Call to Action" managedIn="About Us" />
     </div>
   );
