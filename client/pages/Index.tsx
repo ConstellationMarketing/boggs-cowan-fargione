@@ -4,7 +4,6 @@ import AboutSection from "@site/components/home/AboutSection";
 import PracticeAreasSection from "@site/components/home/PracticeAreasSection";
 import PracticeAreasGrid from "@site/components/home/PracticeAreasGrid";
 import WhyChooseUsSection from "@site/components/home/AwardsSection";
-import TestimonialsSection from "@site/components/home/TestimonialsSection";
 import ProcessSection from "@site/components/home/ProcessSection";
 import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
 import FaqSection from "@site/components/home/FaqSection";
@@ -193,9 +192,6 @@ export default function Index() {
 
       {/* Why Choose Us Section */}
       <WhyChooseUsSection content={content.whyChooseUs} headingTag={content.headingTags?.["whyChooseUs.sectionLabel"]} />
-
-      {/* Testimonials Section */}
-      <TestimonialsSection content={content.testimonials} headingTag={content.headingTags?.["testimonials.sectionLabel"]} />
 
       {/* Process Section */}
       <ProcessSection content={content.process} headingTags={content.headingTags} />
