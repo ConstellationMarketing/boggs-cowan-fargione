@@ -603,12 +603,34 @@ export function mergeAboutContentWithDefaults(cmsContent: Partial<AboutPageConte
     return defaults;
   }
 
+  const legacyStory = isRecord(cmsContent.story) ? cmsContent.story : null;
+  const legacyStoryParagraphs = Array.isArray(legacyStory?.paragraphs)
+    ? legacyStory.paragraphs.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    : [];
+
   return {
     hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
     story: {
       ...defaults.story,
       ...cmsContent.story,
-      paragraphs: cmsContent.story?.paragraphs?.length ? cmsContent.story.paragraphs : defaults.story.paragraphs,
+      description: typeof cmsContent.story?.description === "string" && cmsContent.story.description.trim().length > 0
+        ? cmsContent.story.description
+        : legacyStoryParagraphs.length > 0
+          ? legacyStoryParagraphs.join("\n")
+          : defaults.story.description,
+      attorneyImage: typeof cmsContent.story?.attorneyImage === "string" && cmsContent.story.attorneyImage.trim().length > 0
+        ? cmsContent.story.attorneyImage
+        : typeof legacyStory?.image === "string"
+          ? legacyStory.image
+          : defaults.story.attorneyImage,
+      attorneyImageAlt: typeof cmsContent.story?.attorneyImageAlt === "string" && cmsContent.story.attorneyImageAlt.trim().length > 0
+        ? cmsContent.story.attorneyImageAlt
+        : typeof legacyStory?.imageAlt === "string"
+          ? legacyStory.imageAlt
+          : defaults.story.attorneyImageAlt,
+      badges: cmsContent.story?.badges?.length ? cmsContent.story.badges : defaults.story.badges,
+      admissionsItems: cmsContent.story?.admissionsItems?.length ? cmsContent.story.admissionsItems : defaults.story.admissionsItems,
+      membershipsItems: cmsContent.story?.membershipsItems?.length ? cmsContent.story.membershipsItems : defaults.story.membershipsItems,
     },
     missionVision: {
       mission: {

@@ -1,18 +1,12 @@
 // Type definitions for structured About page content
+import type { AboutContent as StoryContent } from "./homePageTypes";
+import { defaultHomeContent } from "./homePageTypes";
 import type { SharedHeroContent } from "./sharedHero";
 import { defaultSharedHeroContent } from "./sharedHero";
 
 // Each section maps directly to a static component's data needs
 
 export type AboutHeroContent = SharedHeroContent;
-
-export interface StoryContent {
-  sectionLabel: string; // "– Our Story"
-  heading: string; // "Building Trust Since 1999"
-  paragraphs: string[]; // Array of paragraph texts
-  image: string;
-  imageAlt: string;
-}
 
 export interface MissionVisionContent {
   mission: {
@@ -111,11 +105,7 @@ export const defaultAboutContent: AboutPageContent = {
     ...defaultSharedHeroContent,
   },
   story: {
-    sectionLabel: "",
-    heading: "",
-    paragraphs: [],
-    image: "",
-    imageAlt: "",
+    ...defaultHomeContent.about,
   },
   missionVision: {
     mission: {

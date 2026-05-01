@@ -1,5 +1,6 @@
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
+import AboutSection from "@site/components/home/AboutSection";
 import CallBox from "@site/components/shared/CallBox";
 import PageHero from "@site/components/shared/PageHero";
 import StatsGrid from "@site/components/shared/StatsGrid";
@@ -72,52 +73,10 @@ export default function AboutUs() {
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
       />
 
-      {/* Our Story Section */}
-      {(content.story.heading || content.story.paragraphs.length > 0) && (
-      <div className="bg-white pt-[30px] md:pt-[54px] pb-[30px] md:pb-[54px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[80%]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[8%]">
-            {/* Left Side - Content */}
-            <div>
-              <div className="mb-[10px]">
-                <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
-                  {content.story.sectionLabel}
-                </p>
-              </div>
-              <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black pb-[20px]">
-                {content.story.heading}
-              </h2>
-              <div className="space-y-[15px] md:space-y-[20px]">
-                {content.story.paragraphs.map((paragraph, index) => (
-                  <RichText
-                    key={index}
-                    html={paragraph}
-                    className="font-outfit text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-black"
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Right Side - Image */}
-            <div className="flex items-center justify-center">
-              <div className="relative">
-                <img
-                  src={content.story.image}
-                  alt={content.story.imageAlt}
-                  className="max-w-full w-auto h-auto object-contain"
-                  width={338}
-                  height={462}
-                  loading="lazy"
-                />
-                {/* Fade-out gradient at the bottom */}
-                <div className="absolute bottom-0 left-0 right-0 h-[80px] bg-gradient-to-t from-white to-transparent pointer-events-none" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      )}
+      <AboutSection
+        content={content.story}
+        headingTag={content.headingTags?.["story.heading"]}
+      />
 
       {/* Mission & Vision Section */}
       {(content.missionVision.mission.heading || content.missionVision.vision.heading) && (

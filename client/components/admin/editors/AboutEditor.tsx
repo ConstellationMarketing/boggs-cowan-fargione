@@ -103,7 +103,6 @@ function HeroSection({ content, update }: SectionProps) {
 function StorySection({ content, update }: SectionProps) {
   const story = content.story;
   const set = (patch: Partial<typeof story>) => update("story", { ...story, ...patch });
-  const ht = useHeadingTag(content, update);
 
   return (
     <Section title="Our Story" defaultOpen={false}>
@@ -112,35 +111,119 @@ function StorySection({ content, update }: SectionProps) {
           <Label>Section Label</Label>
           <Input value={story.sectionLabel} onChange={(e) => set({ sectionLabel: e.target.value })} />
         </div>
-        <HeadingField
-          label="Heading"
-          value={story.heading}
-          onChange={(v) => set({ heading: v })}
-          tag={ht.get("story.heading")}
-          onTagChange={(t) => ht.set("story.heading", t)}
-        />
+        <div>
+          <Label>Heading</Label>
+          <Input value={story.heading} onChange={(e) => set({ heading: e.target.value })} />
+        </div>
+        <RichTextField label="Description" value={story.description} onChange={(v) => set({ description: v })} />
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label>Button Text</Label>
+            <Input
+              value={story.contactLabel}
+              onChange={(e) => set({ contactLabel: e.target.value })}
+              placeholder="Learn More About Our Firm"
+            />
+          </div>
+          <div>
+            <Label>Button Link</Label>
+            <Input
+              value={story.contactText}
+              onChange={(e) => set({ contactText: e.target.value })}
+              placeholder="/about/"
+            />
+          </div>
+        </div>
         <ImageField
-          label="Image"
-          value={story.image}
-          onChange={(url) => set({ image: url })}
-          altValue={story.imageAlt}
-          onChangeWithAlt={(image, imageAlt) => set({ image, imageAlt })}
+          label="Attorney Image"
+          value={story.attorneyImage}
+          onChange={(url) => set({ attorneyImage: url })}
+          altValue={story.attorneyImageAlt}
+          onChangeWithAlt={(attorneyImage, attorneyImageAlt) =>
+            set({ attorneyImage, attorneyImageAlt })
+          }
           folder="team"
         />
         <div>
-          <Label>Image Alt Text</Label>
-          <Input value={story.imageAlt} onChange={(e) => set({ imageAlt: e.target.value })} />
+          <Label>Attorney Image Alt</Label>
+          <Input value={story.attorneyImageAlt} onChange={(e) => set({ attorneyImageAlt: e.target.value })} />
         </div>
-        <h4 className="font-medium mt-2">Paragraphs</h4>
+
+        <h4 className="font-medium mt-2">Badges / Awards</h4>
         <ArrayEditor
-          items={story.paragraphs.map((text, i) => ({ id: String(i), text }))}
-          onChange={(items) => set({ paragraphs: items.map((it) => it.text) })}
-          itemLabel="Paragraph"
-          newItem={() => ({ id: String(Date.now()), text: "" })}
+          items={story.badges}
+          onChange={(items) => set({ badges: items.slice(0, 3) })}
+          itemLabel="Badge"
+          newItem={() => ({ src: "", alt: "" })}
           renderItem={(item, _, upd) => (
-            <RichTextField label="" value={item.text} onChange={(v) => upd({ ...item, text: v })} />
+            <div className="grid gap-3">
+              <ImageField
+                label="Badge Image"
+                value={item.src}
+                onChange={(url) => upd({ ...item, src: url })}
+                altValue={item.alt}
+                onChangeWithAlt={(src, alt) => upd({ ...item, src, alt })}
+                folder="awards"
+              />
+              <div>
+                <Label>Badge Alt Text</Label>
+                <Input value={item.alt} onChange={(e) => upd({ ...item, alt: e.target.value })} />
+              </div>
+            </div>
           )}
         />
+        <p className="text-xs text-gray-500 italic">Add up to 3 badges. They render in a single row below the attorney image.</p>
+
+        <div className="border-t pt-4 mt-4 space-y-4">
+          <div>
+            <Label>Credentials Box Title</Label>
+            <Input
+              value={story.credentialsTitle}
+              onChange={(e) => set({ credentialsTitle: e.target.value })}
+              placeholder="Credentials & Affiliations"
+            />
+          </div>
+          <div>
+            <Label>First Subtitle</Label>
+            <Input
+              value={story.admissionsTitle}
+              onChange={(e) => set({ admissionsTitle: e.target.value })}
+              placeholder="Court Admissions"
+            />
+          </div>
+          <ArrayEditor
+            items={story.admissionsItems.map((text, index) => ({ id: `${index}`, text }))}
+            onChange={(items) => set({ admissionsItems: items.map((item) => item.text) })}
+            itemLabel="First List Item"
+            newItem={() => ({ id: String(Date.now()), text: "" })}
+            renderItem={(item, _, upd) => (
+              <div>
+                <Label>Text</Label>
+                <Input value={item.text} onChange={(e) => upd({ ...item, text: e.target.value })} />
+              </div>
+            )}
+          />
+          <div>
+            <Label>Second Subtitle</Label>
+            <Input
+              value={story.membershipsTitle}
+              onChange={(e) => set({ membershipsTitle: e.target.value })}
+              placeholder="Memberships"
+            />
+          </div>
+          <ArrayEditor
+            items={story.membershipsItems.map((text, index) => ({ id: `${index}`, text }))}
+            onChange={(items) => set({ membershipsItems: items.map((item) => item.text) })}
+            itemLabel="Second List Item"
+            newItem={() => ({ id: String(Date.now()), text: "" })}
+            renderItem={(item, _, upd) => (
+              <div>
+                <Label>Text</Label>
+                <Input value={item.text} onChange={(e) => upd({ ...item, text: e.target.value })} />
+              </div>
+            )}
+          />
+        </div>
       </div>
     </Section>
   );

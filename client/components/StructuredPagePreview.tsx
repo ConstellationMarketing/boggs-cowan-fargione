@@ -174,6 +174,8 @@ function HomePreview({ content }: { content: HomePageContent }) {
 }
 
 function AboutPreview({ content }: { content: AboutPageContent }) {
+  const story = content.story as Record<string, unknown>;
+
   return (
     <div className="space-y-4">
       <PreviewSection title="Hero">
@@ -182,10 +184,13 @@ function AboutPreview({ content }: { content: AboutPageContent }) {
       </PreviewSection>
 
       <PreviewSection title="Our Story">
-        {content.story.paragraphs.map((p, i) => (
-          <p key={i} className="text-sm text-gray-600 mb-2">{p}</p>
-        ))}
-        <PreviewImage src={content.story.image} alt="Story" />
+        <PreviewField label="Section Label" value={typeof story.sectionLabel === "string" ? story.sectionLabel : null} />
+        <PreviewField label="Heading" value={typeof story.heading === "string" ? story.heading : null} />
+        <p className="text-sm text-gray-600 mb-2">{typeof story.description === "string" ? story.description : null}</p>
+        <PreviewImage
+          src={typeof story.attorneyImage === "string" ? story.attorneyImage : undefined}
+          alt={typeof story.attorneyImageAlt === "string" ? story.attorneyImageAlt : "Story"}
+        />
       </PreviewSection>
 
       <PreviewSection title="Attorney">

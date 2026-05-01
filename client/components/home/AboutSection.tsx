@@ -1,10 +1,12 @@
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { AboutContent } from "@site/lib/cms/homePageTypes";
+import DynamicHeading from "@site/components/shared/DynamicHeading";
 import RichText from "@site/components/shared/RichText";
 
 interface AboutSectionProps {
   content?: AboutContent;
+  headingTag?: string;
 }
 
 function CredentialList({ title, items }: { title: string; items: string[] }) {
@@ -37,7 +39,7 @@ function CredentialList({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export default function AboutSection({ content }: AboutSectionProps) {
+export default function AboutSection({ content, headingTag }: AboutSectionProps) {
   if (!content) {
     return null;
   }
@@ -111,9 +113,13 @@ export default function AboutSection({ content }: AboutSectionProps) {
             ) : null}
 
             {data.heading ? (
-              <h2 className="font-playfair text-black text-[34px] md:text-[52px] leading-[1.08] mb-5 md:mb-6 max-w-[720px]">
+              <DynamicHeading
+                tag={headingTag}
+                defaultTag="h2"
+                className="font-playfair text-black text-[34px] md:text-[52px] leading-[1.08] mb-5 md:mb-6 max-w-[720px]"
+              >
                 {data.heading}
-              </h2>
+              </DynamicHeading>
             ) : null}
 
             {data.description ? (
