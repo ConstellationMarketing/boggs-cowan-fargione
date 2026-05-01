@@ -53,9 +53,9 @@ export default function Index() {
           />
         ) : null}
         <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
-          <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-[3%] flex-1">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-[3%] flex-1">
             {/* Left Side: H1, Headline and CTAs */}
-            <div className="lg:w-[65.667%] flex flex-col justify-end pt-[9.5rem] md:pt-[10.5rem] pb-[36px] md:pb-[48px]">
+            <div className="lg:w-[65.667%] flex flex-col justify-center pt-[9.5rem] md:pt-[10.5rem] pb-[36px] md:pb-[48px]">
               <div className="mb-[20px] md:mb-[24px]">
               {/* H1 Title - All caps, green, positioned ABOVE headline */}
               {heroContent.h1Title && (
