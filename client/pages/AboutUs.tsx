@@ -28,6 +28,23 @@ const iconMap: Record<string, LucideIcon> = {
   Heart,
 };
 
+const TEAM_AVATAR_BACKGROUNDS = ["#E7E0D3", "#D9E4EC", "#E8D9E6"];
+
+function createBlankAvatar(index: number) {
+  const background = TEAM_AVATAR_BACKGROUNDS[index % TEAM_AVATAR_BACKGROUNDS.length];
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none">
+      <rect width="400" height="500" fill="${background}" />
+      <circle cx="200" cy="170" r="74" fill="#F7F4EE" />
+      <path d="M110 500V420C110 356 150 320 200 320C250 320 290 356 290 420V500H110Z" fill="#F7F4EE" />
+      <circle cx="200" cy="170" r="74" stroke="#D1C7B7" stroke-width="8" />
+      <path d="M110 500V420C110 356 150 320 200 320C250 320 290 356 290 420V500H110Z" stroke="#D1C7B7" stroke-width="8" />
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 export default function AboutUs() {
   const { content, meta, title, publishedAt, updatedAt, isLoading } = useAboutContent();
   const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
@@ -42,8 +59,12 @@ export default function AboutUs() {
     );
   }
 
-  // Map team members from CMS content
-  const teamMembers = content.team.members;
+  // Use temporary placeholder avatars on the About page until real team photos are available
+  const teamMembers = content.team.members.map((member, index) => ({
+    ...member,
+    image: createBlankAvatar(index),
+    imageAlt: member.imageAlt || `${member.name} placeholder avatar`,
+  }));
 
   // Map core values from CMS content with icon components
   const coreValues = content.values.items.map((item) => ({
