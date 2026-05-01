@@ -8,17 +8,6 @@ import { defaultSharedHeroContent } from "./sharedHero";
 
 export type AboutHeroContent = SharedHeroContent;
 
-export interface MissionVisionContent {
-  mission: {
-    heading: string; // "Our Mission"
-    text: string; // Mission paragraph
-  };
-  vision: {
-    heading: string; // "Our Vision"
-    text: string; // Vision paragraph
-  };
-}
-
 export interface TeamMember {
   name: string;
   title: string;
@@ -89,7 +78,6 @@ export interface CTAContent {
 export interface AboutPageContent {
   hero: AboutHeroContent;
   story: StoryContent;
-  missionVision: MissionVisionContent;
   team: TeamContent;
   values: ValuesContent;
   stats: StatsContent;
@@ -106,16 +94,6 @@ export const defaultAboutContent: AboutPageContent = {
   },
   story: {
     ...defaultHomeContent.about,
-  },
-  missionVision: {
-    mission: {
-      heading: "",
-      text: "",
-    },
-    vision: {
-      heading: "",
-      text: "",
-    },
   },
   team: {
     sectionLabel: "",

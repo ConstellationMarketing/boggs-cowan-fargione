@@ -260,7 +260,6 @@ const HOME_CONTENT_KEYS: (keyof HomePageContent)[] = [
 const ABOUT_CONTENT_KEYS: (keyof AboutPageContent)[] = [
   "hero",
   "story",
-  "missionVision",
   "team",
   "values",
   "stats",
@@ -631,16 +630,6 @@ export function mergeAboutContentWithDefaults(cmsContent: Partial<AboutPageConte
       badges: cmsContent.story?.badges?.length ? cmsContent.story.badges : defaults.story.badges,
       admissionsItems: cmsContent.story?.admissionsItems?.length ? cmsContent.story.admissionsItems : defaults.story.admissionsItems,
       membershipsItems: cmsContent.story?.membershipsItems?.length ? cmsContent.story.membershipsItems : defaults.story.membershipsItems,
-    },
-    missionVision: {
-      mission: {
-        ...defaults.missionVision.mission,
-        ...cmsContent.missionVision?.mission,
-      },
-      vision: {
-        ...defaults.missionVision.vision,
-        ...cmsContent.missionVision?.vision,
-      },
     },
     team: {
       ...defaults.team,

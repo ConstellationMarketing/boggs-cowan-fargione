@@ -79,37 +79,6 @@ export default function AboutUs() {
         credentialsPlacement="below"
       />
 
-      {/* Mission & Vision Section */}
-      {(content.missionVision.mission.heading || content.missionVision.vision.heading) && (
-      <div className="bg-brand-accent-dark py-[40px] md:py-[60px]">
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[80%]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[8%]">
-            {/* Mission */}
-            <div className="text-center lg:text-left">
-              <h2 className="font-playfair text-[32px] md:text-[40px] leading-tight text-brand-accent pb-[15px] md:pb-[20px]">
-                {content.missionVision.mission.heading}
-              </h2>
-              <RichText
-                html={content.missionVision.mission.text}
-                className="font-outfit text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-white"
-              />
-            </div>
-
-            {/* Vision */}
-            <div className="text-center lg:text-left">
-              <h2 className="font-playfair text-[32px] md:text-[40px] leading-tight text-brand-accent pb-[15px] md:pb-[20px]">
-                {content.missionVision.vision.heading}
-              </h2>
-              <RichText
-                html={content.missionVision.vision.text}
-                className="font-outfit text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-white"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      )}
 
       {/* Team Section */}
       {teamMembers.length > 0 && (

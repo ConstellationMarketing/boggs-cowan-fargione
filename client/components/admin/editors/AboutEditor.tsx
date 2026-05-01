@@ -15,7 +15,6 @@ export default function AboutEditor({ content, onChange }: AboutEditorProps) {
     <div className="space-y-6">
       <HeroSection content={content} update={update} />
       <StorySection content={content} update={update} />
-      <MissionVisionSection content={content} update={update} />
       <TeamSection content={content} update={update} />
       <ValuesSection content={content} update={update} />
       <StatsSection content={content} update={update} />
@@ -224,39 +223,6 @@ function StorySection({ content, update }: SectionProps) {
             )}
           />
         </div>
-      </div>
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-function MissionVisionSection({ content, update }: SectionProps) {
-  const mv = content.missionVision;
-  const set = (patch: Partial<typeof mv>) => update("missionVision", { ...mv, ...patch });
-  const ht = useHeadingTag(content, update);
-
-  return (
-    <Section title="Mission & Vision" defaultOpen={false}>
-      <div className="grid gap-4">
-        <h4 className="font-medium">Mission</h4>
-        <HeadingField
-          label="Heading"
-          value={mv.mission.heading}
-          onChange={(v) => set({ mission: { ...mv.mission, heading: v } })}
-          tag={ht.get("mission.heading")}
-          onTagChange={(t) => ht.set("mission.heading", t)}
-        />
-        <RichTextField label="Text" value={mv.mission.text} onChange={(v) => set({ mission: { ...mv.mission, text: v } })} />
-        <hr />
-        <h4 className="font-medium">Vision</h4>
-        <HeadingField
-          label="Heading"
-          value={mv.vision.heading}
-          onChange={(v) => set({ vision: { ...mv.vision, heading: v } })}
-          tag={ht.get("vision.heading")}
-          onTagChange={(t) => ht.set("vision.heading", t)}
-        />
-        <RichTextField label="Text" value={mv.vision.text} onChange={(v) => set({ vision: { ...mv.vision, text: v } })} />
       </div>
     </Section>
   );
