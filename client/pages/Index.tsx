@@ -43,7 +43,7 @@ export default function Index() {
       />
 
       {/* Hero Section – negative top margin extends it under the transparent sticky header */}
-      <div className="relative overflow-hidden bg-brand-dark -mt-[7rem] mb-[20px] md:mb-[40px] min-h-[80vh] flex flex-col">
+      <div className="relative overflow-hidden bg-brand-dark -mt-[7rem] min-h-[80vh] flex flex-col">
         {heroContent.backgroundImage ? (
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
