@@ -81,11 +81,8 @@ export default function PageHero({
                 </DynamicHeading>
               ) : null}
 
-              <div className="relative">
-                <p
-                  className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left"
-                  style={{ marginTop: "-0.44em" }}
-                >
+              <div className={`relative ${content.h1Title ? "mt-[8px] md:mt-[12px]" : ""}`}>
+                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left">
                   {renderHeadline(content)}
                 </p>
               </div>
