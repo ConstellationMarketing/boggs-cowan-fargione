@@ -261,6 +261,7 @@ const ABOUT_CONTENT_KEYS: (keyof AboutPageContent)[] = [
   "hero",
   "story",
   "team",
+  "approach",
   "values",
   "stats",
   "whyChooseUs",
@@ -648,6 +649,10 @@ export function mergeAboutContentWithDefaults(cmsContent: Partial<AboutPageConte
             };
           })
         : defaults.team.members,
+    },
+    approach: {
+      ...defaults.approach,
+      ...cmsContent.approach,
     },
     values: {
       ...defaults.values,

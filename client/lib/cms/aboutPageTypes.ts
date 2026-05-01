@@ -23,6 +23,11 @@ export interface TeamContent {
   members: TeamMember[];
 }
 
+export interface ApproachContent {
+  heading: string;
+  description: string;
+}
+
 export interface ValueItem {
   icon: string; // Lucide icon name
   title: string;
@@ -79,6 +84,7 @@ export interface AboutPageContent {
   hero: AboutHeroContent;
   story: StoryContent;
   team: TeamContent;
+  approach: ApproachContent;
   values: ValuesContent;
   stats: StatsContent;
   whyChooseUs: WhyChooseUsContent;
@@ -99,6 +105,10 @@ export const defaultAboutContent: AboutPageContent = {
     sectionLabel: "",
     heading: "",
     members: [],
+  },
+  approach: {
+    heading: "Our Approach",
+    description: `<p>At Boggs, Cowan, & Fargione, we handle every case with intention. We take the time to understand how an injury, family law matter, or civil dispute affects our client's life — and we build our legal strategy around that reality.</p><p>Clients work directly with their attorney and receive straightforward communication about their case, potential challenges, and realistic expectations. Our goal is not to rush cases to resolution, but to position them for the strongest possible outcome — whether through negotiation or at trial.</p><p>We take pride in preparation, honest counsel, and representing our clients with care and respect at every stage of the process.</p>`,
   },
   values: {
     sectionLabel: "",

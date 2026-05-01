@@ -16,6 +16,7 @@ export default function AboutEditor({ content, onChange }: AboutEditorProps) {
       <HeroSection content={content} update={update} />
       <StorySection content={content} update={update} />
       <TeamSection content={content} update={update} />
+      <ApproachSection content={content} update={update} />
       <ValuesSection content={content} update={update} />
       <StatsSection content={content} update={update} />
       <WhyChooseUsSection content={content} update={update} />
@@ -298,6 +299,33 @@ function TeamSection({ content, update }: SectionProps) {
               />
             </div>
           )}
+        />
+      </div>
+    </Section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function ApproachSection({ content, update }: SectionProps) {
+  const approach = content.approach;
+  const set = (patch: Partial<typeof approach>) => update("approach", { ...approach, ...patch });
+  const ht = useHeadingTag(content, update);
+
+  return (
+    <Section title="Our Approach" defaultOpen={false}>
+      <div className="grid gap-4">
+        <HeadingField
+          label="Title"
+          value={approach.heading}
+          onChange={(v) => set({ heading: v })}
+          tag={ht.get("approach.heading")}
+          onTagChange={(t) => ht.set("approach.heading", t)}
+        />
+        <RichTextField
+          label="Body"
+          value={approach.description}
+          onChange={(v) => set({ description: v })}
+          placeholder="Add at least 3 paragraphs describing the firm's approach."
         />
       </div>
     </Section>

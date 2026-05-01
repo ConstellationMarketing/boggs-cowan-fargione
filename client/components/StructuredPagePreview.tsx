@@ -174,54 +174,76 @@ function HomePreview({ content }: { content: HomePageContent }) {
 }
 
 function AboutPreview({ content }: { content: AboutPageContent }) {
-  const story = content.story as Record<string, unknown>;
+  const about = content as unknown as Record<string, unknown>;
+  const hero = (about.hero as Record<string, unknown> | undefined) ?? {};
+  const story = (about.story as Record<string, unknown> | undefined) ?? {};
+  const team = (about.team as Record<string, unknown> | undefined) ?? {};
+  const approach = (about.approach as Record<string, unknown> | undefined) ?? {};
+  const values = (about.values as Record<string, unknown> | undefined) ?? {};
+  const stats = (about.stats as Record<string, unknown> | undefined) ?? {};
+  const whyChooseUs = (about.whyChooseUs as Record<string, unknown> | undefined) ?? {};
+  const cta = (about.cta as Record<string, unknown> | undefined) ?? {};
+  const teamMembers = Array.isArray(team.members) ? team.members : [];
+  const valueItems = Array.isArray(values.items) ? values.items : [];
+  const statItems = Array.isArray(stats.stats) ? stats.stats : [];
+  const whyChooseItems = Array.isArray(whyChooseUs.items) ? whyChooseUs.items : [];
+  const secondaryButton = (cta.secondaryButton as Record<string, unknown> | undefined) ?? {};
 
   return (
     <div className="space-y-4">
       <PreviewSection title="Hero">
-        <PreviewField label="Title" value={content.hero.title} />
-        <PreviewImage src={content.hero.backgroundImage} alt="Hero" />
+        <PreviewField label="H1 Title" value={typeof hero.h1Title === "string" ? hero.h1Title : null} />
+        <PreviewField label="Headline" value={typeof hero.headline === "string" ? hero.headline : null} />
+        <PreviewImage src={typeof hero.backgroundImage === "string" ? hero.backgroundImage : undefined} alt="Hero" />
       </PreviewSection>
 
       <PreviewSection title="Our Story">
         <PreviewField label="Section Label" value={typeof story.sectionLabel === "string" ? story.sectionLabel : null} />
         <PreviewField label="Heading" value={typeof story.heading === "string" ? story.heading : null} />
-        <p className="text-sm text-gray-600 mb-2">{typeof story.description === "string" ? story.description : null}</p>
+        <div
+          className="text-sm text-gray-600 space-y-2"
+          dangerouslySetInnerHTML={{ __html: typeof story.description === "string" ? story.description : "" }}
+        />
         <PreviewImage
           src={typeof story.attorneyImage === "string" ? story.attorneyImage : undefined}
           alt={typeof story.attorneyImageAlt === "string" ? story.attorneyImageAlt : "Story"}
         />
       </PreviewSection>
 
-      <PreviewSection title="Attorney">
-        <PreviewField label="Name" value={content.attorney.name} />
-        <PreviewField label="Title" value={content.attorney.title} />
-        <PreviewImage src={content.attorney.photo} alt={content.attorney.name} />
+      <PreviewSection title="Team Members">
+        <PreviewField label="Section Label" value={typeof team.sectionLabel === "string" ? team.sectionLabel : null} />
+        <PreviewField label="Heading" value={typeof team.heading === "string" ? team.heading : null} />
+        <PreviewField label="Members" value={teamMembers.length} />
       </PreviewSection>
 
       <PreviewSection title="Our Approach">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {content.approach.map((a, i) => (
-            <div key={i} className="bg-gray-50 rounded p-3">
-              <p className="font-medium text-gray-800">{a.title}</p>
-              <p className="text-sm text-gray-600 mt-1">{a.description}</p>
-            </div>
-          ))}
-        </div>
+        <PreviewField label="Heading" value={typeof approach.heading === "string" ? approach.heading : null} />
+        <div
+          className="text-sm text-gray-600 space-y-2"
+          dangerouslySetInnerHTML={{ __html: typeof approach.description === "string" ? approach.description : "" }}
+        />
       </PreviewSection>
 
-      <PreviewSection title="Testimonials">
-        {content.testimonials.map((t, i) => (
-          <div key={i} className="bg-gray-50 rounded p-3 mb-2">
-            <p className="text-sm text-gray-600 italic">"{t.quote}"</p>
-            <p className="text-sm font-medium mt-1">{t.name} — {t.caseType}</p>
-          </div>
-        ))}
+      <PreviewSection title="Our Values">
+        <PreviewField label="Section Label" value={typeof values.sectionLabel === "string" ? values.sectionLabel : null} />
+        <PreviewField label="Heading" value={typeof values.heading === "string" ? values.heading : null} />
+        <PreviewField label="Items" value={valueItems.length} />
+      </PreviewSection>
+
+      <PreviewSection title="Stats">
+        <PreviewField label="Stats" value={statItems.length} />
+      </PreviewSection>
+
+      <PreviewSection title="Why Choose Us">
+        <PreviewField label="Section Label" value={typeof whyChooseUs.sectionLabel === "string" ? whyChooseUs.sectionLabel : null} />
+        <PreviewField label="Heading" value={typeof whyChooseUs.heading === "string" ? whyChooseUs.heading : null} />
+        <PreviewField label="Items" value={whyChooseItems.length} />
       </PreviewSection>
 
       <PreviewSection title="CTA">
-        <PreviewField label="Heading" value={content.cta.heading} />
-        <PreviewField label="Phone" value={content.cta.phone} />
+        <PreviewField label="Heading" value={typeof cta.heading === "string" ? cta.heading : null} />
+        <PreviewField label="Secondary Label" value={typeof secondaryButton.label === "string" ? secondaryButton.label : null} />
+        <PreviewField label="Secondary Link" value={typeof secondaryButton.link === "string" ? secondaryButton.link : null} />
       </PreviewSection>
     </div>
   );

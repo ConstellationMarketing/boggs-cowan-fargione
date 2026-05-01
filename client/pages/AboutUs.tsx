@@ -66,6 +66,10 @@ export default function AboutUs() {
     imageAlt: member.imageAlt || `${member.name} placeholder avatar`,
   }));
 
+  const hasApproachSection = Boolean(
+    content.approach.heading.trim() || content.approach.description.trim(),
+  );
+
   // Map core values from CMS content with icon components
   const coreValues = content.values.items.map((item) => ({
     icon: iconMap[item.icon] || Scale,
@@ -127,6 +131,24 @@ export default function AboutUs() {
             {teamMembers.map((member, index) => (
               <TeamMemberCard key={index} {...member} />
             ))}
+          </div>
+        </div>
+      </div>
+
+      )}
+
+      {/* Our Approach Section */}
+      {hasApproachSection && (
+      <div className="bg-[#F7F4EE] py-[40px] md:py-[60px]">
+        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[80%]">
+          <div className="mx-auto max-w-[1040px] rounded-[24px] border border-black/10 bg-white px-[24px] py-[28px] md:px-[48px] md:py-[44px] shadow-[0_18px_60px_rgba(17,24,39,0.08)]">
+            <h2 className="font-playfair text-[32px] md:text-[44px] lg:text-[48px] leading-tight text-black pb-[18px] md:pb-[22px] text-center">
+              {content.approach.heading}
+            </h2>
+            <RichText
+              html={content.approach.description}
+              className="font-outfit text-[16px] md:text-[19px] leading-[28px] md:leading-[34px] text-black/80 [&_p:not(:last-child)]:mb-[18px] md:[&_p:not(:last-child)]:mb-[22px]"
+            />
           </div>
         </div>
       </div>
