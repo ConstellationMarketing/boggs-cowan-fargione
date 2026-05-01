@@ -98,7 +98,7 @@ export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsS
                         <Icon className="mt-0.5 h-6 w-6 shrink-0 text-brand-accent md:h-7 md:w-7" strokeWidth={2} />
                         <div className="min-w-0 flex-1">
                           {item.title ? (
-                            <h3 className="font-inter text-[22px] font-semibold uppercase leading-tight text-brand-accent">
+                            <h3 className="font-inter text-[20px] font-semibold uppercase leading-tight text-brand-accent">
                               {item.title}
                             </h3>
                           ) : null}

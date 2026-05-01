@@ -80,7 +80,7 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
                     </span>
 
                     {step.title ? (
-                      <h3 className="mt-3 font-inter text-[22px] font-semibold uppercase leading-tight text-white">
+                      <h3 className="mt-3 font-inter text-[20px] font-semibold uppercase leading-tight text-white">
                         {step.title}
                       </h3>
                     ) : null}
