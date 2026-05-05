@@ -7,6 +7,7 @@ interface HeroContactActionsProps {
   consultationButtonLink?: string;
   className?: string;
   stacked?: boolean;
+  consultationButtonClassName?: string;
 }
 
 export default function HeroContactActions({
@@ -14,6 +15,7 @@ export default function HeroContactActions({
   consultationButtonLink,
   className,
   stacked = false,
+  consultationButtonClassName,
 }: HeroContactActionsProps) {
   const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
 
@@ -47,7 +49,10 @@ export default function HeroContactActions({
       {consultationButtonText ? (
         <a
           href={consultationButtonLink || "/contact/"}
-          className="bg-white hover:bg-gray-100 transition-all duration-300 p-[6px] group"
+          className={cn(
+            "bg-white hover:bg-gray-100 transition-all duration-300 p-[6px] group",
+            consultationButtonClassName,
+          )}
         >
           <div className="flex items-center gap-3 h-full">
             <div className="bg-accent p-[10px] flex items-center justify-center flex-shrink-0">
