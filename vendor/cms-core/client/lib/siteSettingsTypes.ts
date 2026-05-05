@@ -2,10 +2,17 @@
 
 import { normalizeFaviconAssets, type FaviconAssets } from "@site/lib/seo/favicon";
 
+export interface NavigationGrandchildItem {
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+}
+
 export interface NavigationChildItem {
   label: string;
   href: string;
   openInNewTab?: boolean;
+  children?: NavigationGrandchildItem[];
 }
 
 export interface NavigationItem {

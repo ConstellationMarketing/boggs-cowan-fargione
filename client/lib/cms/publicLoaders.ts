@@ -33,7 +33,7 @@ export interface SiteSettings {
     href: string;
     order?: number;
     openInNewTab?: boolean;
-    children?: { label: string; href: string; openInNewTab?: boolean }[];
+    children?: { label: string; href: string; openInNewTab?: boolean; children?: { label: string; href: string; openInNewTab?: boolean }[] }[];
   }[];
   footerAboutLinks: { label: string; href?: string }[];
   footerPracticeLinks: { label: string; href?: string }[];

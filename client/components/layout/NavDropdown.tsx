@@ -1,16 +1,107 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
+
+interface NavGrandchildItem {
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+}
+
+interface NavDropdownChildItem {
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+  children?: NavGrandchildItem[];
+}
 
 interface NavDropdownItem {
   label: string;
   href: string;
   openInNewTab?: boolean;
-  children?: { label: string; href: string; openInNewTab?: boolean }[];
+  children?: NavDropdownChildItem[];
 }
 
 interface NavDropdownProps {
   item: NavDropdownItem;
+}
+
+function GrandchildFlyout({
+  child,
+  parentOpen,
+}: {
+  child: NavDropdownChildItem;
+  parentOpen: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasGrandchildren = child.children && child.children.length > 0;
+
+  const handleEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleLeave = () => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  if (!hasGrandchildren) {
+    return (
+      <Link
+        to={child.href}
+        target={child.openInNewTab ? "_blank" : undefined}
+        rel={child.openInNewTab ? "noopener noreferrer" : undefined}
+        className="block px-5 py-2.5 font-inter text-[16px] text-white/90 hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap"
+        tabIndex={parentOpen ? 0 : -1}
+      >
+        {child.label}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <div className="flex items-center justify-between px-5 py-2.5 font-inter text-[16px] text-white/90 hover:bg-white/10 hover:text-white transition-colors cursor-default whitespace-nowrap gap-3">
+        <Link
+          to={child.href}
+          target={child.openInNewTab ? "_blank" : undefined}
+          rel={child.openInNewTab ? "noopener noreferrer" : undefined}
+          className="flex-1 hover:text-white transition-colors"
+          tabIndex={parentOpen ? 0 : -1}
+        >
+          {child.label}
+        </Link>
+        <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-60" />
+      </div>
+
+      {/* Grandchild flyout panel */}
+      <div
+        className={`absolute left-full top-0 min-w-[200px] bg-brand-card border border-brand-border rounded-md shadow-xl z-50 py-2 transition-all duration-150 ${
+          open
+            ? "visible opacity-100 pointer-events-auto"
+            : "invisible opacity-0 pointer-events-none"
+        }`}
+      >
+        {child.children!.map((grandchild, idx) => (
+          <Link
+            key={idx}
+            to={grandchild.href}
+            target={grandchild.openInNewTab ? "_blank" : undefined}
+            rel={grandchild.openInNewTab ? "noopener noreferrer" : undefined}
+            className="block px-5 py-2.5 font-inter text-[15px] text-white/90 hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap"
+            tabIndex={open ? 0 : -1}
+          >
+            {grandchild.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function NavDropdown({ item }: NavDropdownProps) {
@@ -27,7 +118,6 @@ export default function NavDropdown({ item }: NavDropdownProps) {
     timeoutRef.current = setTimeout(() => setOpen(false), 150);
   };
 
-  // Close on outside click (safety net)
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (
@@ -66,17 +156,7 @@ export default function NavDropdown({ item }: NavDropdownProps) {
         }`}
       >
         {item.children!.map((child, idx) => (
-          <Link
-            key={idx}
-            to={child.href}
-            target={child.openInNewTab ? "_blank" : undefined}
-            rel={child.openInNewTab ? "noopener noreferrer" : undefined}
-            className="block px-5 py-2.5 font-inter text-[16px] text-white/90 hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap"
-            tabIndex={open ? 0 : -1}
-            onClick={() => setOpen(false)}
-          >
-            {child.label}
-          </Link>
+          <GrandchildFlyout key={idx} child={child} parentOpen={open} />
         ))}
       </div>
     </div>
