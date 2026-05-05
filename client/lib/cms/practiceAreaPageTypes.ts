@@ -89,10 +89,23 @@ export const defaultPracticeAreaPageContent: PracticeAreaPageContent = {
     ...defaultSharedHeroContent,
   },
   socialProof: {
-    mode: "none",
+    mode: "awards",
     testimonials: [],
     awards: {
-      logos: [],
+      logos: [
+        {
+          src: "https://zbouydkozqcneyauykju.supabase.co/storage/v1/object/public/media/awards/1777994126052-dzcg4o.webp",
+          alt: "Top 100 Trial Lawyers",
+        },
+        {
+          src: "https://zbouydkozqcneyauykju.supabase.co/storage/v1/object/public/media/awards/1777994131254-qwnuq2.jpg",
+          alt: "GTLA Badge",
+        },
+        {
+          src: "https://zbouydkozqcneyauykju.supabase.co/storage/v1/object/public/media/awards/1777563601804-3xhwut.png",
+          alt: "Award Badge",
+        },
+      ],
     },
   },
   contentSections: [],
