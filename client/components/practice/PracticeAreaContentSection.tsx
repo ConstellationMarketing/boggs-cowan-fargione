@@ -13,9 +13,10 @@ export default function PracticeAreaContentSection({
 }: PracticeAreaContentSectionProps) {
   const imageOnLeft = section.imagePosition === "left";
   const showCTAs = section.showCTAs !== false;
+  const isDarkSection = index % 2 !== 0;
 
   return (
-    <div className={`py-[40px] md:py-[60px] ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+    <div className={`py-[40px] md:py-[60px] ${isDarkSection ? "bg-black" : "bg-white"}`}>
       <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
         <div
           className={`flex flex-col ${imageOnLeft ? "lg:flex-row-reverse" : "lg:flex-row"} gap-8 lg:gap-[5%] items-start`}
@@ -24,10 +25,11 @@ export default function PracticeAreaContentSection({
           <div className={showCTAs || section.image ? "lg:w-[60%]" : "w-full"}>
             <RichText
               html={section.body}
-              className="font-inter text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] text-black/90 prose prose-lg max-w-none
-                [&_h2]:font-playfair [&_h2]:text-[32px] [&_h2]:md:text-[48px] [&_h2]:lg:text-[54px] [&_h2]:leading-tight [&_h2]:md:leading-[54px] [&_h2]:text-black [&_h2]:mb-4
-                [&_h3]:font-playfair [&_h3]:text-[22px] [&_h3]:md:text-[28px] [&_h3]:leading-tight [&_h3]:text-black [&_h3]:mb-3
-                [&_p]:mb-4 [&_ul]:mb-4 [&_ol]:mb-4 [&_li]:mb-1"
+              className={`font-inter text-[16px] md:text-[18px] leading-[26px] md:leading-[30px] prose prose-lg max-w-none
+                ${isDarkSection ? "text-white [&_h2]:text-white [&_h3]:text-white [&_strong]:text-white [&_a]:text-white" : "text-black/90 [&_h2]:text-black [&_h3]:text-black"}
+                [&_h2]:font-playfair [&_h2]:text-[32px] [&_h2]:md:text-[48px] [&_h2]:lg:text-[54px] [&_h2]:leading-tight [&_h2]:md:leading-[54px] [&_h2]:mb-4
+                [&_h3]:font-playfair [&_h3]:text-[22px] [&_h3]:md:text-[28px] [&_h3]:leading-tight [&_h3]:mb-3
+                [&_p]:mb-4 [&_ul]:mb-4 [&_ol]:mb-4 [&_li]:mb-1`}
             />
           </div>
 
