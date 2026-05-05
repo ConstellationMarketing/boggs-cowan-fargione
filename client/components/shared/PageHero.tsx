@@ -1,13 +1,13 @@
-import { MessageSquare, Phone } from "lucide-react";
 import type { SharedHeroContent } from "@site/lib/cms/sharedHero";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
+import HeroContactActions from "@site/components/shared/HeroContactActions";
 import RichText from "@site/components/shared/RichText";
 
 interface PageHeroProps {
   content: SharedHeroContent;
   headingTag?: string;
   underHeader?: boolean;
+  awardLogos?: Array<{ src: string; alt: string }>;
 }
 
 function renderHeadline(content: SharedHeroContent) {
@@ -51,8 +51,8 @@ export default function PageHero({
   content,
   headingTag,
   underHeader = true,
+  awardLogos = [],
 }: PageHeroProps) {
-  const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
   const heroImage = content.heroImage?.trim() || "";
 
   return (
@@ -96,44 +96,31 @@ export default function PageHero({
               ) : null}
             </div>
 
-            <div className={`grid w-full max-w-[720px] gap-3 ${content.consultationButtonText ? "grid-cols-2" : "grid-cols-1"}`}>
-              <a
-                href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-                className="bg-accent hover:bg-accent/90 transition-all duration-300 p-[6px] group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="bg-white p-[10px] flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 md:w-6 md:h-6 text-accent" strokeWidth={1.5} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-inter text-[12px] md:text-[14px] leading-tight text-white pb-[4px] font-normal truncate">
-                      {phoneLabel}
-                    </h4>
-                    <p className="font-inter text-[16px] md:text-[24px] text-white leading-tight font-semibold truncate">
-                      {phoneDisplay}
-                    </p>
-                  </div>
-                </div>
-              </a>
+            <HeroContactActions
+              consultationButtonText={content.consultationButtonText}
+              consultationButtonLink={content.consultationButtonLink || "/contact/"}
+              className="max-w-[720px]"
+            />
 
-              {content.consultationButtonText ? (
-                <a
-                  href={content.consultationButtonLink || "/contact"}
-                  className="bg-white hover:bg-gray-100 transition-all duration-300 p-[6px] group"
-                >
-                  <div className="flex items-center gap-3 h-full">
-                    <div className="bg-accent p-[10px] flex items-center justify-center flex-shrink-0">
-                      <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white" strokeWidth={1.5} />
+            {awardLogos.length ? (
+              <div className="mt-4 max-w-[720px] overflow-x-auto pb-1">
+                <div className="flex min-w-max flex-nowrap items-center gap-3 pr-1">
+                  {awardLogos.map((logo, index) => (
+                    <div
+                      key={`${logo.src}-${index}`}
+                      className="flex h-[54px] w-[88px] shrink-0 items-center justify-center sm:h-[64px] sm:w-[108px] md:h-[72px] md:w-[124px]"
+                    >
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        loading="lazy"
+                        className="max-h-full max-w-full object-contain"
+                      />
                     </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                      <p className="font-inter text-[14px] md:text-[22px] text-accent leading-tight font-semibold">
-                        {content.consultationButtonText}
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              ) : null}
-            </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           {heroImage ? (

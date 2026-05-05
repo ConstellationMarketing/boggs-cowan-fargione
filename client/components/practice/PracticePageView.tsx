@@ -36,12 +36,19 @@ export default function PracticePageView({
       <PracticeAreaHero
         content={content.hero}
         headingTags={content.headingTags}
+        awards={
+          content.socialProof.mode === "awards"
+            ? content.socialProof.awards.logos
+            : undefined
+        }
       />
 
-      <PracticeAreaSocialProof
-        content={content.socialProof}
-        headingTags={content.headingTags}
-      />
+      {content.socialProof.mode === "testimonials" ? (
+        <PracticeAreaSocialProof
+          content={content.socialProof}
+          headingTags={content.headingTags}
+        />
+      ) : null}
 
       {content.contentSections.map((section, index) => (
         <PracticeAreaContentSection

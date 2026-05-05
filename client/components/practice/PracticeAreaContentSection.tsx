@@ -1,7 +1,5 @@
-import { Phone, Calendar } from "lucide-react";
 import type { PracticeAreaContentSectionItem } from "@site/lib/cms/practiceAreaPageTypes";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
-import CallBox from "@site/components/shared/CallBox";
+import HeroContactActions from "@site/components/shared/HeroContactActions";
 import RichText from "@site/components/shared/RichText";
 
 interface PracticeAreaContentSectionProps {
@@ -13,7 +11,6 @@ export default function PracticeAreaContentSection({
   section,
   index,
 }: PracticeAreaContentSectionProps) {
-  const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
   const imageOnLeft = section.imagePosition === "left";
   const showCTAs = section.showCTAs !== false;
 
@@ -47,20 +44,12 @@ export default function PracticeAreaContentSection({
               )}
 
               {showCTAs && (
-                <div className="flex flex-col gap-6">
-                  <CallBox
-                    icon={Phone}
-                    title={phoneLabel}
-                    subtitle={phoneDisplay}
-                    phone={phoneNumber}
-                  />
-                  <CallBox
-                    icon={Calendar}
-                    title="Schedule Now"
-                    subtitle="Free Consultation"
-                    link="/contact/"
-                  />
-                </div>
+                <HeroContactActions
+                  consultationButtonText="Free Consultation"
+                  consultationButtonLink="/contact/"
+                  stacked
+                  className="max-w-[340px]"
+                />
               )}
             </div>
           )}
