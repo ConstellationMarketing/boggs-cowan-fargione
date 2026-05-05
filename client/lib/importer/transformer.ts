@@ -56,7 +56,7 @@ function transformPracticePage(
   const rawSlug = mapped["url_slug"]
     ? String(mapped["url_slug"])
     : slugify(title);
-  const urlPath = `/practice-areas/${rawSlug}/`;
+  const urlPath = `/${rawSlug}/`;
   const publishDate = resolveImportPublishDate(mapped["published_at"], importTimestamp);
 
   // Build content sections from repeater data or mapped arrays

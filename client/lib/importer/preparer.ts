@@ -187,7 +187,7 @@ function preparePracticePage(
   const rawSlug = mapped["url_slug"]
     ? normalizeUrlSlug(String(mapped["url_slug"]), title)
     : slugify(title);
-  const urlPath = `/practice-areas/${rawSlug}/`;
+  const urlPath = `/${rawSlug}/`;
   const siteName = options?.siteName ?? "";
   const publishDate = resolveImportPublishDate(
     mapped["published_at"],

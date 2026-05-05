@@ -9,7 +9,7 @@
 // ============================================================================
 
 import type { MappedRecord, FieldConfidence, RuleExecutionResult, RecipeRuleType } from "./recipeTypes";
-import { splitOnH2, splitByParagraphGroups, extractSectionImages } from "./preparer";
+import { splitOnH2, splitByParagraphGroups, extractSectionImages, stripH1Tags, removeFaqFromHtml, detectFaqPatterns } from "./preparer";
 import { createPracticeAreaContentSection } from "@site/lib/cms/practiceAreaPageTypes";
 import { slugify } from "./fieldMapping";
 
@@ -282,7 +282,13 @@ function executeH2Split(
     return emptyResult(ctx, "h2_split", "No body content to split");
   }
 
-  const html = ensureHtml(raw);
+  // Strip H1 tags (they belong in hero, not content sections)
+  let html = stripH1Tags(ensureHtml(raw));
+  // Remove FAQ content to avoid duplication (FAQ goes in the faq field, not sections)
+  const detectedFaq = detectFaqPatterns(html);
+  if (detectedFaq.length >= 2) {
+    html = removeFaqFromHtml(html, detectedFaq);
+  }
   const h2Sections = splitOnH2(html);
 
   // Paragraph grouping fallback when no H2s are found

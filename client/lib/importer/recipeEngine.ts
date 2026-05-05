@@ -360,7 +360,7 @@ function buildPracticeRecord(
 
   const urlPath = rawSlug.startsWith("/")
     ? rawSlug
-    : `/practice-areas/${rawSlug}/`;
+    : `/${rawSlug}/`;
   const publishDate = resolveImportPublishDate(
     outputs["published_at"] ?? mapped["published_at"],
     importTimestamp ?? new Date().toISOString(),
