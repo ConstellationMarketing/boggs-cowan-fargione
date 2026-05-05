@@ -22,8 +22,8 @@ export const defaultSharedHeroContent: SharedHeroContent = {
   backgroundImage: "",
   heroImage: "",
   heroImageAlt: "",
-  consultationButtonText: "",
-  consultationButtonLink: "",
+  consultationButtonText: "Free Consultation",
+  consultationButtonLink: "/contact/",
   sectionLabel: "",
   tagline: "",
   backgroundImageAlt: "",
@@ -49,8 +49,8 @@ export function normalizeSharedHeroContent(content: unknown): SharedHeroContent 
   const backgroundImage = readString(content.backgroundImage);
   const heroImage = readString(content.heroImage);
   const heroImageAlt = readString(content.heroImageAlt, readString(content.backgroundImageAlt));
-  const consultationButtonText = readString(content.consultationButtonText);
-  const consultationButtonLink = readString(content.consultationButtonLink);
+  const consultationButtonText = readString(content.consultationButtonText) || defaultSharedHeroContent.consultationButtonText;
+  const consultationButtonLink = readString(content.consultationButtonLink) || defaultSharedHeroContent.consultationButtonLink;
 
   return {
     h1Title,
