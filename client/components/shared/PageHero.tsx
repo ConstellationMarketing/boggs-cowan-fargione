@@ -103,21 +103,26 @@ export default function PageHero({
             />
 
             {awardLogos.length ? (
-              <div className="mt-4 max-w-[720px] overflow-x-auto pb-1">
-                <div className="flex min-w-max flex-nowrap items-center gap-3 pr-1">
-                  {awardLogos.map((logo, index) => (
-                    <div
-                      key={`${logo.src}-${index}`}
-                      className="flex h-[68px] w-[108px] shrink-0 items-center justify-center sm:h-[82px] sm:w-[132px] md:h-[96px] md:w-[156px]"
-                    >
-                      <img
-                        src={logo.src}
-                        alt={logo.alt}
-                        loading="lazy"
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  ))}
+              <div className="mt-5 max-w-[720px]">
+                <p className="font-outfit text-[11px] md:text-[12px] tracking-widest uppercase text-white/50 mb-3">
+                  Awards &amp; Recognition
+                </p>
+                <div className="overflow-x-auto pb-1">
+                  <div className="flex flex-nowrap items-center gap-2 md:gap-3 pr-1">
+                    {awardLogos.map((logo, index) => (
+                      <div
+                        key={`${logo.src}-${index}`}
+                        className="flex shrink-0 items-center justify-center bg-white p-2 md:p-3 h-[64px] w-[96px] sm:h-[76px] sm:w-[114px] md:h-[84px] md:w-[128px]"
+                      >
+                        <img
+                          src={logo.src}
+                          alt={logo.alt}
+                          loading="lazy"
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : null}
