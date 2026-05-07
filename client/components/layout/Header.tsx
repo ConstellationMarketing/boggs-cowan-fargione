@@ -47,8 +47,8 @@ export default function Header() {
                   className={cn(
                     "block max-w-full brightness-0 invert transition-all duration-300",
                     isScrolled
-                      ? "w-[175px] sm:w-[205px] md:w-[240px] lg:w-[280px]"
-                      : "w-[210px] sm:w-[245px] md:w-[280px] lg:w-[380px]"
+                      ? "w-[175px] sm:w-[205px] md:w-[240px] lg:w-[220px] xl:w-[280px]"
+                      : "w-[210px] sm:w-[245px] md:w-[280px] lg:w-[260px] xl:w-[380px]"
                   )}
                   width={380}
                   height={62}
@@ -63,7 +63,7 @@ export default function Header() {
 
           {/* Desktop Navigation - Centered */}
           <nav className="hidden lg:flex items-center flex-1 justify-center">
-            <ul className="flex flex-wrap justify-center items-center -mx-[11px]">
+            <ul className="flex flex-nowrap justify-center items-center -mx-[11px]">
               {navItems.map((item, index) => {
                 const hasChildren =
                   item.children && item.children.length > 0;
@@ -107,7 +107,7 @@ export default function Header() {
                 )} strokeWidth={1.5} />
                 <span className={cn(
                   "font-inter font-semibold text-white hover:text-accent transition-all duration-300",
-                  isScrolled ? "text-[28px]" : "text-[36px]"
+                  isScrolled ? "text-[22px] lg:text-[22px] xl:text-[28px]" : "text-[26px] lg:text-[26px] xl:text-[36px]"
                 )}>
                   {phoneDisplay}
                 </span>
