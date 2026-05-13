@@ -149,7 +149,7 @@ export default function NavDropdown({ item }: NavDropdownProps) {
       </Link>
 
       <div
-        className={`absolute top-full left-0 mt-0 min-w-[220px] overflow-hidden bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-200 ${
+        className={`absolute top-full left-0 mt-0 min-w-[220px] bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-200 ${
           open
             ? "visible opacity-100 pointer-events-auto"
             : "invisible opacity-0 pointer-events-none"
