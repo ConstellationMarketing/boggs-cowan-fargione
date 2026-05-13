@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { useEffect, useState } from "react";
+import { isSupabaseConfigured, isSupabaseNetworkError, supabase } from "../lib/supabase";
 
 export type UserRole = "admin" | "editor" | null;
 
@@ -39,7 +39,6 @@ export function useUserRole(): UseUserRoleResult {
 
     async function fetchUserRole() {
       try {
-        // Get current authenticated user
         const {
           data: { user },
           error: authError,
@@ -54,6 +53,7 @@ export function useUserRole(): UseUserRoleResult {
             setRole(null);
             setUserId(null);
             setUserEmail(null);
+            setError(null);
             setIsLoading(false);
           }
           return;
@@ -64,16 +64,15 @@ export function useUserRole(): UseUserRoleResult {
           setUserEmail(user.email || null);
         }
 
-        // Check cache
         if (roleCache && roleCache.userId === user.id) {
           if (isMounted) {
             setRole(roleCache.role);
+            setError(null);
             setIsLoading(false);
           }
           return;
         }
 
-        // Fetch role from cms_users table
         const { data, error: fetchError } = await supabase
           .from("cms_users")
           .select("role")
@@ -81,11 +80,10 @@ export function useUserRole(): UseUserRoleResult {
           .single();
 
         if (fetchError) {
-          // User might not be in cms_users table yet
           if (fetchError.code === "PGRST116") {
-            // No rows returned
             if (isMounted) {
               setRole(null);
+              setError(null);
               setIsLoading(false);
             }
             return;
@@ -94,8 +92,6 @@ export function useUserRole(): UseUserRoleResult {
         }
 
         const userRole = data?.role as UserRole;
-
-        // Update cache
         roleCache = { userId: user.id, role: userRole };
 
         if (isMounted) {
@@ -103,9 +99,11 @@ export function useUserRole(): UseUserRoleResult {
           setError(null);
         }
       } catch (err) {
-        console.error("[useUserRole] Error:", err);
+        if (!isSupabaseNetworkError(err)) {
+          console.error("[useUserRole] Error:", err);
+        }
         if (isMounted) {
-          setError(err instanceof Error ? err : new Error("Unknown error"));
+          setError(err instanceof Error && !isSupabaseNetworkError(err) ? err : null);
           setRole(null);
         }
       } finally {
@@ -117,11 +115,10 @@ export function useUserRole(): UseUserRoleResult {
 
     fetchUserRole();
 
-    // Subscribe to auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(() => {
-      roleCache = null; // Clear cache on auth change
+      roleCache = null;
       fetchUserRole();
     });
 
@@ -142,7 +139,6 @@ export function useUserRole(): UseUserRoleResult {
   };
 }
 
-// Helper to clear cache (call after role changes)
 export function clearUserRoleCache() {
   roleCache = null;
 }

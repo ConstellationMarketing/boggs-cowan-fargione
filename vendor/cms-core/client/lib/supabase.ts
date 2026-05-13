@@ -13,6 +13,10 @@ export const supabaseConfigError = new Error(
   "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.",
 );
 
+export function isSupabaseNetworkError(error: unknown) {
+  return error instanceof TypeError && error.message === "Failed to fetch";
+}
+
 function createQueryStub(result: { data: null; error: Error }) {
   const promise = Promise.resolve(result);
 

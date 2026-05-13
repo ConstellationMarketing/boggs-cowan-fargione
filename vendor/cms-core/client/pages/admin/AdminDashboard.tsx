@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { isSupabaseConfigured, isSupabaseNetworkError, supabase } from '@/lib/supabase';
 import { triggerRebuild } from '@/lib/triggerRebuild';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,34 +15,60 @@ interface Stats {
   redirects: number;
 }
 
+const emptyStats: Stats = {
+  totalPages: 0,
+  totalPosts: 0,
+  publishedPages: 0,
+  draftPages: 0,
+  redirects: 0,
+};
+
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [stats, setStats] = useState<Stats>(emptyStats);
   const [loading, setLoading] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [statsUnavailable, setStatsUnavailable] = useState(false);
 
   useEffect(() => {
     fetchStats();
   }, []);
 
   const fetchStats = async () => {
-    const [pagesResult, postsResult, redirectsResult] = await Promise.all([
-      supabase.from('pages').select('status'),
-      supabase.from('posts').select('id', { count: 'exact' }),
-      supabase.from('redirects').select('id', { count: 'exact' }),
-    ]);
+    if (!isSupabaseConfigured) {
+      setStats(emptyStats);
+      setStatsUnavailable(true);
+      setLoading(false);
+      return;
+    }
 
-    const pages = pagesResult.data || [];
-    const publishedPages = pages.filter(p => p.status === 'published').length;
-    const draftPages = pages.filter(p => p.status === 'draft').length;
+    try {
+      const [pagesResult, postsResult, redirectsResult] = await Promise.all([
+        supabase.from('pages').select('status'),
+        supabase.from('posts').select('id', { count: 'exact' }),
+        supabase.from('redirects').select('id', { count: 'exact' }),
+      ]);
 
-    setStats({
-      totalPages: pages.length,
-      totalPosts: postsResult.count || 0,
-      publishedPages,
-      draftPages,
-      redirects: redirectsResult.count || 0,
-    });
-    setLoading(false);
+      const pages = pagesResult.data || [];
+      const publishedPages = pages.filter((p) => p.status === 'published').length;
+      const draftPages = pages.filter((p) => p.status === 'draft').length;
+
+      setStats({
+        totalPages: pages.length,
+        totalPosts: postsResult.count || 0,
+        publishedPages,
+        draftPages,
+        redirects: redirectsResult.count || 0,
+      });
+      setStatsUnavailable(false);
+    } catch (error) {
+      if (!isSupabaseNetworkError(error)) {
+        console.error('[AdminDashboard] Failed to fetch stats:', error);
+      }
+      setStats(emptyStats);
+      setStatsUnavailable(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePublishSite = async () => {
@@ -73,6 +99,11 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-500 mt-1">Welcome to the CMS admin panel</p>
+          {statsUnavailable ? (
+            <p className="mt-2 text-sm text-amber-600">
+              Dashboard stats are temporarily unavailable because the CMS database could not be reached.
+            </p>
+          ) : null}
         </div>
         <Button onClick={handlePublishSite} disabled={isPublishing} className="sm:self-start">
           {isPublishing ? (
@@ -96,7 +127,7 @@ export default function AdminDashboard() {
             <FileText className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats?.totalPages}</div>
+            <div className="text-3xl font-bold">{stats.totalPages}</div>
           </CardContent>
         </Card>
 
@@ -106,7 +137,7 @@ export default function AdminDashboard() {
             <FileText className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-600">{stats?.totalPosts}</div>
+            <div className="text-3xl font-bold text-blue-600">{stats.totalPosts}</div>
           </CardContent>
         </Card>
 
@@ -116,7 +147,7 @@ export default function AdminDashboard() {
             <FileText className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">{stats?.publishedPages}</div>
+            <div className="text-3xl font-bold text-green-600">{stats.publishedPages}</div>
           </CardContent>
         </Card>
 
@@ -126,7 +157,7 @@ export default function AdminDashboard() {
             <FileText className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-yellow-600">{stats?.draftPages}</div>
+            <div className="text-3xl font-bold text-yellow-600">{stats.draftPages}</div>
           </CardContent>
         </Card>
 
@@ -136,7 +167,7 @@ export default function AdminDashboard() {
             <ArrowRightLeft className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats?.redirects}</div>
+            <div className="text-3xl font-bold">{stats.redirects}</div>
           </CardContent>
         </Card>
       </div>
@@ -179,7 +210,7 @@ export default function AdminDashboard() {
               Use the sidebar to manage pages, posts, redirects, and site settings.
             </p>
             <p className="text-amber-600">
-              Note: Only pages and posts with "Published" status will appear on the live site.
+              Changes are saved to the CMS immediately. Use &quot;Publish Site&quot; to trigger a rebuild.
             </p>
           </CardContent>
         </Card>
