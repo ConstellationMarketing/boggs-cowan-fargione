@@ -129,7 +129,7 @@ export default function PageHero({
           </div>
 
           {heroImage ? (
-            <div className="mt-auto flex w-full justify-center px-4 pb-4 sm:px-6 sm:pb-6 lg:hidden">
+            <div className="mt-auto flex w-full items-end justify-center px-4 sm:px-6 lg:hidden">
               <img
                 src={heroImage}
                 alt={content.heroImageAlt || "Hero"}
