@@ -36,7 +36,7 @@ function TestimonialsView({
           {testimonials.map((item, index) => (
             <div
               key={index}
-              className="bg-[rgb(239,239,239)] p-[30px] md:p-[40px] flex flex-col"
+              className="bg-[rgb(239,239,239)] rounded-lg p-[30px] md:p-[40px] flex flex-col"
             >
               {item.ratingImage && (
                 <img
@@ -89,7 +89,7 @@ function AwardsView({
             {logos.map((logo, index) => (
               <div
                 key={index}
-                className="bg-white p-2 md:p-3 flex-shrink-0"
+                className="bg-white rounded-md p-2 md:p-3 flex-shrink-0"
               >
                 <img
                   src={logo.src}

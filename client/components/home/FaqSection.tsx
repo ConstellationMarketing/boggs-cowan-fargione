@@ -64,7 +64,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`bg-white shadow-[0_10px_24px_rgba(0,0,0,0.06)] border-b-2 border-brand-accent ${
+              className={`bg-white rounded-lg shadow-[0_10px_24px_rgba(0,0,0,0.06)] border-b-2 border-brand-accent ${
                 index < faqs.length - 1 ? "mb-4" : ""
               }`}
             >

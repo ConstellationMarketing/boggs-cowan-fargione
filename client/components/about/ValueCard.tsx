@@ -17,7 +17,7 @@ export default function ValueCard({
       <div className="flex flex-col items-center text-center">
         {/* Icon Section */}
         <div className="mb-[20px] md:mb-[30px]">
-          <div className="bg-brand-accent p-[20px] md:p-[25px] inline-block transition-all duration-300 group-hover:bg-white group-hover:scale-110">
+          <div className="bg-brand-accent rounded-md p-[20px] md:p-[25px] inline-block transition-all duration-300 group-hover:bg-white group-hover:scale-110">
             <Icon
               className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] text-black transition-colors duration-300"
               strokeWidth={1.5}

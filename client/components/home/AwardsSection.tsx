@@ -49,7 +49,7 @@ export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsS
         <div className={`grid grid-cols-1 ${data.image ? "lg:grid-cols-2" : ""} gap-10 lg:gap-[6%] items-stretch`}>
           {data.image ? (
             <div>
-              <div className="h-full min-h-[360px] overflow-hidden border border-black/10 bg-[#f7f7f7] lg:min-h-full">
+              <div className="h-full min-h-[360px] overflow-hidden rounded-lg border border-black/10 bg-[#f7f7f7] lg:min-h-full">
                 <img
                   src={data.image}
                   alt={data.imageAlt || data.heading || "Why Choose Us"}
@@ -92,7 +92,7 @@ export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsS
                   return (
                     <article
                       key={`${item.title}-${index}`}
-                      className="border-b-2 border-brand-accent bg-white px-5 py-5 shadow-[0_12px_34px_rgba(0,0,0,0.07)] md:px-7 md:py-6"
+                      className="border-b-2 border-brand-accent rounded-lg bg-white px-5 py-5 shadow-[0_12px_34px_rgba(0,0,0,0.07)] md:px-7 md:py-6"
                     >
                       <div className="flex items-start gap-3 md:gap-4">
                         <Icon className="mt-0.5 h-6 w-6 shrink-0 text-brand-accent md:h-7 md:w-7" strokeWidth={2} />

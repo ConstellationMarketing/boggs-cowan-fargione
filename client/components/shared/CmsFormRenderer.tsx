@@ -156,8 +156,8 @@ function FormInner({
           disabled={isSubmitting}
           className={
             variant === "contactSection"
-              ? "h-[56px] w-full rounded-none border border-brand-accent bg-brand-accent text-[18px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
-              : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-none"
+              ? "h-[56px] w-full rounded-md border border-brand-accent bg-brand-accent text-[18px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+              : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-md"
           }
         >
           {isSubmitting ? "SUBMITTING..." : form.submit_button_text}
@@ -181,10 +181,10 @@ function FormInner({
 }
 
 const defaultFieldInputClass =
-  "w-full h-[50px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-none focus-visible:ring-0 focus-visible:ring-offset-0";
+  "w-full h-[50px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-md focus-visible:ring-0 focus-visible:ring-offset-0";
 
 const contactSectionFieldInputClass =
-  "w-full h-[44px] md:h-[52px] bg-white border border-white text-black text-[16px] px-5 py-3 rounded-none placeholder:text-black/45 focus-visible:ring-0 focus-visible:ring-offset-0";
+  "w-full h-[44px] md:h-[52px] bg-white border border-white text-black text-[16px] px-5 py-3 rounded-md placeholder:text-black/45 focus-visible:ring-0 focus-visible:ring-offset-0";
 
 function getFieldPlaceholder(field: FormFieldDef, variant: "default" | "contactSection") {
   if (variant !== "contactSection") {
@@ -270,8 +270,8 @@ function FormField({
             required={field.required}
             className={
               variant === "contactSection"
-                ? "min-h-[120px] w-full resize-none rounded-none border border-white bg-white px-5 py-4 text-[16px] text-black placeholder:text-black/45 focus-visible:ring-0 focus-visible:ring-offset-0"
-                : "w-full h-[200px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                ? "min-h-[120px] w-full resize-none rounded-md border border-white bg-white px-5 py-4 text-[16px] text-black placeholder:text-black/45 focus-visible:ring-0 focus-visible:ring-offset-0"
+                : "w-full h-[200px] bg-white border-[0.8px] border-brand-border text-gray-600 text-[16px] px-[12px] py-[12px] rounded-md resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
             }
           />
         </div>

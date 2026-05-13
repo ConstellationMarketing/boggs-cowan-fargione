@@ -58,7 +58,7 @@ export default function ContactSectionBlock({ block }: ContactSectionBlockProps)
         </div>
 
         {/* Right Side: Form */}
-        <div className="lg:w-[31.3333%] relative p-[30px] pt-[30px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)]">
+        <div className="lg:w-[31.3333%] relative rounded-lg p-[30px] pt-[30px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)]">
           <CmsFormRenderer formId="contact-block" className="p-[5px] mx-auto space-y-[25px]" />
         </div>
       </div>

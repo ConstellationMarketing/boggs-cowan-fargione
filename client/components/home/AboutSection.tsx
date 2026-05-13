@@ -81,7 +81,7 @@ export default function AboutSection({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[6%] items-start">
           <div>
             {data.attorneyImage ? (
-              <div className="overflow-hidden border border-black/10 bg-[#f7f7f7]">
+              <div className="overflow-hidden rounded-lg border border-black/10 bg-[#f7f7f7]">
                 <img
                   src={data.attorneyImage}
                   alt={data.attorneyImageAlt || data.heading || "Attorney"}
@@ -160,7 +160,7 @@ export default function AboutSection({
             <div className="mt-6 md:mt-8">
               <Link
                 to={buttonLink}
-                className="inline-flex min-h-[56px] items-center justify-center bg-brand-accent px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-accent-dark"
+                className="inline-flex min-h-[56px] items-center justify-center rounded-lg bg-brand-accent px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-accent-dark"
               >
                 {buttonText}
               </Link>

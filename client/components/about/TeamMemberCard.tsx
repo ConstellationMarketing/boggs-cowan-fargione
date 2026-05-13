@@ -22,7 +22,7 @@ export default function TeamMemberCard({
   const credentialItems = (credentials && credentials.length > 0 ? credentials : specialties || []).filter(Boolean);
 
   return (
-    <div className="bg-brand-card border border-brand-border overflow-hidden group transition-all duration-300 hover:border-brand-accent h-full flex flex-col">
+    <div className="bg-brand-card border border-brand-border overflow-hidden rounded-lg group transition-all duration-300 hover:border-brand-accent h-full flex flex-col">
       <div className="relative overflow-hidden aspect-[4/5] min-h-[360px]">
         <img
           src={image}

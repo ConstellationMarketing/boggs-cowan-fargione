@@ -25,7 +25,7 @@ export default function MapBlock({ block }: MapBlockProps) {
           </div>
         )}
 
-        <div className="w-full h-[400px] md:h-[500px]">
+        <div className="w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden">
           <iframe
             src={block.mapEmbedUrl}
             width="100%"

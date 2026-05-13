@@ -39,7 +39,7 @@ export default function ContentSectionBlock({ block, index }: ContentSectionBloc
                 <img
                   src={block.image}
                   alt={block.imageAlt || ""}
-                  className="w-full h-auto object-cover mb-6"
+                  className="w-full h-auto rounded-lg object-cover mb-6"
                   loading="lazy"
                 />
               )}

@@ -20,7 +20,7 @@ export default function Hero() {
           {/* Call Box */}
           <a
             href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-            className="bg-brand-accent p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block"
+            className="bg-brand-accent rounded-lg p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block"
           >
             <div className="flex items-start gap-4">
               <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">

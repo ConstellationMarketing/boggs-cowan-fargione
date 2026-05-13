@@ -70,7 +70,7 @@ export default function TestimonialsBlock({ block }: TestimonialsBlockProps) {
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="w-full flex-shrink-0 bg-white bg-[url('/images/backgrounds/quote-bg.png')] bg-no-repeat bg-[position:left_10%_top_10%] px-[6%]"
+                  className="w-full flex-shrink-0 rounded-lg bg-white bg-[url('/images/backgrounds/quote-bg.png')] bg-no-repeat bg-[position:left_10%_top_10%] px-[6%]"
                 >
                   <div className="flex items-center min-h-[400px]">
                     <div className="w-full p-[30px]">
@@ -104,14 +104,14 @@ export default function TestimonialsBlock({ block }: TestimonialsBlockProps) {
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-[rgb(95,99,104)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[100] cursor-pointer bg-white/80 hover:bg-white p-2"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-[rgb(95,99,104)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[100] cursor-pointer rounded-full bg-white/80 hover:bg-white p-2"
                 aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-8 h-8" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[rgb(95,99,104)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[100] cursor-pointer bg-white/80 hover:bg-white p-2"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[rgb(95,99,104)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[100] cursor-pointer rounded-full bg-white/80 hover:bg-white p-2"
                 aria-label="Next testimonial"
               >
                 <ChevronRight className="w-8 h-8" />

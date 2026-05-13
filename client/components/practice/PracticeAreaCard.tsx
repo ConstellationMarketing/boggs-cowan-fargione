@@ -23,7 +23,7 @@ export default function PracticeAreaCard({
   return (
     <Link
       to={link}
-      className="relative min-h-[450px] overflow-hidden group bg-brand-card border border-brand-border transition-all duration-300 hover:border-brand-accent"
+      className="relative min-h-[450px] overflow-hidden rounded-lg group bg-brand-card border border-brand-border transition-all duration-300 hover:border-brand-accent"
     >
       {/* Background Image */}
       <div

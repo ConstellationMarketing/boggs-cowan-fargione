@@ -29,7 +29,7 @@ export default function HeroContactActions({
     >
       <a
         href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-        className="bg-accent hover:bg-accent/90 transition-all duration-300 p-[6px] group"
+        className="bg-accent hover:bg-accent/90 transition-all duration-300 rounded-lg p-[6px] group"
       >
         <div className="flex items-center gap-3">
           <div className="bg-white p-[10px] flex items-center justify-center flex-shrink-0">
@@ -50,7 +50,7 @@ export default function HeroContactActions({
         <a
           href={consultationButtonLink || "/contact/"}
           className={cn(
-            "bg-white hover:bg-gray-100 transition-all duration-300 p-[6px] group",
+            "bg-white hover:bg-gray-100 transition-all duration-300 rounded-lg p-[6px] group",
             consultationButtonClassName,
           )}
         >
