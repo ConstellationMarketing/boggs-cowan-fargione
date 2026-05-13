@@ -4,6 +4,7 @@ import WhyChooseUsSection from "@site/components/home/AwardsSection";
 import PracticeAreasOverviewGrid from "@site/components/practice/PracticeAreasOverviewGrid";
 import ApproachSection from "@site/components/shared/ApproachSection";
 import PageHero from "@site/components/shared/PageHero";
+import SectionTransition from "@site/components/shared/SectionTransition";
 import { Loader2 } from "lucide-react";
 import { usePracticeAreasContent } from "@site/hooks/usePracticeAreasContent";
 import { useHomeContent } from "@site/hooks/useHomeContent";
@@ -44,10 +45,16 @@ export default function PracticeAreas() {
         headingTag={content.headingTags?.["grid.heading"]}
       />
 
+      {/* dark → light: overview grid (dark) → awards (white) */}
+      <SectionTransition direction="dark-to-light" />
+
       <WhyChooseUsSection
         content={homeContent.whyChooseUs}
         headingTag={homeContent.headingTags?.["whyChooseUs.sectionLabel"]}
       />
+
+      {/* light → dark: awards (white) → approach (black) */}
+      <SectionTransition direction="light-to-dark" />
 
       <ApproachSection
         heading={content.approach.heading}

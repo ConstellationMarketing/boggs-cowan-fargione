@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
 import BlogPostHero from "@site/components/blog/BlogPostHero";
+import SectionTransition from "@site/components/shared/SectionTransition";
 import BlogSidebar from "@site/components/blog/BlogSidebar";
 import RecentPosts from "@site/components/blog/RecentPosts";
 import { ArrowLeft } from "lucide-react";
@@ -120,6 +121,9 @@ export default function BlogPost() {
         publishedDate={displayDate}
         featuredImage={post.featured_image}
       />
+
+      {/* dark → light: hero (dark) → article (white) */}
+      <SectionTransition direction="dark-to-light" />
 
       <section className="bg-white py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

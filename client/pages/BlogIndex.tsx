@@ -2,6 +2,7 @@ import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
 import BlogHero from "@site/components/blog/BlogHero";
 import RecentBlogPosts from "@site/components/blog/RecentBlogPosts";
+import SectionTransition from "@site/components/shared/SectionTransition";
 import { useBlogContent } from "@site/hooks/useBlogContent";
 import { Loader2 } from "lucide-react";
 
@@ -29,6 +30,9 @@ export default function BlogIndex() {
 
       {/* Hero - CMS-driven, matches About page style */}
       <BlogHero hero={hero} />
+
+      {/* dark → light: hero (dark) → recent posts (white) */}
+      <SectionTransition direction="dark-to-light" />
 
       {/* Recent Blog Posts - 6 latest */}
       <RecentBlogPosts data={recentPosts} />

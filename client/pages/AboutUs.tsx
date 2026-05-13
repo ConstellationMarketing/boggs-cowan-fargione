@@ -5,6 +5,7 @@ import WhyChooseUsSection from "@site/components/home/AwardsSection";
 import ApproachSection from "@site/components/shared/ApproachSection";
 import CallBox from "@site/components/shared/CallBox";
 import PageHero from "@site/components/shared/PageHero";
+import SectionTransition from "@site/components/shared/SectionTransition";
 import TeamMemberCard from "@site/components/about/TeamMemberCard";
 import {
   Phone as PhoneIcon,
@@ -75,6 +76,9 @@ export default function AboutUs() {
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
       />
 
+      {/* dark → light: hero (dark) → about/story (white) */}
+      <SectionTransition direction="dark-to-light" />
+
       <AboutSection
         content={content.story}
         headingTag={content.headingTags?.["story.heading"]}
@@ -117,12 +121,17 @@ export default function AboutUs() {
 
       {/* Our Approach Section */}
       {hasApproachSection && (
-      <ApproachSection
-        heading={content.approach.heading}
-        description={content.approach.description}
-        headingTag={content.headingTags?.["approach.heading"]}
-      />
-
+        <>
+          {/* light → dark: team (white) → approach (black) */}
+          <SectionTransition direction="light-to-dark" />
+          <ApproachSection
+            heading={content.approach.heading}
+            description={content.approach.description}
+            headingTag={content.headingTags?.["approach.heading"]}
+          />
+          {/* dark → light: approach (black) → awards (white) */}
+          <SectionTransition direction="dark-to-light" />
+        </>
       )}
 
       <WhyChooseUsSection

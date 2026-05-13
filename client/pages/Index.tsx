@@ -9,6 +9,7 @@ import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
 import FaqSection from "@site/components/home/FaqSection";
 import ContactUsSection from "@site/components/home/ContactUsSection";
 import PageHero from "@site/components/shared/PageHero";
+import SectionTransition from "@site/components/shared/SectionTransition";
 import { useHomeContent } from "@site/hooks/useHomeContent";
 import { Loader2 } from "lucide-react";
 
@@ -71,8 +72,14 @@ export default function Index() {
         </div>
       )}
 
+      {/* dark → light: hero/badges (dark) → about (white) */}
+      <SectionTransition direction="dark-to-light" />
+
       {/* About Us Section */}
       <AboutSection content={content.about} />
+
+      {/* light → dark: about (white) → practice areas (dark) */}
+      <SectionTransition direction="light-to-dark" />
 
       {/* Practice Areas Section */}
       <PracticeAreasSection content={content.practiceAreasIntro} />
@@ -80,17 +87,29 @@ export default function Index() {
       {/* Practice Areas Grid */}
       <PracticeAreasGrid areas={content.practiceAreas} />
 
+      {/* dark → light: practice areas grid (dark) → awards (white) */}
+      <SectionTransition direction="dark-to-light" />
+
       {/* Why Choose Us Section */}
       <WhyChooseUsSection content={content.whyChooseUs} headingTag={content.headingTags?.["whyChooseUs.sectionLabel"]} />
 
+      {/* light → dark: awards (white) → process (dark) */}
+      <SectionTransition direction="light-to-dark" />
+
       {/* Process Section */}
       <ProcessSection content={content.process} headingTags={content.headingTags} />
+
+      {/* dark → light: process (dark) → reviews (white) */}
+      <SectionTransition direction="dark-to-light" />
 
       {/* Google Reviews Section */}
       <GoogleReviewsSection content={content.googleReviews} headingTag={content.headingTags?.["googleReviews.sectionLabel"]} />
 
       {/* FAQ Section */}
       <FaqSection content={content.faq} />
+
+      {/* light → dark: faq (white) → contact (dark) */}
+      <SectionTransition direction="light-to-dark" />
 
       {/* Contact Us Section */}
       <ContactUsSection content={content.contact} headingTag={content.headingTags?.["contact.sectionLabel"]} />
