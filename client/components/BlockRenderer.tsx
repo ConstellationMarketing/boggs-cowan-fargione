@@ -18,6 +18,9 @@ interface BlockRendererProps {
   isPreview?: boolean;
 }
 
+// Block types that use a background image — never put a transition strip right after these.
+const BG_IMAGE_BLOCK_TYPES = new Set(["hero"]);
+
 // Returns the background tone of a block at a given index.
 // "other" = accent/unknown color — skip transitions around it.
 function getBlockBg(block: ContentBlock, index: number): "dark" | "light" | "other" {
@@ -65,11 +68,13 @@ export default function BlockRenderer({
       {content.map((block, index) => {
         const currentBg = getBlockBg(block, index);
         const prevBg = index > 0 ? getBlockBg(content[index - 1], index - 1) : null;
+        const prevBlock = index > 0 ? content[index - 1] : null;
         const needsTransition =
           prevBg !== null &&
           prevBg !== currentBg &&
           prevBg !== "other" &&
-          currentBg !== "other";
+          currentBg !== "other" &&
+          !(prevBlock && BG_IMAGE_BLOCK_TYPES.has(prevBlock.type));
 
         return (
           <div key={index}>

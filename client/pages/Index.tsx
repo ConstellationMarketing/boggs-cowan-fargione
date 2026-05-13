@@ -47,33 +47,34 @@ export default function Index() {
 
       {/* Partner Badges Section - Bottom of Hero */}
       {partnerLogos.length > 0 && (
-        <div className="bg-brand-dark py-[20px] md:py-[30px]">
-          <div className="max-w-[2560px] mx-auto w-[95%]">
-            <div className="bg-brand-card border border-brand-border py-[10px] px-0 flex flex-nowrap justify-center overflow-hidden">
-              {partnerLogos.map((logo, index) => (
-                <div
-                  key={index}
-                  className="px-[8px] sm:px-[15px] md:px-[30px] py-2 flex items-center justify-center flex-shrink"
-                >
-                  <div className="text-center">
-                    <img
-                      src={logo.src}
-                      alt={logo.alt}
-                      className="w-[80px] sm:w-[100px] md:w-[120px] lg:w-[190px] max-w-full inline-block"
-                      width={190}
-                      height={123}
-                      loading="lazy"
-                    />
+        <>
+          <div className="bg-brand-dark py-[20px] md:py-[30px]">
+            <div className="max-w-[2560px] mx-auto w-[95%]">
+              <div className="bg-brand-card border border-brand-border py-[10px] px-0 flex flex-nowrap justify-center overflow-hidden">
+                {partnerLogos.map((logo, index) => (
+                  <div
+                    key={index}
+                    className="px-[8px] sm:px-[15px] md:px-[30px] py-2 flex items-center justify-center flex-shrink"
+                  >
+                    <div className="text-center">
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="w-[80px] sm:w-[100px] md:w-[120px] lg:w-[190px] max-w-full inline-block"
+                        width={190}
+                        height={123}
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+          {/* dark → light: badges (dark, no bg-image) → about (white) */}
+          <SectionTransition direction="dark-to-light" />
+        </>
       )}
-
-      {/* dark → light: hero/badges (dark) → about (white) */}
-      <SectionTransition direction="dark-to-light" />
 
       {/* About Us Section */}
       <AboutSection content={content.about} />

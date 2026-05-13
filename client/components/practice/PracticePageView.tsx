@@ -53,9 +53,6 @@ export default function PracticePageView({
         }
       />
 
-      {/* hero (dark) → testimonials (white) or first content section (white) */}
-      <SectionTransition direction="dark-to-light" />
-
       {hasTestimonials ? (
         <PracticeAreaSocialProof
           content={content.socialProof}

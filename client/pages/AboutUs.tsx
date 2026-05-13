@@ -76,9 +76,6 @@ export default function AboutUs() {
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
       />
 
-      {/* dark → light: hero (dark) → about/story (white) */}
-      <SectionTransition direction="dark-to-light" />
-
       <AboutSection
         content={content.story}
         headingTag={content.headingTags?.["story.heading"]}
