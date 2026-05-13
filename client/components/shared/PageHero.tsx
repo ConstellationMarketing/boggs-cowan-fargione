@@ -112,7 +112,7 @@ export default function PageHero({
                     {awardLogos.map((logo, index) => (
                       <div
                         key={`${logo.src}-${index}`}
-                        className="flex shrink-0 items-center justify-center rounded-md bg-white p-2 md:p-3 h-[64px] w-[96px] sm:h-[76px] sm:w-[114px] md:h-[84px] md:w-[128px]"
+                        className="flex h-[64px] w-[96px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white p-2 md:p-3 sm:h-[76px] sm:w-[114px] md:h-[84px] md:w-[128px]"
                       >
                         <img
                           src={logo.src}

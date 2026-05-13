@@ -32,7 +32,7 @@ export default function HeroContactActions({
         className="block overflow-hidden rounded-xl bg-accent p-[6px] transition-all duration-300 hover:bg-accent/90 group"
       >
         <div className="flex items-center gap-3">
-          <div className="flex flex-shrink-0 items-center justify-center rounded-lg bg-white p-[10px]">
+          <div className="flex flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white p-[10px]">
             <Phone className="w-5 h-5 md:w-6 md:h-6 text-accent" strokeWidth={1.5} />
           </div>
           <div className="min-w-0 flex-1">
@@ -55,7 +55,7 @@ export default function HeroContactActions({
           )}
         >
           <div className="flex items-center gap-3 h-full">
-            <div className="flex flex-shrink-0 items-center justify-center rounded-lg bg-accent p-[10px]">
+            <div className="flex flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-accent p-[10px]">
               <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white" strokeWidth={1.5} />
             </div>
             <div className="min-w-0 flex-1 flex items-center">

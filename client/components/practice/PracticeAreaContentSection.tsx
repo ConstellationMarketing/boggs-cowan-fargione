@@ -40,7 +40,7 @@ export default function PracticeAreaContentSection({
                 <img
                   src={section.image}
                   alt={section.imageAlt || ""}
-                  className="w-full h-auto rounded-lg object-cover mb-6"
+                  className="mb-6 w-full h-auto rounded-xl object-cover"
                   loading="lazy"
                 />
               )}

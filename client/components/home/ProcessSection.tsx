@@ -72,7 +72,7 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
                   >
                     <span
                       className={[
-                        "inline-flex min-h-[28px] items-center bg-brand-accent px-3 font-inter text-[12px] font-semibold uppercase tracking-[0.06em] text-white",
+                        "inline-flex min-h-[28px] items-center rounded-xl bg-brand-accent px-3 font-inter text-[12px] font-semibold uppercase tracking-[0.06em] text-white",
                         !isRight ? "md:ml-auto" : "",
                       ].join(" ")}
                     >

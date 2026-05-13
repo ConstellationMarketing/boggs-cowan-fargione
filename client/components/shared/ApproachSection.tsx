@@ -19,7 +19,7 @@ export default function ApproachSection({
   return (
     <section className="bg-black py-[40px] md:py-[60px]">
       <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[80%]">
-        <div className="mx-auto max-w-[1040px] rounded-lg border border-black/10 bg-white px-[24px] py-[28px] md:px-[48px] md:py-[44px] shadow-[0_18px_60px_rgba(0,0,0,0.24)]">
+        <div className="mx-auto max-w-[1040px] overflow-hidden rounded-xl border border-black/10 bg-white px-[24px] py-[28px] md:px-[48px] md:py-[44px] shadow-[0_18px_60px_rgba(0,0,0,0.24)]">
           {heading ? (
             <DynamicHeading
               tag={headingTag}

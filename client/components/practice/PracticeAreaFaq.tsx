@@ -50,7 +50,7 @@ export default function PracticeAreaFaq({
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className={`rounded-lg border-[0.8px] border-[rgb(217,217,217)] ${
+            className={`overflow-hidden rounded-xl border-[0.8px] border-[rgb(217,217,217)] ${
               index < faqs.length - 1 ? "mb-[12px]" : ""
             } ${openIndex === index ? "bg-brand-dark" : "bg-white"}`}
           >
