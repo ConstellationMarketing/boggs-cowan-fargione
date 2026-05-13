@@ -11,31 +11,10 @@ import MapBlock from "@site/components/blocks/MapBlock";
 import PracticeAreasGridBlock from "@site/components/blocks/PracticeAreasGridBlock";
 import RecentPostsBlock from "@site/components/blocks/RecentPostsBlock";
 import LegacyBlock from "@site/components/blocks/LegacyBlock";
-import SectionTransition from "@site/components/shared/SectionTransition";
 
 interface BlockRendererProps {
   content: ContentBlock[] | Record<string, unknown> | null | undefined;
   isPreview?: boolean;
-}
-
-// Block types that use a background image — never put a transition strip right after these.
-const BG_IMAGE_BLOCK_TYPES = new Set(["hero"]);
-
-// Returns the background tone of a block at a given index.
-// "other" = accent/unknown color — skip transitions around it.
-function getBlockBg(block: ContentBlock, index: number): "dark" | "light" | "other" {
-  switch (block.type) {
-    case "hero":
-    case "team-members":
-      return "dark";
-    case "cta":
-      return "other";
-    case "content-section":
-      // ContentSectionBlock alternates: even index = white, odd index = black
-      return index % 2 === 0 ? "light" : "dark";
-    default:
-      return "light";
-  }
 }
 
 export default function BlockRenderer({
@@ -65,28 +44,9 @@ export default function BlockRenderer({
 
   return (
     <div>
-      {content.map((block, index) => {
-        const currentBg = getBlockBg(block, index);
-        const prevBg = index > 0 ? getBlockBg(content[index - 1], index - 1) : null;
-        const prevBlock = index > 0 ? content[index - 1] : null;
-        const needsTransition =
-          prevBg !== null &&
-          prevBg !== currentBg &&
-          prevBg !== "other" &&
-          currentBg !== "other" &&
-          !(prevBlock && BG_IMAGE_BLOCK_TYPES.has(prevBlock.type));
-
-        return (
-          <div key={index}>
-            {needsTransition && (
-              <SectionTransition
-                direction={prevBg === "dark" ? "dark-to-light" : "light-to-dark"}
-              />
-            )}
-            <RenderBlock block={block} index={index} isPreview={isPreview} />
-          </div>
-        );
-      })}
+      {content.map((block, index) => (
+        <RenderBlock key={index} block={block} index={index} isPreview={isPreview} />
+      ))}
     </div>
   );
 }
