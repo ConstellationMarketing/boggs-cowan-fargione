@@ -51,7 +51,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
             <img
               src={data.videoThumbnail}
               alt={data.videoThumbnailAlt || "Frequently Asked Questions"}
-              className="w-full h-auto object-cover"
+              className="w-full h-auto rounded-xl object-cover"
               width={720}
               height={480}
               loading="lazy"
@@ -64,7 +64,7 @@ export default function FaqSection({ content }: FaqSectionProps) {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`bg-white rounded-lg shadow-[0_10px_24px_rgba(0,0,0,0.06)] border-b-2 border-brand-accent ${
+              className={`overflow-hidden rounded-xl border-b-2 border-brand-accent bg-white shadow-[0_10px_24px_rgba(0,0,0,0.06)] ${
                 index < faqs.length - 1 ? "mb-4" : ""
               }`}
             >

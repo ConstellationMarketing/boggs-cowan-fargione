@@ -69,7 +69,7 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
             return (
               <article
                 key={`${area.title}-${index}`}
-                className="flex h-full flex-col rounded-lg bg-white px-6 pb-6 pt-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] md:px-8 md:pb-8 md:pt-6"
+                className="flex h-full flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] md:px-8 md:pb-8 md:pt-6"
               >
                 <div className="flex items-center gap-3">
                   <Icon className="h-6 w-6 shrink-0 text-brand-accent" strokeWidth={1.75} />
@@ -91,7 +91,7 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                   <div className="mt-6">
                     <Link
                       to={area.link}
-                      className="inline-flex min-h-[46px] items-center justify-center rounded-lg bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                      className="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
                     >
                       {area.linkText || "View Practice"}
                     </Link>

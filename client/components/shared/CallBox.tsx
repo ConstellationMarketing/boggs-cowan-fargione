@@ -36,10 +36,10 @@ export default function CallBox({
 
   const content = (
     <div
-      className={`bg-brand-accent rounded-lg p-[8px] w-full lg:w-[340px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group ${className}`}
+      className={`bg-brand-accent rounded-xl overflow-hidden p-[8px] w-full lg:w-[340px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group ${className}`}
     >
       <div className="flex items-start gap-4">
-        <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
+        <div className="mt-1 flex items-center justify-center rounded-lg bg-white p-[15px] transition-colors duration-300 group-hover:bg-black">
           <Icon
             className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
             strokeWidth={1.5}

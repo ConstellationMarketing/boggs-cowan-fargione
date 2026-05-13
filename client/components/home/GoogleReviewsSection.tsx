@@ -58,7 +58,7 @@ export default function GoogleReviewsSection({
           {reviews.slice(0, 3).map((review, index) => (
             <div
               key={index}
-              className={`md:w-[31.3333%] rounded-lg border-[0.8px] border-[rgb(224,224,224)] p-[20px] ${
+              className={`md:w-[31.3333%] overflow-hidden rounded-xl border-[0.8px] border-[rgb(224,224,224)] p-[20px] ${
                 index < 2 ? "md:mr-[3%] mb-4 md:mb-0" : ""
               }`}
             >
@@ -102,7 +102,7 @@ export default function GoogleReviewsSection({
           {reviews.slice(3, 6).map((review, index) => (
             <div
               key={index}
-              className={`md:w-[31.3333%] rounded-lg border-[0.8px] border-[rgb(224,224,224)] p-[20px] ${
+              className={`md:w-[31.3333%] overflow-hidden rounded-xl border-[0.8px] border-[rgb(224,224,224)] p-[20px] ${
                 index < 2 ? "md:mr-[3%] mb-4 md:mb-0" : ""
               }`}
             >

@@ -88,7 +88,7 @@ export default function TestimonialsSection({
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="w-full flex-shrink-0 rounded-lg bg-white bg-[url('/images/backgrounds/quote-bg.png')] bg-no-repeat bg-[position:left_10%_top_10%] px-[6%]"
+                  className="w-full flex-shrink-0 overflow-hidden rounded-xl bg-white bg-[url('/images/backgrounds/quote-bg.png')] bg-no-repeat bg-[position:left_10%_top_10%] px-[6%]"
                 >
                   <div className="flex items-center min-h-[502px]">
                     <div className="w-full p-[30px]">

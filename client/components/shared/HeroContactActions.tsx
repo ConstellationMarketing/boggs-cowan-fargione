@@ -29,10 +29,10 @@ export default function HeroContactActions({
     >
       <a
         href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-        className="bg-accent hover:bg-accent/90 transition-all duration-300 rounded-lg p-[6px] group"
+        className="block overflow-hidden rounded-xl bg-accent p-[6px] transition-all duration-300 hover:bg-accent/90 group"
       >
         <div className="flex items-center gap-3">
-          <div className="bg-white p-[10px] flex items-center justify-center flex-shrink-0">
+          <div className="flex flex-shrink-0 items-center justify-center rounded-lg bg-white p-[10px]">
             <Phone className="w-5 h-5 md:w-6 md:h-6 text-accent" strokeWidth={1.5} />
           </div>
           <div className="min-w-0 flex-1">
@@ -50,12 +50,12 @@ export default function HeroContactActions({
         <a
           href={consultationButtonLink || "/contact/"}
           className={cn(
-            "bg-white hover:bg-gray-100 transition-all duration-300 rounded-lg p-[6px] group",
+            "block overflow-hidden rounded-xl bg-white p-[6px] transition-all duration-300 hover:bg-gray-100 group",
             consultationButtonClassName,
           )}
         >
           <div className="flex items-center gap-3 h-full">
-            <div className="bg-accent p-[10px] flex items-center justify-center flex-shrink-0">
+            <div className="flex flex-shrink-0 items-center justify-center rounded-lg bg-accent p-[10px]">
               <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white" strokeWidth={1.5} />
             </div>
             <div className="min-w-0 flex-1 flex items-center">

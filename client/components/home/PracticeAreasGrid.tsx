@@ -49,7 +49,7 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
             return (
               <article
                 key={`${area.title}-${index}`}
-                className="flex min-h-[360px] flex-col rounded-lg bg-white px-6 pb-6 pt-5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+                className="flex min-h-[360px] flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
               >
                 <div className="flex items-center justify-center gap-3">
                   <Icon className="h-6 w-6 text-brand-accent" strokeWidth={1.75} />
@@ -80,7 +80,7 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
                 <div className="mt-6 flex justify-center">
                   <Link
                     to={area.link || "/practice-areas/"}
-                    className="inline-flex min-h-[46px] items-center justify-center rounded-lg bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                    className="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
                   >
                     Learn More
                   </Link>

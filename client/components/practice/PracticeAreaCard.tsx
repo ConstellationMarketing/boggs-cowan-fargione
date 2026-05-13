@@ -23,7 +23,7 @@ export default function PracticeAreaCard({
   return (
     <Link
       to={link}
-      className="relative min-h-[450px] overflow-hidden rounded-lg group bg-brand-card border border-brand-border transition-all duration-300 hover:border-brand-accent"
+      className="group relative min-h-[450px] overflow-hidden rounded-xl border border-brand-border bg-brand-card transition-all duration-300 hover:border-brand-accent"
     >
       {/* Background Image */}
       <div
@@ -42,7 +42,7 @@ export default function PracticeAreaCard({
       <div className="relative h-full flex flex-col justify-between p-[25px] md:p-[30px]">
         {/* Icon */}
         <div className="flex justify-start">
-          <div className="bg-brand-accent p-[15px] inline-block transition-all duration-300 group-hover:bg-white">
+          <div className="inline-block rounded-lg bg-brand-accent p-[15px] transition-all duration-300 group-hover:bg-white">
             <Icon
               className="w-[30px] h-[30px] md:w-[35px] md:h-[35px] text-black"
               strokeWidth={1.5}
