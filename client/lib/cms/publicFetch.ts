@@ -40,12 +40,7 @@ function isBrowserRuntime() {
 }
 
 function buildBrowserProxyUrl(resourcePath: string) {
-  const path = `/api/public-cms?resource=${encodeURIComponent(resourcePath)}`;
-  if (!isBrowserRuntime()) {
-    return path;
-  }
-
-  return new URL(path, window.location.origin).toString();
+  return `/api/public-cms?resource=${encodeURIComponent(resourcePath)}`;
 }
 
 function buildRestUrl(baseUrl: string, resourcePath: string) {
@@ -64,22 +59,39 @@ async function fetchRestJson<T>(input: RequestInfo | URL, init?: RequestInit): P
   return Array.isArray(data) ? (data as T[]) : [];
 }
 
+function buildPublicCmsFetchError(lastError: unknown, resourcePath: string) {
+  const message = lastError instanceof Error ? lastError.message : "Unknown error";
+  return new Error(`Failed to fetch public CMS resource "${resourcePath}". Checked both the direct REST endpoint and /api/public-cms proxy. Last error: ${message}`);
+}
+
 export async function fetchRestRows<T>(resourcePath: string, apiKey?: string): Promise<T[]> {
   const { url, anonKey } = getPublicCmsConfig();
   const authKey = apiKey || anonKey;
 
   if (isBrowserRuntime()) {
-    try {
-      return await fetchRestJson<T>(buildBrowserProxyUrl(resourcePath));
-    } catch (error) {
-      if (!url || !authKey) {
-        throw error;
-      }
+    const attempts: Array<() => Promise<T[]>> = [];
 
-      return fetchRestJson<T>(buildRestUrl(url, resourcePath), {
-        headers: buildRestHeaders(authKey),
-      });
+    if (url && authKey) {
+      attempts.push(() =>
+        fetchRestJson<T>(buildRestUrl(url, resourcePath), {
+          headers: buildRestHeaders(authKey),
+        }),
+      );
     }
+
+    attempts.push(() => fetchRestJson<T>(buildBrowserProxyUrl(resourcePath)));
+
+    let lastError: unknown = null;
+
+    for (const attempt of attempts) {
+      try {
+        return await attempt();
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw buildPublicCmsFetchError(lastError, resourcePath);
   }
 
   if (!url || !authKey) {
