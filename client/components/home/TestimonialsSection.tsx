@@ -94,9 +94,9 @@ export default function TestimonialsSection({
                     <div className="w-full p-[30px]">
                       <RichText
                         html={testimonial.text}
-                        className="font-inter text-[24px] leading-[31.2px] text-black pb-[10px] text-left"
+                        className="pb-[10px] text-center font-inter text-[24px] leading-[31.2px] text-black lg:text-left"
                       />
-                      <div className="font-inter text-[24px] font-semibold text-black text-left">
+                      <div className="text-center font-inter text-[24px] font-semibold text-black lg:text-left">
                         {testimonial.ratingImage && (
                           <img
                             src={testimonial.ratingImage}
@@ -104,7 +104,7 @@ export default function TestimonialsSection({
                             width={186}
                             height={34}
                             loading="lazy"
-                            className="max-w-full mb-1"
+                            className="mx-auto mb-1 max-w-full lg:mx-0"
                           />
                         )}
                         <br />

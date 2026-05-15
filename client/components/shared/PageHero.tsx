@@ -70,7 +70,7 @@ export default function PageHero({
 
       <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-[3%] flex-1">
-          <div className={`lg:w-[65.667%] flex flex-col justify-center pb-[36px] md:pb-[48px] ${underHeader ? "pt-[12.5rem] md:pt-[13.5rem]" : "pt-[3rem] md:pt-[4rem]"}`}>
+          <div className={`lg:w-[65.667%] flex flex-col items-center justify-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${underHeader ? "pt-[12.5rem] md:pt-[13.5rem]" : "pt-[3rem] md:pt-[4rem]"}`}>
             <div className="mb-[20px] md:mb-[24px]">
               {content.h1Title ? (
                 <DynamicHeading
@@ -83,7 +83,7 @@ export default function PageHero({
               ) : null}
 
               <div className={`relative ${content.h1Title ? "mt-[8px] md:mt-[12px]" : ""}`}>
-                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-left">
+                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-center lg:text-left">
                   {renderHeadline(content)}
                 </p>
               </div>
@@ -91,7 +91,7 @@ export default function PageHero({
               {content.description ? (
                 <RichText
                   html={content.description}
-                  className="mt-[12px] max-w-[720px] font-inter text-[15px] md:text-[18px] leading-[24px] md:leading-[30px] text-white/85"
+                  className="mt-[12px] max-w-[720px] font-inter text-[15px] md:text-[18px] leading-[24px] md:leading-[30px] text-center text-white/85 lg:text-left"
                 />
               ) : null}
             </div>
@@ -99,16 +99,16 @@ export default function PageHero({
             <HeroContactActions
               consultationButtonText={content.consultationButtonText}
               consultationButtonLink={content.consultationButtonLink || "/contact/"}
-              className="max-w-[720px]"
+              className="mx-auto max-w-[720px] lg:mx-0"
             />
 
             {awardLogos.length ? (
-              <div className="mt-5 max-w-[720px]">
+              <div className="mt-5 max-w-[720px] text-center lg:text-left">
                 <p className="font-outfit text-[11px] md:text-[12px] tracking-widest uppercase text-white/50 mb-3">
                   Awards &amp; Recognition
                 </p>
                 <div className="overflow-x-auto pb-1">
-                  <div className="flex flex-nowrap items-center gap-2 md:gap-3 pr-1">
+                  <div className="flex flex-nowrap items-center justify-center gap-2 pr-1 md:gap-3 lg:justify-start">
                     {awardLogos.map((logo, index) => (
                       <div
                         key={`${logo.src}-${index}`}

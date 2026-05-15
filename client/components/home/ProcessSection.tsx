@@ -64,7 +64,7 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
                 >
                   <div
                     className={[
-                      "relative pl-10 md:pl-0",
+                      "relative pl-10 text-center md:pl-0",
                       isRight
                         ? "md:col-start-2 md:pb-14 md:pt-10 md:text-left"
                         : "md:col-start-1 md:pb-14 md:pt-10 md:text-right",
@@ -72,8 +72,8 @@ export default function ProcessSection({ content, headingTags }: ProcessSectionP
                   >
                     <span
                       className={[
-                        "inline-flex min-h-[28px] items-center rounded-xl bg-brand-accent px-3 font-inter text-[12px] font-semibold uppercase tracking-[0.06em] text-white",
-                        !isRight ? "md:ml-auto" : "",
+                        "flex w-fit min-h-[28px] items-center rounded-xl bg-brand-accent px-3 font-inter text-[12px] font-semibold uppercase tracking-[0.06em] text-white",
+                        !isRight ? "mx-auto md:ml-auto md:mr-0" : "mx-auto md:mx-0",
                       ].join(" ")}
                     >
                       {stepLabel}

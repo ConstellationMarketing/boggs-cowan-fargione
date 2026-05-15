@@ -69,9 +69,9 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
             return (
               <article
                 key={`${area.title}-${index}`}
-                className="flex h-full flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] md:px-8 md:pb-8 md:pt-6"
+                className="flex h-full flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 text-center shadow-[0_14px_40px_rgba(0,0,0,0.18)] md:px-8 md:pb-8 md:pt-6 md:text-left"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center gap-3 md:justify-start">
                   <Icon className="h-6 w-6 shrink-0 text-brand-accent" strokeWidth={1.75} />
                   <h3 className="font-playfair text-[30px] leading-tight text-black md:text-[34px]">
                     {area.title}
@@ -88,7 +88,7 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                 ) : null}
 
                 {area.link ? (
-                  <div className="mt-6">
+                  <div className="mt-6 flex justify-center md:justify-start">
                     <Link
                       to={area.link}
                       className="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
@@ -101,7 +101,7 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                 {subPractices.length > 0 ? (
                   <div className="mt-7 space-y-4 border-t border-black/10 pt-6 md:mt-8 md:space-y-5 md:pt-7">
                     {subPractices.map((subPractice, subIndex) => (
-                      <div key={`${subPractice.title}-${subIndex}`} className="border-l-2 border-brand-accent/80 pl-4 md:pl-5">
+                      <div key={`${subPractice.title}-${subIndex}`} className="border-l-2 border-brand-accent/80 pl-4 text-left md:pl-5">
                         {subPractice.title ? (
                           <h4 className="font-inter text-[18px] font-semibold uppercase leading-tight text-brand-accent md:text-[20px]">
                             {subPractice.title}

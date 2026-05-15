@@ -41,7 +41,7 @@ export default function PracticeAreaCard({
       {/* Content */}
       <div className="relative h-full flex flex-col justify-between p-[25px] md:p-[30px]">
         {/* Icon */}
-        <div className="flex justify-start">
+        <div className="flex justify-center lg:justify-start">
           <div className="inline-block rounded-lg bg-brand-accent p-[15px] transition-all duration-300 group-hover:bg-white">
             <Icon
               className="w-[30px] h-[30px] md:w-[35px] md:h-[35px] text-black"
@@ -51,7 +51,7 @@ export default function PracticeAreaCard({
         </div>
 
         {/* Title and Description */}
-        <div>
+        <div className="text-center lg:text-left">
           <h3 className="font-playfair text-[28px] md:text-[32px] leading-tight text-white pb-[15px] transition-all duration-300 group-hover:text-brand-accent">
             {title}
           </h3>
@@ -61,7 +61,7 @@ export default function PracticeAreaCard({
           />
 
           {/* Learn More Link */}
-          <div className="flex items-center gap-2 text-brand-accent group-hover:text-white transition-colors duration-300">
+          <div className="flex items-center justify-center gap-2 text-brand-accent transition-colors duration-300 group-hover:text-white lg:justify-start">
             <span className="font-inter text-[14px] md:text-[16px]">
               Learn More
             </span>

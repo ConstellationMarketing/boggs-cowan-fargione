@@ -112,7 +112,7 @@ export default function AboutSection({
             ) : null}
           </div>
 
-          <div className={`pt-1 ${contentAlignment === "center" ? "self-center" : ""}`}>
+          <div className={`pt-1 text-center lg:text-left ${contentAlignment === "center" ? "self-center" : ""}`}>
             {data.sectionLabel ? (
               <p className="font-inter text-brand-accent text-[18px] md:text-[24px] font-semibold uppercase tracking-[0.08em] mb-3 md:mb-4">
                 {data.sectionLabel}
@@ -123,7 +123,7 @@ export default function AboutSection({
               <DynamicHeading
                 tag={headingTag}
                 defaultTag="h2"
-                className="font-playfair text-black text-[34px] md:text-[52px] leading-[1.08] mb-5 md:mb-6 max-w-[720px]"
+                className="mx-auto max-w-[720px] font-playfair text-[34px] leading-[1.08] text-black mb-5 md:text-[52px] md:mb-6 lg:mx-0"
               >
                 {data.heading}
               </DynamicHeading>
@@ -132,7 +132,7 @@ export default function AboutSection({
             {data.description ? (
               <RichText
                 html={data.description}
-                className="font-inter text-[16px] md:text-[19px] leading-[1.75] text-black/80 max-w-[760px] [&_p]:my-0 [&_p+p]:mt-5 md:[&_p+p]:mt-6"
+                className="mx-auto max-w-[760px] font-inter text-[16px] leading-[1.75] text-black/80 [&_p]:my-0 [&_p+p]:mt-5 md:text-[19px] md:[&_p+p]:mt-6 lg:mx-0"
               />
             ) : null}
 
@@ -157,7 +157,7 @@ export default function AboutSection({
               </div>
             ) : null}
 
-            <div className="mt-6 md:mt-8">
+            <div className="mt-6 flex justify-center md:mt-8 lg:justify-start">
               <Link
                 to={buttonLink}
                 className="inline-flex min-h-[56px] items-center justify-center rounded-xl bg-brand-accent px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-accent-dark"

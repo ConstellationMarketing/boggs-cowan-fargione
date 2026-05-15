@@ -38,7 +38,7 @@ export default function CallBox({
     <div
       className={`bg-brand-accent rounded-xl overflow-hidden p-[8px] w-full lg:w-[340px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group ${className}`}
     >
-      <div className="flex items-start gap-4">
+      <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
         <div className="mt-1 flex items-center justify-center rounded-lg bg-white p-[15px] transition-colors duration-300 group-hover:bg-black">
           <Icon
             className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
