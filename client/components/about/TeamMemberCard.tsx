@@ -35,7 +35,7 @@ export default function TeamMemberCard({
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <div className="p-[24px] md:p-[32px] flex flex-col flex-1">
+      <div className="flex flex-1 flex-col p-[24px] text-center md:p-[32px] lg:text-left">
         <h3 className="font-playfair text-[26px] md:text-[30px] leading-tight text-white pb-[6px]">
           {name}
         </h3>
@@ -54,7 +54,7 @@ export default function TeamMemberCard({
             </h4>
             <ul className="space-y-2.5">
               {credentialItems.map((credential, index) => (
-                <li key={index} className="flex items-start gap-2.5 text-white/85">
+                <li key={index} className="flex items-start justify-center gap-2.5 text-white/85 lg:justify-start">
                   <span className="mt-[8px] h-[6px] w-[6px] rounded-full bg-brand-accent shrink-0" />
                   <span className="font-inter text-[14px] md:text-[15px] leading-[22px] md:leading-[24px]">
                     {credential}
