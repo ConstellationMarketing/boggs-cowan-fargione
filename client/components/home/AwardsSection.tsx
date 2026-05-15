@@ -60,7 +60,7 @@ export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsS
             </div>
           ) : null}
 
-          <div className="pt-1">
+          <div className="pt-1 text-center lg:text-left">
             {data.sectionLabel ? (
               <DynamicHeading
                 tag={headingTag}
@@ -72,7 +72,7 @@ export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsS
             ) : null}
 
             {data.heading ? (
-              <p className="mb-5 md:mb-6 max-w-[720px] font-playfair text-[34px] leading-[1.08] text-black md:text-[52px]">
+              <p className="mx-auto mb-5 max-w-[720px] font-playfair text-[34px] leading-[1.08] text-black md:mb-6 md:text-[52px] lg:mx-0">
                 {data.heading}
               </p>
             ) : null}
@@ -80,7 +80,7 @@ export default function WhyChooseUsSection({ content, headingTag }: WhyChooseUsS
             {data.description ? (
               <RichText
                 html={data.description}
-                className="max-w-[760px] font-inter text-[16px] leading-[1.75] text-black/80 [&_p]:my-0 [&_p+p]:mt-5 md:text-[19px] md:[&_p+p]:mt-6"
+                className="mx-auto max-w-[760px] font-inter text-[16px] leading-[1.75] text-black/80 [&_p]:my-0 [&_p+p]:mt-5 md:text-[19px] md:[&_p+p]:mt-6 lg:mx-0"
               />
             ) : null}
 
