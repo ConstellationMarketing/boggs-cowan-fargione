@@ -30,6 +30,8 @@ export default {
         "brand-border": "rgb(230, 230, 230)",   // Light gray
         "brand-accent": "rgb(44, 143, 52)",     // #2C8F34
         "brand-accent-dark": "rgb(44, 143, 52)", // Match brand green so only one green is used
+        "brand-navy": "#1F3A5F",
+        "brand-navy-dark": "#182F4D",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

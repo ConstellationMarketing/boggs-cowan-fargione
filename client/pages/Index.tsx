@@ -28,6 +28,7 @@ export default function Index() {
   // Use CMS content for hero and partner logos
   const heroContent = content.hero;
   const partnerLogos = content.partnerLogos;
+  const homepageButtonTone = "navy" as const;
 
   return (
     <Layout>
@@ -42,6 +43,7 @@ export default function Index() {
       <PageHero
         content={heroContent}
         headingTag={content.headingTags?.["hero.h1Title"]}
+        ctaTone={homepageButtonTone}
       />
 
       {/* Partner Badges Section - Bottom of Hero */}
@@ -72,13 +74,13 @@ export default function Index() {
       )}
 
       {/* About Us Section */}
-      <AboutSection content={content.about} />
+      <AboutSection content={content.about} buttonTone={homepageButtonTone} />
 
       {/* Practice Areas Section */}
       <PracticeAreasSection content={content.practiceAreasIntro} />
 
       {/* Practice Areas Grid */}
-      <PracticeAreasGrid areas={content.practiceAreas} />
+      <PracticeAreasGrid areas={content.practiceAreas} buttonTone={homepageButtonTone} />
 
       {/* Why Choose Us Section */}
       <WhyChooseUsSection content={content.whyChooseUs} headingTag={content.headingTags?.["whyChooseUs.sectionLabel"]} />
@@ -93,7 +95,11 @@ export default function Index() {
       <FaqSection content={content.faq} />
 
       {/* Contact Us Section */}
-      <ContactUsSection content={content.contact} headingTag={content.headingTags?.["contact.sectionLabel"]} />
+      <ContactUsSection
+        content={content.contact}
+        headingTag={content.headingTags?.["contact.sectionLabel"]}
+        buttonTone={homepageButtonTone}
+      />
     </Layout>
   );
 }

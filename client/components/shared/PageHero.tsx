@@ -8,6 +8,7 @@ interface PageHeroProps {
   headingTag?: string;
   underHeader?: boolean;
   awardLogos?: Array<{ src: string; alt: string }>;
+  ctaTone?: "green" | "navy";
 }
 
 function renderHeadline(content: SharedHeroContent) {
@@ -52,6 +53,7 @@ export default function PageHero({
   headingTag,
   underHeader = true,
   awardLogos = [],
+  ctaTone = "green",
 }: PageHeroProps) {
   const heroImage = content.heroImage?.trim() || "";
 
@@ -100,6 +102,7 @@ export default function PageHero({
               consultationButtonText={content.consultationButtonText}
               consultationButtonLink={content.consultationButtonLink || "/contact/"}
               className="mx-auto max-w-[720px] lg:mx-0"
+              ctaTone={ctaTone}
             />
 
             {awardLogos.length ? (

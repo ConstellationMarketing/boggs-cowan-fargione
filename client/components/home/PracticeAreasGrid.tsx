@@ -5,6 +5,7 @@ import type { PracticeAreaItem } from "@site/lib/cms/homePageTypes";
 
 interface PracticeAreasGridProps {
   areas?: PracticeAreaItem[];
+  buttonTone?: "green" | "navy";
 }
 
 const normalizedIconMap = Object.entries(LucideIcons).reduce<Record<string, LucideIcon>>((acc, [name, icon]) => {
@@ -26,10 +27,15 @@ function resolvePracticeAreaIcon(iconName: string | null | undefined): LucideIco
   return normalizedIconMap[normalizedInput] || Scale;
 }
 
-export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
+export default function PracticeAreasGrid({ areas, buttonTone = "green" }: PracticeAreasGridProps) {
   if (!areas || areas.length === 0) {
     return null;
   }
+
+  const buttonClassName =
+    buttonTone === "navy"
+      ? "inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-navy px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-navy-dark"
+      : "inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark";
 
   return (
     <section className="bg-brand-dark py-[40px] md:py-[60px]">
@@ -80,7 +86,7 @@ export default function PracticeAreasGrid({ areas }: PracticeAreasGridProps) {
                 <div className="mt-6 flex justify-center">
                   <Link
                     to={area.link || "/practice-areas/"}
-                    className="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                    className={buttonClassName}
                   >
                     Learn More
                   </Link>

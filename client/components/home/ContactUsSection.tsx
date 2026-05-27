@@ -7,9 +7,15 @@ interface ContactUsSectionProps {
   content?: Pick<ContactContent, "sectionLabel" | "heading" | "description">;
   headingTag?: string;
   sectionId?: string;
+  buttonTone?: "green" | "navy";
 }
 
-export default function ContactUsSection({ content, headingTag, sectionId }: ContactUsSectionProps) {
+export default function ContactUsSection({
+  content,
+  headingTag,
+  sectionId,
+  buttonTone = "green",
+}: ContactUsSectionProps) {
   if (!content || (!content.heading && !content.sectionLabel && !content.description)) {
     return null;
   }
@@ -49,6 +55,7 @@ export default function ContactUsSection({ content, headingTag, sectionId }: Con
             formId="contact"
             variant="contactSection"
             className="space-y-4 md:space-y-5"
+            buttonTone={buttonTone}
           />
         </div>
       </div>

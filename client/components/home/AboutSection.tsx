@@ -9,6 +9,7 @@ interface AboutSectionProps {
   headingTag?: string;
   credentialsPlacement?: "side" | "below";
   contentAlignment?: "start" | "center";
+  buttonTone?: "green" | "navy";
 }
 
 function CredentialList({ title, items }: { title: string; items: string[] }) {
@@ -46,6 +47,7 @@ export default function AboutSection({
   headingTag,
   credentialsPlacement = "side",
   contentAlignment = "start",
+  buttonTone = "green",
 }: AboutSectionProps) {
   if (!content) {
     return null;
@@ -63,6 +65,10 @@ export default function AboutSection({
     !!data.membershipsTitle ||
     admissionsItems.length > 0 ||
     membershipsItems.length > 0;
+  const buttonClassName =
+    buttonTone === "navy"
+      ? "inline-flex min-h-[56px] items-center justify-center rounded-xl bg-brand-navy px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-navy-dark"
+      : "inline-flex min-h-[56px] items-center justify-center rounded-xl bg-brand-accent px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-accent-dark";
 
   if (
     !data.sectionLabel &&
@@ -160,7 +166,7 @@ export default function AboutSection({
             <div className="mt-6 flex justify-center md:mt-8 lg:justify-start">
               <Link
                 to={buttonLink}
-                className="inline-flex min-h-[56px] items-center justify-center rounded-xl bg-brand-accent px-6 md:px-8 text-white font-inter text-[16px] md:text-[18px] font-medium transition-colors duration-300 hover:bg-brand-accent-dark"
+                className={buttonClassName}
               >
                 {buttonText}
               </Link>

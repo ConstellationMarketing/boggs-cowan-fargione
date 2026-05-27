@@ -23,6 +23,8 @@ interface CmsFormRendererProps {
   className?: string;
   /** Optional visual styling preset */
   variant?: "default" | "contactSection";
+  /** Optional submit button color */
+  buttonTone?: "green" | "navy";
 }
 
 export default function CmsFormRenderer({
@@ -30,6 +32,7 @@ export default function CmsFormRenderer({
   formId,
   className,
   variant = "default",
+  buttonTone = "green",
 }: CmsFormRendererProps) {
   const { form: fetchedForm, isLoading } = useCmsForm(
     formProp ? undefined : formId,
@@ -48,17 +51,41 @@ export default function CmsFormRenderer({
     return null;
   }
 
-  return <FormInner form={form} className={className} variant={variant} />;
+  return (
+    <FormInner
+      form={form}
+      className={className}
+      variant={variant}
+      buttonTone={buttonTone}
+    />
+  );
+}
+
+function getSubmitButtonClassName(
+  variant: "default" | "contactSection",
+  buttonTone: "green" | "navy",
+) {
+  if (variant === "contactSection") {
+    return buttonTone === "navy"
+      ? "h-[56px] w-full rounded-xl border border-brand-navy bg-brand-navy text-[18px] font-medium text-white transition-colors duration-300 hover:bg-brand-navy-dark"
+      : "h-[56px] w-full rounded-xl border border-brand-accent bg-brand-accent text-[18px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark";
+  }
+
+  return buttonTone === "navy"
+    ? "w-full border-brand-navy bg-brand-navy text-white font-inter text-[22px] h-[50px] hover:bg-brand-navy-dark transition-all duration-300 rounded-xl"
+    : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-xl";
 }
 
 function FormInner({
   form,
   className,
   variant,
+  buttonTone,
 }: {
   form: CmsForm;
   className?: string;
   variant: "default" | "contactSection";
+  buttonTone: "green" | "navy";
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trackingPayload, setTrackingPayload] = useState(
@@ -154,11 +181,7 @@ function FormInner({
         <Button
           type="submit"
           disabled={isSubmitting}
-          className={
-            variant === "contactSection"
-              ? "h-[56px] w-full rounded-xl border border-brand-accent bg-brand-accent text-[18px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
-              : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-xl"
-          }
+          className={getSubmitButtonClassName(variant, buttonTone)}
         >
           {isSubmitting ? "SUBMITTING..." : form.submit_button_text}
         </Button>
