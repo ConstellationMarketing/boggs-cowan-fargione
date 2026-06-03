@@ -139,6 +139,24 @@ function FormInner({
       toast.success(form.success_message);
       formElement.reset();
       setTrackingPayload(getBrowserFormTrackingPayload());
+
+      // Notify WhatConverts of the form submission (required for Ajax/fetch forms)
+      try {
+        const wc = (window as Window & {
+          _wci?: { run?: () => void };
+          WhatConverts?: { track?: () => void };
+          _wcq?: Array<Record<string, unknown>>;
+        });
+        if (typeof wc.WhatConverts?.track === "function") {
+          wc.WhatConverts.track();
+        } else if (typeof wc._wci?.run === "function") {
+          wc._wci.run();
+        } else if (Array.isArray(wc._wcq)) {
+          wc._wcq.push({ type: "track" });
+        }
+      } catch {
+        // WhatConverts not loaded — no action needed
+      }
     } catch (err) {
       console.error("[CmsFormRenderer] Submit error:", err);
       toast.error("Something went wrong. Please try again.");
