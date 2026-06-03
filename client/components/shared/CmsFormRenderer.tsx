@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -95,12 +95,22 @@ function FormInner({
     () => normalizeRedirectUrl(form.redirect_url),
     [form.redirect_url],
   );
+  // Flag: when true, the next onSubmit call is our WC tracking submit — skip fetch
+  const isWcTrackingSubmit = useRef(false);
 
   useEffect(() => {
     setTrackingPayload(getBrowserFormTrackingPayload());
   }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    // This is the WC tracking submit fired after a successful Netlify submission.
+    // We must NOT call preventDefault so WC sees defaultPrevented=false.
+    if (isWcTrackingSubmit.current) {
+      isWcTrackingSubmit.current = false;
+      // Allow the form to submit natively to the hidden iframe — no extra action needed.
+      return;
+    }
+
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -140,22 +150,38 @@ function FormInner({
       formElement.reset();
       setTrackingPayload(getBrowserFormTrackingPayload());
 
-      // Notify WhatConverts of the form submission (required for Ajax/fetch forms)
+      // Fire a real native form submit for WhatConverts web form lead capture.
+      // We route this to /api/wc-track (a no-op endpoint) via a hidden iframe so:
+      //   1. WC sees a submit event with defaultPrevented=false → records the lead
+      //   2. The form does NOT submit to Netlify again (no duplicate)
       try {
-        const wc = (window as Window & {
-          _wci?: { run?: () => void };
-          WhatConverts?: { track?: () => void };
-          _wcq?: Array<Record<string, unknown>>;
-        });
-        if (typeof wc.WhatConverts?.track === "function") {
-          wc.WhatConverts.track();
-        } else if (typeof wc._wci?.run === "function") {
-          wc._wci.run();
-        } else if (Array.isArray(wc._wcq)) {
-          wc._wcq.push({ type: "track" });
-        }
+        const iframeName = `_wc_track_${Date.now()}`;
+        const iframe = document.createElement("iframe");
+        iframe.name = iframeName;
+        iframe.setAttribute("aria-hidden", "true");
+        iframe.style.cssText =
+          "position:absolute;top:-9999px;left:-9999px;width:0;height:0;border:none;";
+        document.body.appendChild(iframe);
+
+        const prevTarget = formElement.getAttribute("target") ?? "";
+        const prevAction = formElement.action;
+
+        formElement.target = iframeName;
+        formElement.action = "/api/wc-track";
+
+        isWcTrackingSubmit.current = true;
+        // requestSubmit() fires a real submit event (WC captures it), then
+        // the form submits natively to the iframe target.
+        formElement.requestSubmit();
+
+        // Restore after a short delay (let the native submit complete)
+        setTimeout(() => {
+          formElement.target = prevTarget;
+          formElement.action = prevAction;
+          iframe.remove();
+        }, 3000);
       } catch {
-        // WhatConverts not loaded — no action needed
+        // requestSubmit not supported or WC not present — silent fail
       }
     } catch (err) {
       console.error("[CmsFormRenderer] Submit error:", err);
