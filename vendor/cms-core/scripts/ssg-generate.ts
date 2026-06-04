@@ -92,12 +92,13 @@ async function generateSSG() {
   for (const page of pages || []) {
     const urlPath = normalizeCmsUrlPath(page.url_path);
     const preloadState = await buildRoutePreload(urlPath, { siteSettings: renderSiteSettings });
-    const rendered = renderRoute(urlPath, preloadState);
+    const serializedPreloadState = stripPreloadedScriptSettings(preloadState);
+    const rendered = renderRoute(urlPath, serializedPreloadState);
     const html = generatePageHtml(
       template,
       rendered.html,
       rendered.helmet,
-      preloadState,
+      serializedPreloadState,
       renderSiteSettings,
       bodyStartScripts,
     );
@@ -120,12 +121,13 @@ async function generateSSG() {
 
     const urlPath = `/blog/${normalizedSlug}/`;
     const preloadState = await buildRoutePreload(urlPath, { siteSettings: renderSiteSettings });
-    const rendered = renderRoute(urlPath, preloadState);
+    const serializedPreloadState = stripPreloadedScriptSettings(preloadState);
+    const rendered = renderRoute(urlPath, serializedPreloadState);
     const html = generatePageHtml(
       template,
       rendered.html,
       rendered.helmet,
-      preloadState,
+      serializedPreloadState,
       renderSiteSettings,
       bodyStartScripts,
     );
@@ -186,10 +188,6 @@ function generateRobotsTxt(siteSettings: SiteSettings, siteUrl: string) {
   console.log(`Generated robots.txt (${siteSettings.siteNoindex ? "noindex" : "indexable"})`);
 }
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 function removeNoscriptBlocks(html: string) {
   return html
     .replace(/<!--\s*Google Tag Manager \(noscript\)\s*-->[\s\S]*?<!--\s*End Google Tag Manager \(noscript\)\s*-->/gi, "")
@@ -206,28 +204,33 @@ function htmlContainsGoogleTagId(html: string, tagId: string) {
 }
 
 function removeGoogleTagSnippets(html: string, tagIds: string[]) {
-  return tagIds.reduce((cleanedHtml, tagId) => {
-    if (!tagId) {
-      return cleanedHtml;
-    }
+  const activeTagIds = tagIds.filter(Boolean);
+  if (activeTagIds.length === 0) {
+    return html;
+  }
 
-    const escapedTagId = escapeRegExp(tagId);
-    const gtagSrcPattern = new RegExp(
-      `<script\\b(?=[^>]*\\bsrc=["'](?:https?:)?//www\\.googletagmanager\\.com/gtag/js\\?id=${escapedTagId}(?:[&"'][^"']*)?["'])[^>]*>[\\s\\S]*?<\\/script>`,
-      "gi",
-    );
-    const inlineScriptPattern = new RegExp(
-      `<script\\b(?![^>]*\\bsrc=)[^>]*>[\\s\\S]*?${escapedTagId}[\\s\\S]*?<\\/script>`,
-      "gi",
-    );
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (script) => {
+      const isGoogleTagScript = /gtag|dataLayer|googletagmanager|google-analytics/i.test(script);
+      const containsManagedTagId = activeTagIds.some((tagId) => script.includes(tagId));
 
-    return cleanedHtml
-      .replace(gtagSrcPattern, "")
-      .replace(inlineScriptPattern, (script) =>
-        /gtag|dataLayer|googletagmanager|google-analytics/i.test(script) ? "" : script,
-      )
-      .trim();
-  }, html);
+      return isGoogleTagScript && containsManagedTagId ? "" : script;
+    })
+    .trim();
+}
+
+function stripPreloadedScriptSettings(preloadState: CmsPreloadedState): CmsPreloadedState {
+  return {
+    ...preloadState,
+    site: {
+      ...preloadState.site,
+      settings: {
+        ...preloadState.site.settings,
+        headScripts: "",
+        footerScripts: "",
+      },
+    },
+  };
 }
 
 function getBodyStartScripts(siteSettings: SiteSettings) {
@@ -301,6 +304,9 @@ function sanitizeTemplateHtml(template: string, siteSettings: SiteSettings) {
     .replace(/<script[^>]*data-rh="true"[\s\S]*?<\/script>/g, "")
     .replace(/<script>window\.__CMS_PRELOADED_STATE__=[\s\S]*?<\/script>/g, "")
     .replace(/<script[^>]*src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=[^"]+"[^>]*><\/script>/g, "")
+    .replace(/<!--\s*Google Tag Manager\s*-->[\s\S]*?<!--\s*End Google Tag Manager\s*-->/gi, "")
+    .replace(/<script\b(?![^>]*\bsrc=)[^>]*>[\s\S]*?\$wc_leads[\s\S]*?<\/script>/gi, "")
+    .replace(/<script\b[^>]*\bsrc=["'](?:https?:)?\/\/s\.ksrndkehqnwntyxlhgto\.com\/165912\.js["'][^>]*><\/script>/gi, "")
     .replace(/<script>\s*window\.dataLayer = window\.dataLayer \|\| \[\];[\s\S]*?<\/script>/g, "")
     .replace(/<script>\s*gtag\('config', '[^']+'\);\s*<\/script>/g, "")
     .replace(/<!--\s*Google Tag Manager \(noscript\)\s*-->[\s\S]*?<!--\s*End Google Tag Manager \(noscript\)\s*-->/gi, "")
