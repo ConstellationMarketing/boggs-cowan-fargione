@@ -229,8 +229,9 @@ describe("Practice page full pipeline (prepareRecords)", () => {
     );
   });
 
-  it("URL path = /practice-areas/personal-injury/", () => {
-    expect(result.url_path).toBe("/practice-areas/personal-injury/");
+  it("URL path = /personal-injury/", () => {
+    expect(result.url_path).toBe("/personal-injury/");
+    expect(result.url_path).not.toBe("/practice-areas/personal-injury/");
   });
 
   it("final CMS record has NO body or featured_image fields (source-only)", () => {
