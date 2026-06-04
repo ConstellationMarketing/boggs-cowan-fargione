@@ -6,7 +6,7 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || process.env.URL || "*";
 const corsHeaders = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
 const jsonHeaders = {
@@ -121,6 +121,18 @@ export const handler: Handler = async (event: HandlerEvent) => {
 
   if (routePath === "/public-cms") {
     return handlePublicCms(event);
+  }
+
+  if (routePath === "/wc-track") {
+    if (event.httpMethod !== "POST") {
+      return jsonResponse(405, { error: "Method not allowed" });
+    }
+
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: "",
+    };
   }
 
   return jsonResponse(404, { error: "Not found" });

@@ -76,6 +76,50 @@ function getSubmitButtonClassName(
     : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-xl";
 }
 
+function submitForWhatConvertsTracking(
+  formElement: HTMLFormElement,
+  markNextSubmitAsTracking: () => void,
+) {
+  const iframeName = `_wc_track_${Date.now()}`;
+  const iframe = document.createElement("iframe");
+  iframe.name = iframeName;
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.style.cssText =
+    "position:absolute;top:-9999px;left:-9999px;width:0;height:0;border:none;";
+  document.body.appendChild(iframe);
+
+  const previousTarget = formElement.getAttribute("target");
+  const previousAction = formElement.getAttribute("action");
+
+  formElement.setAttribute("target", iframeName);
+  formElement.setAttribute("action", "/api/wc-track");
+
+  markNextSubmitAsTracking();
+  formElement.requestSubmit();
+
+  return new Promise<boolean>((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 300);
+
+    setTimeout(() => {
+      if (previousTarget === null) {
+        formElement.removeAttribute("target");
+      } else {
+        formElement.setAttribute("target", previousTarget);
+      }
+
+      if (previousAction === null) {
+        formElement.removeAttribute("action");
+      } else {
+        formElement.setAttribute("action", previousAction);
+      }
+
+      iframe.remove();
+    }, 3000);
+  });
+}
+
 function FormInner({
   form,
   className,
@@ -141,6 +185,14 @@ function FormInner({
         throw new Error(`Form submission failed with ${response.status}`);
       }
 
+      try {
+        await submitForWhatConvertsTracking(formElement, () => {
+          isWcTrackingSubmit.current = true;
+        });
+      } catch {
+        isWcTrackingSubmit.current = false;
+      }
+
       if (redirectUrl && typeof window !== "undefined") {
         window.location.assign(redirectUrl);
         return;
@@ -149,40 +201,6 @@ function FormInner({
       toast.success(form.success_message);
       formElement.reset();
       setTrackingPayload(getBrowserFormTrackingPayload());
-
-      // Fire a real native form submit for WhatConverts web form lead capture.
-      // We route this to /api/wc-track (a no-op endpoint) via a hidden iframe so:
-      //   1. WC sees a submit event with defaultPrevented=false → records the lead
-      //   2. The form does NOT submit to Netlify again (no duplicate)
-      try {
-        const iframeName = `_wc_track_${Date.now()}`;
-        const iframe = document.createElement("iframe");
-        iframe.name = iframeName;
-        iframe.setAttribute("aria-hidden", "true");
-        iframe.style.cssText =
-          "position:absolute;top:-9999px;left:-9999px;width:0;height:0;border:none;";
-        document.body.appendChild(iframe);
-
-        const prevTarget = formElement.getAttribute("target") ?? "";
-        const prevAction = formElement.action;
-
-        formElement.target = iframeName;
-        formElement.action = "/api/wc-track";
-
-        isWcTrackingSubmit.current = true;
-        // requestSubmit() fires a real submit event (WC captures it), then
-        // the form submits natively to the iframe target.
-        formElement.requestSubmit();
-
-        // Restore after a short delay (let the native submit complete)
-        setTimeout(() => {
-          formElement.target = prevTarget;
-          formElement.action = prevAction;
-          iframe.remove();
-        }, 3000);
-      } catch {
-        // requestSubmit not supported or WC not present — silent fail
-      }
     } catch (err) {
       console.error("[CmsFormRenderer] Submit error:", err);
       toast.error("Something went wrong. Please try again.");
