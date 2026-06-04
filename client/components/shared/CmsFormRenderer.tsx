@@ -24,6 +24,8 @@ interface CmsFormRendererProps {
   className?: string;
   /** Optional visual styling preset */
   variant?: "default" | "contactSection";
+  /** Optional DOM id for the rendered visible form */
+  formElementId?: string;
   /** Optional submit button color */
   buttonTone?: "green" | "navy";
 }
@@ -33,6 +35,7 @@ export default function CmsFormRenderer({
   formId,
   className,
   variant = "default",
+  formElementId,
   buttonTone = "green",
 }: CmsFormRendererProps) {
   const { form: fetchedForm, isLoading } = useCmsForm(
@@ -57,6 +60,7 @@ export default function CmsFormRenderer({
       form={form}
       className={className}
       variant={variant}
+      formElementId={formElementId}
       buttonTone={buttonTone}
     />
   );
@@ -105,11 +109,13 @@ function FormInner({
   className,
   variant,
   buttonTone,
+  formElementId,
 }: {
   form: CmsForm;
   className?: string;
   variant: "default" | "contactSection";
   buttonTone: "green" | "navy";
+  formElementId?: string;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trackingPayload, setTrackingPayload] = useState(
@@ -125,7 +131,13 @@ function FormInner({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     trackingDebugLog("submit handler started");
-    trackingDebugLog(`WhatConverts script present: ${getWhatConvertsReadiness().state !== "absent"}`);
+    const hasWhatConvertsScript = getWhatConvertsReadiness().state !== "absent";
+    trackingDebugLog(
+      hasWhatConvertsScript
+        ? "WhatConverts script present"
+        : "WhatConverts script missing",
+    );
+    trackingDebugLog("visible form id");
     trackingDebugLog(`visible form id: ${e.currentTarget.id || "(none)"}`);
 
     e.preventDefault();
@@ -186,7 +198,7 @@ function FormInner({
 
   return (
     <form
-      id={form.name === "contact" ? "wc-contact-form" : undefined}
+      id={formElementId}
       name={form.name}
       method="POST"
       action="/"

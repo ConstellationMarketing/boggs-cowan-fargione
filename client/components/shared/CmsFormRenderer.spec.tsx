@@ -1,3 +1,5 @@
+/* @vitest-environment jsdom */
+
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
@@ -63,7 +65,7 @@ describe("CmsFormRenderer", () => {
   });
 
   it("renders Netlify form markup with visible contact form id during SSR", () => {
-    const html = renderToString(<CmsFormRenderer form={TEST_FORM} />);
+    const html = renderToString(<CmsFormRenderer formElementId="wc-contact-form" form={TEST_FORM} />);
 
     expect(html).toContain('id="wc-contact-form"');
     expect(html).toContain('name="contact"');
@@ -82,7 +84,7 @@ describe("CmsFormRenderer", () => {
     const requestSubmitSpy = vi.spyOn(HTMLFormElement.prototype, "requestSubmit");
 
     await act(async () => {
-      root.render(<CmsFormRenderer form={{ ...TEST_FORM, redirect_url: "" }} />);
+      root.render(<CmsFormRenderer formElementId="wc-contact-form" form={{ ...TEST_FORM, redirect_url: "" }} />);
     });
 
     const form = container.querySelector("form") as HTMLFormElement;
@@ -111,7 +113,7 @@ describe("CmsFormRenderer", () => {
     vi.useFakeTimers();
 
     await act(async () => {
-      root.render(<CmsFormRenderer form={{ ...TEST_FORM, redirect_url: "" }} />);
+      root.render(<CmsFormRenderer formElementId="wc-contact-form" form={{ ...TEST_FORM, redirect_url: "" }} />);
     });
 
     const form = container.querySelector("form") as HTMLFormElement;
@@ -141,7 +143,7 @@ describe("CmsFormRenderer", () => {
     const infoSpy = vi.spyOn(console, "info").mockImplementation(() => undefined);
 
     await act(async () => {
-      root.render(<CmsFormRenderer form={{ ...TEST_FORM, redirect_url: "" }} />);
+      root.render(<CmsFormRenderer formElementId="wc-contact-form" form={{ ...TEST_FORM, redirect_url: "" }} />);
     });
 
     const form = container.querySelector("form") as HTMLFormElement;
@@ -151,7 +153,8 @@ describe("CmsFormRenderer", () => {
     });
 
     expect(infoSpy).toHaveBeenCalledWith("[Tracking] submit handler started");
-    expect(infoSpy).toHaveBeenCalledWith("[Tracking] WhatConverts script present: true");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] WhatConverts script present");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] visible form id");
     expect(infoSpy).toHaveBeenCalledWith("[Tracking] visible form id: wc-contact-form");
     expect(infoSpy).toHaveBeenCalledWith("[Tracking] Netlify POST success");
     expect(infoSpy).toHaveBeenCalledWith("[Tracking] redirect delayed");

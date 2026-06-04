@@ -54,6 +54,7 @@ export default function ContactUsSection({
           <CmsFormRenderer
             formId="contact"
             variant="contactSection"
+            formElementId="wc-contact-form"
             className="space-y-4 md:space-y-5"
             buttonTone={buttonTone}
           />
