@@ -29,14 +29,12 @@ interface WhatConvertsReadiness {
 }
 
 const THROTTLE_MS = 500;
-const CLONE_THROTTLE_MS = 2_000;
 const WHATCONVERTS_SRC_PATTERN = /whatconverts|s\.ksrndkehqnwntyxlhgto\.com/i;
 const WHATCONVERTS_INLINE_PATTERN = /\$wc_load|\$wc_leads|wc_lead|_wcq|_wci|WhatConverts|whatconverts/i;
 const DEFAULT_READY_TIMEOUT_MS = 2_000;
 const READY_POLL_INTERVAL_MS = 50;
 
 let lastCallTs = 0;
-let lastCloneTs = 0;
 let scheduledTimers: ReturnType<typeof setTimeout>[] = [];
 const observedWhatConvertsScripts = new WeakSet<HTMLScriptElement>();
 let scriptObserverStarted = false;
@@ -188,26 +186,6 @@ function ensureWhatConvertsScriptObserver(): void {
   });
 
   registerWhatConvertsScriptNodes(undefined, "script-observer-init");
-}
-
-function cloneWhatConvertsScript(original: HTMLScriptElement): void {
-  const now = Date.now();
-  if (now - lastCloneTs < CLONE_THROTTLE_MS) {
-    return;
-  }
-
-  lastCloneTs = now;
-
-  document
-    .querySelectorAll("script[data-wc-dni-copy]")
-    .forEach((element) => element.parentNode?.removeChild(element));
-
-  const clone = document.createElement("script");
-  clone.src = original.src;
-  clone.async = true;
-  clone.setAttribute("data-wc-dni-copy", "true");
-  document.head.appendChild(clone);
-  observeWhatConvertsScripts([clone], "script-clone");
 }
 
 export function getWhatConvertsReadiness(): WhatConvertsReadiness {
@@ -375,18 +353,6 @@ export function refreshWhatConvertsDni(
     // Silently continue to next strategy
   }
 
-  try {
-    const original = readiness.scripts.find(
-      (script) => script.src && !script.hasAttribute("data-wc-dni-copy"),
-    );
-    if (!original?.src) {
-      return;
-    }
-
-    cloneWhatConvertsScript(original);
-  } catch {
-    // Silent — never break the app for analytics
-  }
 }
 
 export function cancelScheduledRefreshes(): void {
