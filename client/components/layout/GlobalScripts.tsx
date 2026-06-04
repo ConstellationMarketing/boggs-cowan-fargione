@@ -3,7 +3,9 @@ import { useSiteSettings } from "@site/contexts/SiteSettingsContext";
 import {
   refreshWhatConvertsDni,
   registerWhatConvertsScriptNodes,
+  scheduleRefreshSeries,
 } from "@site/lib/whatconvertsRefresh";
+import { startUniversalPhoneSync } from "@site/lib/syncDniPhone";
 
 declare global {
   interface Window {
@@ -308,6 +310,8 @@ export default function GlobalScripts() {
 
     registerWhatConvertsScriptNodes(injected, "head-scripts-injected");
     refreshWhatConvertsDni("head-scripts-injected", { force: true });
+    startUniversalPhoneSync();
+    scheduleRefreshSeries("head-scripts-injected", startUniversalPhoneSync);
 
     return () => {
       for (const node of injected) {

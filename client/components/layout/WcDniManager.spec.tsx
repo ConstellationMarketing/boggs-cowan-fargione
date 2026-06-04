@@ -9,6 +9,7 @@ const {
   refreshWhatConvertsDni,
   scheduleRefreshSeries,
   cancelScheduledRefreshes,
+  resetUniversalPhoneSyncState,
   startUniversalPhoneSync,
   syncPhoneNumbersNow,
 } = vi.hoisted(() => ({
@@ -23,6 +24,7 @@ const {
   refreshWhatConvertsDni: vi.fn(),
   scheduleRefreshSeries: vi.fn(),
   cancelScheduledRefreshes: vi.fn(),
+  resetUniversalPhoneSyncState: vi.fn(),
   startUniversalPhoneSync: vi.fn(),
   syncPhoneNumbersNow: vi.fn(),
 }));
@@ -38,6 +40,7 @@ vi.mock("@site/lib/whatconvertsRefresh", () => ({
 }));
 
 vi.mock("@site/lib/syncDniPhone", () => ({
+  resetUniversalPhoneSyncState,
   startUniversalPhoneSync,
   syncPhoneNumbersNow,
 }));
@@ -65,6 +68,7 @@ describe("WcDniManager", () => {
     refreshWhatConvertsDni.mockReset();
     scheduleRefreshSeries.mockReset();
     cancelScheduledRefreshes.mockReset();
+    resetUniversalPhoneSyncState.mockReset();
     startUniversalPhoneSync.mockReset();
     syncPhoneNumbersNow.mockReset();
   });

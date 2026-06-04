@@ -9,10 +9,14 @@ const {
   mockUseSiteSettings,
   refreshWhatConvertsDni,
   registerWhatConvertsScriptNodes,
+  scheduleRefreshSeries,
+  startUniversalPhoneSync,
 } = vi.hoisted(() => ({
   mockUseSiteSettings: vi.fn(),
   refreshWhatConvertsDni: vi.fn(),
   registerWhatConvertsScriptNodes: vi.fn(),
+  scheduleRefreshSeries: vi.fn(),
+  startUniversalPhoneSync: vi.fn(),
 }));
 
 vi.mock("@site/contexts/SiteSettingsContext", () => ({
@@ -22,6 +26,11 @@ vi.mock("@site/contexts/SiteSettingsContext", () => ({
 vi.mock("@site/lib/whatconvertsRefresh", () => ({
   refreshWhatConvertsDni,
   registerWhatConvertsScriptNodes,
+  scheduleRefreshSeries,
+}));
+
+vi.mock("@site/lib/syncDniPhone", () => ({
+  startUniversalPhoneSync,
 }));
 
 import GlobalScripts from "./GlobalScripts";
@@ -80,6 +89,8 @@ describe("GlobalScripts", () => {
     });
     refreshWhatConvertsDni.mockReset();
     registerWhatConvertsScriptNodes.mockReset();
+    scheduleRefreshSeries.mockReset();
+    startUniversalPhoneSync.mockReset();
   });
 
   afterEach(() => {

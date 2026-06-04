@@ -6,6 +6,7 @@ import {
   scheduleRefreshSeries,
 } from "@site/lib/whatconvertsRefresh";
 import {
+  resetUniversalPhoneSyncState,
   startUniversalPhoneSync,
   syncPhoneNumbersNow,
 } from "@site/lib/syncDniPhone";
@@ -57,6 +58,12 @@ function runImmediateDniPass(reason: string, force = false): void {
   syncPhoneNumbersNow();
 }
 
+function startDniRecoverySeries(reason: string, immediateReason = `${reason}-immediate`): void {
+  runImmediateDniPass(immediateReason, true);
+  startUniversalPhoneSync();
+  scheduleRefreshSeries(reason, startUniversalPhoneSync);
+}
+
 /**
  * Invisible component that orchestrates WhatConverts DNI refreshes
  * across initial load, route changes, DOM mutations, and content reveals.
@@ -69,13 +76,10 @@ export default function WcDniManager() {
   const mutationDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    runImmediateDniPass("initial-immediate", true);
-    startUniversalPhoneSync();
-    scheduleRefreshSeries("initial", startUniversalPhoneSync);
+    startDniRecoverySeries("initial");
 
     const onLoad = () => {
-      runImmediateDniPass("window-load", true);
-      startUniversalPhoneSync();
+      startDniRecoverySeries("window-load");
     };
 
     if (document.readyState === "complete") {
@@ -98,9 +102,8 @@ export default function WcDniManager() {
     }
 
     cancelScheduledRefreshes();
-    runImmediateDniPass("route-immediate", true);
-    startUniversalPhoneSync();
-    scheduleRefreshSeries("route", startUniversalPhoneSync);
+    resetUniversalPhoneSyncState();
+    startDniRecoverySeries("route");
   }, [navigationSignal]);
 
   useEffect(() => {
@@ -118,8 +121,7 @@ export default function WcDniManager() {
       }
 
       mutationDebounce.current = setTimeout(() => {
-        runImmediateDniPass("dom-mutation", true);
-        startUniversalPhoneSync();
+        startDniRecoverySeries("dom-mutation", "dom-mutation");
       }, 250);
     });
 

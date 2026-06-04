@@ -378,7 +378,8 @@ export function syncPhoneNumbersNow(): boolean {
 
 /**
  * Start a 250 ms polling loop that runs `syncPhoneNumbersNow()` for up
- * to 15 seconds. Stops early after 3 consecutive no-change passes.
+ * to 20 seconds. It keeps running long enough for delayed route content,
+ * hydration, and third-party DNI scripts to settle.
  *
  * Safe for re-invocation — cancels any previous loop first.
  */
@@ -391,7 +392,9 @@ export function startUniversalPhoneSync(): void {
 
     syncPhoneNumbersNow();
 
-    const MAX_ITERATIONS = 60;
+    const MAX_ITERATIONS = 80;
+    const MIN_ITERATIONS_BEFORE_IDLE_STOP = 24;
+    const MAX_CONSECUTIVE_NO_CHANGE_AFTER_MIN = 12;
     let iterations = 0;
     let consecutiveNoChange = 0;
 
@@ -405,7 +408,11 @@ export function startUniversalPhoneSync(): void {
         consecutiveNoChange++;
       }
 
-      if (iterations >= MAX_ITERATIONS || consecutiveNoChange >= 3) {
+      const canStopForIdle =
+        iterations >= MIN_ITERATIONS_BEFORE_IDLE_STOP
+        && consecutiveNoChange >= MAX_CONSECUTIVE_NO_CHANGE_AFTER_MIN;
+
+      if (iterations >= MAX_ITERATIONS || canStopForIdle) {
         if (pollingTimer !== null) {
           clearInterval(pollingTimer);
           pollingTimer = null;

@@ -308,17 +308,17 @@ export function refreshWhatConvertsDni(
 
   ensureWhatConvertsScriptObserver();
 
+  const readiness = getWhatConvertsReadiness();
+  if (readiness.state === "absent") {
+    return;
+  }
+
   const now = Date.now();
   if (!opts?.force && now - lastCallTs < THROTTLE_MS) {
     return;
   }
 
   lastCallTs = now;
-
-  const readiness = getWhatConvertsReadiness();
-  if (readiness.state === "absent") {
-    return;
-  }
 
   if (opts?.retryOnLoad !== false) {
     observeWhatConvertsScripts(readiness.scripts, reason);
@@ -368,7 +368,7 @@ export function scheduleRefreshSeries(
 ): void {
   cancelScheduledRefreshes();
 
-  const delays = [100, 500, 1500, 3000];
+  const delays = [100, 500, 1500, 3000, 6000, 10000, 15000];
 
   for (const delay of delays) {
     const id = setTimeout(() => {
