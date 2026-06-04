@@ -1,17 +1,15 @@
-// @vitest-environment jsdom
-
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CmsForm } from "@site/lib/cms/formTypes";
 
-const { waitForWhatConvertsReady } = vi.hoisted(() => ({
-  waitForWhatConvertsReady: vi.fn(),
+const { getWhatConvertsReadiness } = vi.hoisted(() => ({
+  getWhatConvertsReadiness: vi.fn(),
 }));
 
 vi.mock("@site/lib/whatconvertsRefresh", () => ({
-  waitForWhatConvertsReady,
+  getWhatConvertsReadiness,
 }));
 
 import CmsFormRenderer from "./CmsFormRenderer";
@@ -36,21 +34,9 @@ const TEST_FORM: CmsForm = {
   updated_at: "",
 };
 
-function createDeferred<T>() {
-  let resolve!: (value: T) => void;
-  let reject!: (reason?: unknown) => void;
-  const promise = new Promise<T>((promiseResolve, promiseReject) => {
-    resolve = promiseResolve;
-    reject = promiseReject;
-  });
-
-  return { promise, resolve, reject };
-}
-
 describe("CmsFormRenderer", () => {
   let container: HTMLDivElement;
   let root: Root;
-  let requestSubmitSpy: ReturnType<typeof vi.spyOn>;
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -58,16 +44,10 @@ describe("CmsFormRenderer", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
-    waitForWhatConvertsReady.mockResolvedValue(true);
+    getWhatConvertsReadiness.mockReturnValue({ state: "script-pending", scripts: [] });
     fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal("fetch", fetchMock);
-    requestSubmitSpy = vi.spyOn(HTMLFormElement.prototype, "requestSubmit").mockImplementation(function requestSubmit() {
-      const form = this as HTMLFormElement;
-      queueMicrotask(() => {
-        const iframe = document.querySelector<HTMLIFrameElement>(`iframe[name="${form.getAttribute("target")}"]`);
-        iframe?.dispatchEvent(new Event("load"));
-      });
-    });
+    window.history.replaceState({}, "", "/");
   });
 
   afterEach(() => {
@@ -77,14 +57,16 @@ describe("CmsFormRenderer", () => {
       });
     }
     container?.remove();
-    requestSubmitSpy?.mockRestore();
     vi.unstubAllGlobals();
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
-  it("renders netlify form markup with hidden tracking inputs during SSR", () => {
+  it("renders Netlify form markup with visible contact form id during SSR", () => {
     const html = renderToString(<CmsFormRenderer form={TEST_FORM} />);
 
+    expect(html).toContain('id="wc-contact-form"');
+    expect(html).toContain('name="contact"');
     expect(html).toContain('data-netlify="true"');
     expect(html).toContain('data-netlify-honeypot="bot-field"');
     expect(html).toContain('name="form-name"');
@@ -95,19 +77,9 @@ describe("CmsFormRenderer", () => {
     expect(html).toContain('name="fullName"');
   });
 
-  it("submits to Netlify first, then runs auxiliary WhatConverts tracking with current field values", async () => {
-    const netlifySubmit = createDeferred<Response>();
-    fetchMock.mockReturnValueOnce(netlifySubmit.promise);
-    let trackedFormData: FormData | null = null;
-    requestSubmitSpy.mockImplementationOnce(function requestSubmit() {
-      const form = this as HTMLFormElement;
-      trackedFormData = new FormData(form);
-      queueMicrotask(() => {
-        document
-          .querySelector<HTMLIFrameElement>(`iframe[name="${form.getAttribute("target")}"]`)
-          ?.dispatchEvent(new Event("load"));
-      });
-    });
+  it("keeps the working Netlify POST and does not use the auxiliary wc-track submit", async () => {
+    vi.useFakeTimers();
+    const requestSubmitSpy = vi.spyOn(HTMLFormElement.prototype, "requestSubmit");
 
     await act(async () => {
       root.render(<CmsFormRenderer form={{ ...TEST_FORM, redirect_url: "" }} />);
@@ -126,27 +98,17 @@ describe("CmsFormRenderer", () => {
       expect.objectContaining({ method: "POST" }),
     );
     expect(requestSubmitSpy).not.toHaveBeenCalled();
+    expect(input.value).toBe("Jane Doe");
 
     await act(async () => {
-      netlifySubmit.resolve({ ok: true } as Response);
-      await netlifySubmit.promise;
+      await vi.advanceTimersByTimeAsync(2_000);
     });
 
-    expect(waitForWhatConvertsReady).toHaveBeenCalledWith({ timeoutMs: 2000 });
-    expect(requestSubmitSpy).toHaveBeenCalledTimes(1);
-    expect(trackedFormData?.get("fullName")).toBe("Jane Doe");
+    expect(input.value).toBe("");
   });
 
-  it("keeps values until tracking finishes, then resets only after iframe load", async () => {
-    let dispatchIframeLoad: (() => void) | undefined;
-    requestSubmitSpy.mockImplementationOnce(function requestSubmit() {
-      const form = this as HTMLFormElement;
-      dispatchIframeLoad = () => {
-        document
-          .querySelector<HTMLIFrameElement>(`iframe[name="${form.getAttribute("target")}"]`)
-          ?.dispatchEvent(new Event("load"));
-      };
-    });
+  it("does not reset fields before the WhatConverts observation delay finishes", async () => {
+    vi.useFakeTimers();
 
     await act(async () => {
       root.render(<CmsFormRenderer form={{ ...TEST_FORM, redirect_url: "" }} />);
@@ -161,41 +123,41 @@ describe("CmsFormRenderer", () => {
     });
 
     await act(async () => {
-      await Promise.resolve();
+      await vi.advanceTimersByTimeAsync(1_999);
     });
 
     expect(input.value).toBe("Still Present");
 
     await act(async () => {
-      dispatchIframeLoad?.();
-      await Promise.resolve();
+      await vi.advanceTimersByTimeAsync(1);
     });
 
     expect(input.value).toBe("");
   });
 
-  it("continues after the tracking iframe timeout if the iframe never loads", async () => {
+  it("emits tracking debug logs when debugTracking is enabled", async () => {
     vi.useFakeTimers();
-    requestSubmitSpy.mockImplementationOnce(() => undefined);
+    window.history.replaceState({}, "", "/contact/?debugTracking=1");
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => undefined);
 
     await act(async () => {
       root.render(<CmsFormRenderer form={{ ...TEST_FORM, redirect_url: "" }} />);
     });
 
     const form = container.querySelector("form") as HTMLFormElement;
-    const input = container.querySelector<HTMLInputElement>('input[name="fullName"]')!;
-    input.value = "Timeout Reset";
 
     await act(async () => {
       form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
     });
 
-    expect(input.value).toBe("Timeout Reset");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] submit handler started");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] WhatConverts script present: true");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] visible form id: wc-contact-form");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] Netlify POST success");
+    expect(infoSpy).toHaveBeenCalledWith("[Tracking] redirect delayed");
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2_000);
     });
-
-    expect(input.value).toBe("");
   });
 });

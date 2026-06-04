@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import {
   normalizeRedirectUrl,
 } from "@site/lib/cms/formTracking";
 import type { CmsForm, FormFieldDef } from "@site/lib/cms/formTypes";
-import { waitForWhatConvertsReady } from "@site/lib/whatconvertsRefresh";
+import { getWhatConvertsReadiness } from "@site/lib/whatconvertsRefresh";
 
 interface CmsFormRendererProps {
   /** Pass a pre-loaded form object directly */
@@ -77,8 +77,7 @@ function getSubmitButtonClassName(
     : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-xl";
 }
 
-const WHATCONVERTS_READY_TIMEOUT_MS = 2_000;
-const WHATCONVERTS_IFRAME_TIMEOUT_MS = 2_000;
+const TRACKING_REDIRECT_DELAY_MS = 2_000;
 
 function isTrackingDebugEnabled() {
   if (typeof window === "undefined") {
@@ -94,74 +93,11 @@ function trackingDebugLog(message: string) {
   }
 }
 
-function restoreFormAttribute(
-  formElement: HTMLFormElement,
-  attributeName: "action" | "target",
-  previousValue: string | null,
-) {
-  if (previousValue === null) {
-    formElement.removeAttribute(attributeName);
-    return;
-  }
-
-  formElement.setAttribute(attributeName, previousValue);
-}
-
-async function submitForWhatConvertsTracking(
-  formElement: HTMLFormElement,
-  markNextSubmitAsTracking: () => void,
-) {
-  const isWhatConvertsDetected = await waitForWhatConvertsReady({
-    timeoutMs: WHATCONVERTS_READY_TIMEOUT_MS,
+function waitForTrackingDelay() {
+  trackingDebugLog("redirect delayed");
+  return new Promise((resolve) => {
+    setTimeout(resolve, TRACKING_REDIRECT_DELAY_MS);
   });
-  if (isWhatConvertsDetected) {
-    trackingDebugLog("WhatConverts detected");
-  }
-
-  const iframeName = `_wc_track_${Date.now()}`;
-  const iframe = document.createElement("iframe");
-  iframe.name = iframeName;
-  iframe.setAttribute("aria-hidden", "true");
-  iframe.style.cssText =
-    "position:absolute;top:-9999px;left:-9999px;width:0;height:0;border:none;";
-  document.body.appendChild(iframe);
-
-  const previousTarget = formElement.getAttribute("target");
-  const previousAction = formElement.getAttribute("action");
-
-  try {
-    await new Promise<boolean>((resolve) => {
-      let completed = false;
-      const finish = (value: boolean) => {
-        if (completed) {
-          return;
-        }
-
-        completed = true;
-        clearTimeout(timeoutId);
-        iframe.removeEventListener("load", onLoad);
-        trackingDebugLog(value ? "WC tracking iframe loaded" : "WC tracking timeout");
-        resolve(value);
-      };
-      const onLoad = () => finish(true);
-      const timeoutId = setTimeout(
-        () => finish(false),
-        WHATCONVERTS_IFRAME_TIMEOUT_MS,
-      );
-
-      iframe.addEventListener("load", onLoad, { once: true });
-      formElement.setAttribute("target", iframeName);
-      formElement.setAttribute("action", "/api/wc-track");
-
-      markNextSubmitAsTracking();
-      formElement.requestSubmit();
-      trackingDebugLog("WC tracking iframe submitted");
-    });
-  } finally {
-    restoreFormAttribute(formElement, "target", previousTarget);
-    restoreFormAttribute(formElement, "action", previousAction);
-    iframe.remove();
-  }
 }
 
 function FormInner({
@@ -183,21 +119,14 @@ function FormInner({
     () => normalizeRedirectUrl(form.redirect_url),
     [form.redirect_url],
   );
-  // Flag: when true, the next onSubmit call is our WC tracking submit — skip fetch
-  const isWcTrackingSubmit = useRef(false);
-
   useEffect(() => {
     setTrackingPayload(getBrowserFormTrackingPayload());
   }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    // This is the WC tracking submit fired after a successful Netlify submission.
-    // We must NOT call preventDefault so WC sees defaultPrevented=false.
-    if (isWcTrackingSubmit.current) {
-      isWcTrackingSubmit.current = false;
-      // Allow the form to submit natively to the hidden iframe — no extra action needed.
-      return;
-    }
+    trackingDebugLog("submit handler started");
+    trackingDebugLog(`WhatConverts script present: ${getWhatConvertsReadiness().state !== "absent"}`);
+    trackingDebugLog(`visible form id: ${e.currentTarget.id || "(none)"}`);
 
     e.preventDefault();
     setIsSubmitting(true);
@@ -229,18 +158,12 @@ function FormInner({
         throw new Error(`Form submission failed with ${response.status}`);
       }
 
-      trackingDebugLog("Netlify submit success");
+      trackingDebugLog("Netlify POST success");
 
-      try {
-        await submitForWhatConvertsTracking(formElement, () => {
-          isWcTrackingSubmit.current = true;
-        });
-      } catch {
-        isWcTrackingSubmit.current = false;
-      }
+      await waitForTrackingDelay();
 
       if (redirectUrl && typeof window !== "undefined") {
-        trackingDebugLog("Redirecting to thank-you");
+        trackingDebugLog("redirecting");
         window.location.assign(redirectUrl);
         return;
       }
@@ -263,6 +186,7 @@ function FormInner({
 
   return (
     <form
+      id={form.name === "contact" ? "wc-contact-form" : undefined}
       name={form.name}
       method="POST"
       action="/"

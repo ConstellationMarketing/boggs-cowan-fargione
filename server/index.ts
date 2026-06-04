@@ -126,14 +126,6 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
-  // No-op endpoint used by the WhatConverts tracking form submit.
-  // The client fires a native form submit targeting this endpoint so that
-  // WhatConverts sees a real submit event (defaultPrevented=false) and
-  // records the web-form lead, without creating a duplicate Netlify submission.
-  app.post("/api/wc-track", (_req, res) => {
-    res.sendStatus(200);
-  });
-
   app.post("/", (req, res, next) => {
     const formName = typeof req.body?.["form-name"] === "string"
       ? req.body["form-name"].trim()
