@@ -33,6 +33,21 @@ function htmlContainsGoogleTagId(html: string, tagId: string): boolean {
   return Boolean(tagId) && html.includes(tagId) && /gtag|googletagmanager|google-analytics/i.test(html);
 }
 
+function isDuplicateGoogleTagNode(node: Node, tagIds: string[] = []): boolean {
+  if (node.nodeType !== Node.ELEMENT_NODE) {
+    return false;
+  }
+
+  const element = node as Element;
+  if (element.tagName.toLowerCase() !== "script") {
+    return false;
+  }
+
+  const script = element as HTMLScriptElement;
+  const scriptHtml = `${script.getAttribute("src") ?? script.src}\n${script.textContent ?? ""}`;
+  return tagIds.some((tagId) => htmlContainsGoogleTagId(scriptHtml, tagId));
+}
+
 function findMatchingNode(target: HTMLElement, node: Node): Node | null {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return null;
@@ -106,7 +121,11 @@ function appendInjectedNode(
 function injectHtmlSnippet(
   html: string,
   target: HTMLElement,
-  options?: { noscriptTarget?: HTMLElement; prependNoscript?: boolean },
+  options?: {
+    noscriptTarget?: HTMLElement;
+    prependNoscript?: boolean;
+    excludedGoogleTagIds?: string[];
+  },
 ): Node[] {
   if (!html.trim()) {
     return [];
@@ -132,7 +151,10 @@ function injectHtmlSnippet(
         ? options.noscriptTarget
         : target;
 
-    if (findMatchingNode(nodeTarget, node)) {
+    if (
+      findMatchingNode(nodeTarget, node)
+      || isDuplicateGoogleTagNode(node, options?.excludedGoogleTagIds)
+    ) {
       continue;
     }
 
@@ -248,11 +270,7 @@ export default function GlobalScripts() {
 
     const injected: Node[] = [];
 
-    if (
-      settings.ga4MeasurementId
-      && !htmlContainsGoogleTagId(settings.headScripts, settings.ga4MeasurementId)
-      && !htmlContainsGoogleTagId(settings.footerScripts, settings.ga4MeasurementId)
-    ) {
+    if (settings.ga4MeasurementId) {
       injected.push(...injectGA4(settings.ga4MeasurementId));
     }
 
@@ -265,17 +283,27 @@ export default function GlobalScripts() {
       );
     }
 
+    const appRenderedGoogleTagIds = [
+      settings.ga4MeasurementId,
+      settings.googleAdsId,
+    ].filter(Boolean);
+
     if (settings.headScripts) {
       injected.push(
         ...injectHtmlSnippet(settings.headScripts, document.head, {
           noscriptTarget: document.body,
           prependNoscript: true,
+          excludedGoogleTagIds: appRenderedGoogleTagIds,
         }),
       );
     }
 
     if (settings.footerScripts) {
-      injected.push(...injectHtmlSnippet(settings.footerScripts, document.body));
+      injected.push(
+        ...injectHtmlSnippet(settings.footerScripts, document.body, {
+          excludedGoogleTagIds: appRenderedGoogleTagIds,
+        }),
+      );
     }
 
     registerWhatConvertsScriptNodes(injected, "head-scripts-injected");

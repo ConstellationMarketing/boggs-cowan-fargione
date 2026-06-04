@@ -80,6 +80,20 @@ function getSubmitButtonClassName(
 const WHATCONVERTS_READY_TIMEOUT_MS = 2_000;
 const WHATCONVERTS_IFRAME_TIMEOUT_MS = 2_000;
 
+function isTrackingDebugEnabled() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return new URLSearchParams(window.location.search).get("debugTracking") === "1";
+}
+
+function trackingDebugLog(message: string) {
+  if (isTrackingDebugEnabled()) {
+    console.info(`[Tracking] ${message}`);
+  }
+}
+
 function restoreFormAttribute(
   formElement: HTMLFormElement,
   attributeName: "action" | "target",
@@ -97,7 +111,12 @@ async function submitForWhatConvertsTracking(
   formElement: HTMLFormElement,
   markNextSubmitAsTracking: () => void,
 ) {
-  await waitForWhatConvertsReady({ timeoutMs: WHATCONVERTS_READY_TIMEOUT_MS });
+  const isWhatConvertsDetected = await waitForWhatConvertsReady({
+    timeoutMs: WHATCONVERTS_READY_TIMEOUT_MS,
+  });
+  if (isWhatConvertsDetected) {
+    trackingDebugLog("WhatConverts detected");
+  }
 
   const iframeName = `_wc_track_${Date.now()}`;
   const iframe = document.createElement("iframe");
@@ -121,6 +140,7 @@ async function submitForWhatConvertsTracking(
         completed = true;
         clearTimeout(timeoutId);
         iframe.removeEventListener("load", onLoad);
+        trackingDebugLog(value ? "WC tracking iframe loaded" : "WC tracking timeout");
         resolve(value);
       };
       const onLoad = () => finish(true);
@@ -135,6 +155,7 @@ async function submitForWhatConvertsTracking(
 
       markNextSubmitAsTracking();
       formElement.requestSubmit();
+      trackingDebugLog("WC tracking iframe submitted");
     });
   } finally {
     restoreFormAttribute(formElement, "target", previousTarget);
@@ -208,6 +229,8 @@ function FormInner({
         throw new Error(`Form submission failed with ${response.status}`);
       }
 
+      trackingDebugLog("Netlify submit success");
+
       try {
         await submitForWhatConvertsTracking(formElement, () => {
           isWcTrackingSubmit.current = true;
@@ -217,6 +240,7 @@ function FormInner({
       }
 
       if (redirectUrl && typeof window !== "undefined") {
+        trackingDebugLog("Redirecting to thank-you");
         window.location.assign(redirectUrl);
         return;
       }

@@ -50,6 +50,8 @@ async function generateSSG() {
   console.log("Starting SSG generation...");
 
   const siteSettings = await loadSiteSettings();
+  const renderSiteSettings = normalizeSiteSettingsForRender(siteSettings);
+  const bodyStartScripts = getBodyStartScripts(siteSettings);
   const siteUrl = (process.env.SITE_URL || siteSettings.siteUrl || "").replace(/\/+$/, "");
 
   if (!siteUrl) {
@@ -84,14 +86,21 @@ async function generateSSG() {
     process.exit(1);
   }
 
-  const template = sanitizeTemplateHtml(fs.readFileSync(templatePath, "utf-8"), siteSettings);
+  const template = sanitizeTemplateHtml(fs.readFileSync(templatePath, "utf-8"), renderSiteSettings);
 
   console.log(`Found ${pages?.length || 0} published pages`);
   for (const page of pages || []) {
     const urlPath = normalizeCmsUrlPath(page.url_path);
-    const preloadState = await buildRoutePreload(urlPath, { siteSettings });
+    const preloadState = await buildRoutePreload(urlPath, { siteSettings: renderSiteSettings });
     const rendered = renderRoute(urlPath, preloadState);
-    const html = generatePageHtml(template, rendered.html, rendered.helmet, preloadState, siteSettings);
+    const html = generatePageHtml(
+      template,
+      rendered.html,
+      rendered.helmet,
+      preloadState,
+      renderSiteSettings,
+      bodyStartScripts,
+    );
 
     const outputPath = urlPath === "/"
       ? path.join(process.cwd(), "dist/spa/index.html")
@@ -110,9 +119,16 @@ async function generateSSG() {
     }
 
     const urlPath = `/blog/${normalizedSlug}/`;
-    const preloadState = await buildRoutePreload(urlPath, { siteSettings });
+    const preloadState = await buildRoutePreload(urlPath, { siteSettings: renderSiteSettings });
     const rendered = renderRoute(urlPath, preloadState);
-    const html = generatePageHtml(template, rendered.html, rendered.helmet, preloadState, siteSettings);
+    const html = generatePageHtml(
+      template,
+      rendered.html,
+      rendered.helmet,
+      preloadState,
+      renderSiteSettings,
+      bodyStartScripts,
+    );
     const outputPath = path.join(process.cwd(), "dist/spa", "blog", normalizedSlug, "index.html");
 
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -170,13 +186,86 @@ function generateRobotsTxt(siteSettings: SiteSettings, siteUrl: string) {
   console.log(`Generated robots.txt (${siteSettings.siteNoindex ? "noindex" : "indexable"})`);
 }
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function removeNoscriptBlocks(html: string) {
+  return html
+    .replace(/<!--\s*Google Tag Manager \(noscript\)\s*-->[\s\S]*?<!--\s*End Google Tag Manager \(noscript\)\s*-->/gi, "")
+    .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, "")
+    .trim();
+}
+
+function extractNoscriptBlocks(html: string) {
+  return html.match(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi)?.join("\n") ?? "";
+}
+
+function htmlContainsGoogleTagId(html: string, tagId: string) {
+  return Boolean(tagId) && html.includes(tagId) && /gtag|googletagmanager|google-analytics/i.test(html);
+}
+
+function removeGoogleTagSnippets(html: string, tagIds: string[]) {
+  return tagIds.reduce((cleanedHtml, tagId) => {
+    if (!tagId) {
+      return cleanedHtml;
+    }
+
+    const escapedTagId = escapeRegExp(tagId);
+    const gtagSrcPattern = new RegExp(
+      `<script\\b(?=[^>]*\\bsrc=["'](?:https?:)?//www\\.googletagmanager\\.com/gtag/js\\?id=${escapedTagId}(?:[&"'][^"']*)?["'])[^>]*>[\\s\\S]*?<\\/script>`,
+      "gi",
+    );
+    const inlineScriptPattern = new RegExp(
+      `<script\\b(?![^>]*\\bsrc=)[^>]*>[\\s\\S]*?${escapedTagId}[\\s\\S]*?<\\/script>`,
+      "gi",
+    );
+
+    return cleanedHtml
+      .replace(gtagSrcPattern, "")
+      .replace(inlineScriptPattern, (script) =>
+        /gtag|dataLayer|googletagmanager|google-analytics/i.test(script) ? "" : script,
+      )
+      .trim();
+  }, html);
+}
+
+function getBodyStartScripts(siteSettings: SiteSettings) {
+  return [
+    extractNoscriptBlocks(siteSettings.headScripts),
+    extractNoscriptBlocks(siteSettings.footerScripts),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+function normalizeSiteSettingsForRender(siteSettings: SiteSettings): SiteSettings {
+  const googleTagIds = [siteSettings.ga4MeasurementId, siteSettings.googleAdsId].filter(Boolean);
+
+  return {
+    ...siteSettings,
+    headScripts: removeGoogleTagSnippets(removeNoscriptBlocks(siteSettings.headScripts), googleTagIds),
+    footerScripts: removeGoogleTagSnippets(removeNoscriptBlocks(siteSettings.footerScripts), googleTagIds),
+  };
+}
+
+function insertBodyStartHtml(html: string, bodyStartHtml: string) {
+  if (!bodyStartHtml.trim()) {
+    return html;
+  }
+
+  return html.replace(/<body([^>]*)>/i, `<body$1>\n${bodyStartHtml}`);
+}
+
 function generatePageHtml(
   template: string,
   appHtml: string,
   helmet: { title: string; meta: string; link: string; script: string },
   preloadState: CmsPreloadedState,
   siteSettings: SiteSettings,
+  bodyStartScripts = "",
 ) {
+  const footerScripts = siteSettings.footerScripts;
   const preloadScript = `<script>window.__CMS_PRELOADED_STATE__=${serializePreloadedState(preloadState)}</script>`;
   const analyticsScripts = buildAnalyticsMarkup(siteSettings);
   const headInjection = [
@@ -193,9 +282,10 @@ function generatePageHtml(
 
   let html = replaceRootHtml(template, appHtml);
   html = html.replace("</head>", `${headInjection}\n</head>`);
+  html = insertBodyStartHtml(html, bodyStartScripts);
 
-  if (siteSettings.footerScripts) {
-    html = html.replace("</body>", `${siteSettings.footerScripts}\n</body>`);
+  if (footerScripts) {
+    html = html.replace("</body>", `${footerScripts}\n</body>`);
   }
 
   return html;
@@ -212,7 +302,9 @@ function sanitizeTemplateHtml(template: string, siteSettings: SiteSettings) {
     .replace(/<script>window\.__CMS_PRELOADED_STATE__=[\s\S]*?<\/script>/g, "")
     .replace(/<script[^>]*src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=[^"]+"[^>]*><\/script>/g, "")
     .replace(/<script>\s*window\.dataLayer = window\.dataLayer \|\| \[\];[\s\S]*?<\/script>/g, "")
-    .replace(/<script>\s*gtag\('config', '[^']+'\);\s*<\/script>/g, "");
+    .replace(/<script>\s*gtag\('config', '[^']+'\);\s*<\/script>/g, "")
+    .replace(/<!--\s*Google Tag Manager \(noscript\)\s*-->[\s\S]*?<!--\s*End Google Tag Manager \(noscript\)\s*-->/gi, "")
+    .replace(/<noscript\b[^>]*>\s*<iframe\b[^>]*src=["'][^"']*googletagmanager\.com\/ns\.html[^"']*["'][\s\S]*?<\/iframe>\s*<\/noscript>/gi, "");
 
   if (siteSettings.headScripts.trim()) {
     html = html.replace(siteSettings.headScripts, "");
@@ -247,8 +339,11 @@ function replaceRootHtml(template: string, appHtml: string) {
 
 function buildAnalyticsMarkup(siteSettings: SiteSettings) {
   let analyticsScripts = "";
+  const cmsScripts = `${siteSettings.headScripts}\n${siteSettings.footerScripts}`;
+  const hasCmsGa4 = htmlContainsGoogleTagId(cmsScripts, siteSettings.ga4MeasurementId);
+  const hasCmsGoogleAds = htmlContainsGoogleTagId(cmsScripts, siteSettings.googleAdsId);
 
-  if (siteSettings.ga4MeasurementId) {
+  if (siteSettings.ga4MeasurementId && !hasCmsGa4) {
     analyticsScripts += `
 <script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(siteSettings.ga4MeasurementId)}"></script>
 <script>
@@ -259,8 +354,8 @@ function buildAnalyticsMarkup(siteSettings: SiteSettings) {
 </script>`;
   }
 
-  if (siteSettings.googleAdsId) {
-    if (!siteSettings.ga4MeasurementId) {
+  if (siteSettings.googleAdsId && !hasCmsGoogleAds) {
+    if (!siteSettings.ga4MeasurementId && !hasCmsGa4) {
       analyticsScripts += `
 <script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(siteSettings.googleAdsId)}"></script>
 <script>
