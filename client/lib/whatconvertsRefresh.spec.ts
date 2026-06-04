@@ -46,6 +46,47 @@ describe("whatconvertsRefresh", () => {
     });
   });
 
+  it("detects the production WhatConverts external script host", async () => {
+    const module = await import("./whatconvertsRefresh");
+    const script = document.createElement("script");
+    script.src = "https://s.ksrndkehqnwntyxlhgto.com/165912.js";
+
+    expect(module.isWhatConvertsScript(script)).toBe(true);
+  });
+
+  it.each(["$wc_load", "$wc_leads", "wc_lead"])(
+    "detects inline WhatConverts content containing %s",
+    async (marker) => {
+      const module = await import("./whatconvertsRefresh");
+      const script = document.createElement("script");
+      script.textContent = `window.marker = ${JSON.stringify(marker)};`;
+
+      expect(module.isWhatConvertsScript(script)).toBe(true);
+    },
+  );
+
+  it("waits until a WhatConverts script appears", async () => {
+    const module = await import("./whatconvertsRefresh");
+    const promise = module.waitForWhatConvertsReady({ timeoutMs: 500 });
+
+    setTimeout(() => {
+      const script = document.createElement("script");
+      script.src = "https://s.ksrndkehqnwntyxlhgto.com/165912.js";
+      document.head.appendChild(script);
+    }, 100);
+
+    await vi.advanceTimersByTimeAsync(150);
+    await expect(promise).resolves.toBe(true);
+  });
+
+  it("times out safely when WhatConverts never appears", async () => {
+    const module = await import("./whatconvertsRefresh");
+    const promise = module.waitForWhatConvertsReady({ timeoutMs: 200 });
+
+    await vi.advanceTimersByTimeAsync(250);
+    await expect(promise).resolves.toBe(false);
+  });
+
   it("registers WhatConverts script load handlers and refreshes once the script loads", async () => {
     const wcq: Array<Record<string, unknown>> = [];
     (window as Window & { _wcq?: Array<Record<string, unknown>> })._wcq = wcq;

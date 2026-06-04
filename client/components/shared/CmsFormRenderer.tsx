@@ -13,6 +13,7 @@ import {
   normalizeRedirectUrl,
 } from "@site/lib/cms/formTracking";
 import type { CmsForm, FormFieldDef } from "@site/lib/cms/formTypes";
+import { waitForWhatConvertsReady } from "@site/lib/whatconvertsRefresh";
 
 interface CmsFormRendererProps {
   /** Pass a pre-loaded form object directly */
@@ -76,10 +77,28 @@ function getSubmitButtonClassName(
     : "w-full bg-brand-accent-dark text-white border-brand-accent font-inter text-[22px] h-[50px] hover:bg-brand-accent hover:text-black transition-all duration-300 rounded-xl";
 }
 
-function submitForWhatConvertsTracking(
+const WHATCONVERTS_READY_TIMEOUT_MS = 2_000;
+const WHATCONVERTS_IFRAME_TIMEOUT_MS = 2_000;
+
+function restoreFormAttribute(
+  formElement: HTMLFormElement,
+  attributeName: "action" | "target",
+  previousValue: string | null,
+) {
+  if (previousValue === null) {
+    formElement.removeAttribute(attributeName);
+    return;
+  }
+
+  formElement.setAttribute(attributeName, previousValue);
+}
+
+async function submitForWhatConvertsTracking(
   formElement: HTMLFormElement,
   markNextSubmitAsTracking: () => void,
 ) {
+  await waitForWhatConvertsReady({ timeoutMs: WHATCONVERTS_READY_TIMEOUT_MS });
+
   const iframeName = `_wc_track_${Date.now()}`;
   const iframe = document.createElement("iframe");
   iframe.name = iframeName;
@@ -91,33 +110,37 @@ function submitForWhatConvertsTracking(
   const previousTarget = formElement.getAttribute("target");
   const previousAction = formElement.getAttribute("action");
 
-  formElement.setAttribute("target", iframeName);
-  formElement.setAttribute("action", "/api/wc-track");
+  try {
+    await new Promise<boolean>((resolve) => {
+      let completed = false;
+      const finish = (value: boolean) => {
+        if (completed) {
+          return;
+        }
 
-  markNextSubmitAsTracking();
-  formElement.requestSubmit();
+        completed = true;
+        clearTimeout(timeoutId);
+        iframe.removeEventListener("load", onLoad);
+        resolve(value);
+      };
+      const onLoad = () => finish(true);
+      const timeoutId = setTimeout(
+        () => finish(false),
+        WHATCONVERTS_IFRAME_TIMEOUT_MS,
+      );
 
-  return new Promise<boolean>((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 300);
+      iframe.addEventListener("load", onLoad, { once: true });
+      formElement.setAttribute("target", iframeName);
+      formElement.setAttribute("action", "/api/wc-track");
 
-    setTimeout(() => {
-      if (previousTarget === null) {
-        formElement.removeAttribute("target");
-      } else {
-        formElement.setAttribute("target", previousTarget);
-      }
-
-      if (previousAction === null) {
-        formElement.removeAttribute("action");
-      } else {
-        formElement.setAttribute("action", previousAction);
-      }
-
-      iframe.remove();
-    }, 3000);
-  });
+      markNextSubmitAsTracking();
+      formElement.requestSubmit();
+    });
+  } finally {
+    restoreFormAttribute(formElement, "target", previousTarget);
+    restoreFormAttribute(formElement, "action", previousAction);
+    iframe.remove();
+  }
 }
 
 function FormInner({
@@ -218,7 +241,7 @@ function FormInner({
     <form
       name={form.name}
       method="POST"
-      action={redirectUrl ?? undefined}
+      action="/"
       data-netlify="true"
       data-netlify-honeypot="bot-field"
       onSubmit={handleSubmit}

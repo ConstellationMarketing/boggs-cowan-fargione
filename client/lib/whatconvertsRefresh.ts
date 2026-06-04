@@ -30,7 +30,10 @@ interface WhatConvertsReadiness {
 
 const THROTTLE_MS = 500;
 const CLONE_THROTTLE_MS = 2_000;
-const WHATCONVERTS_INLINE_PATTERN = /whatconverts|_wcq|_wci|WhatConverts/i;
+const WHATCONVERTS_SRC_PATTERN = /whatconverts|s\.ksrndkehqnwntyxlhgto\.com/i;
+const WHATCONVERTS_INLINE_PATTERN = /\$wc_load|\$wc_leads|wc_lead|_wcq|_wci|WhatConverts|whatconverts/i;
+const DEFAULT_READY_TIMEOUT_MS = 2_000;
+const READY_POLL_INTERVAL_MS = 50;
 
 let lastCallTs = 0;
 let lastCloneTs = 0;
@@ -50,9 +53,9 @@ function hasReadyWhatConvertsApi(): boolean {
   );
 }
 
-function isWhatConvertsScript(script: HTMLScriptElement): boolean {
-  const src = script.getAttribute("src")?.toLowerCase() ?? "";
-  if (src.includes("whatconverts")) {
+export function isWhatConvertsScript(script: HTMLScriptElement): boolean {
+  const src = script.getAttribute("src") ?? script.src ?? "";
+  if (WHATCONVERTS_SRC_PATTERN.test(src)) {
     return true;
   }
 
@@ -249,6 +252,66 @@ export function registerWhatConvertsScriptNodes(
   if (scripts.length > 0) {
     observeWhatConvertsScripts(scripts, reason);
   }
+}
+
+export function waitForWhatConvertsReady({
+  timeoutMs = DEFAULT_READY_TIMEOUT_MS,
+}: { timeoutMs?: number } = {}): Promise<boolean> {
+  if (!isBrowser()) {
+    return Promise.resolve(false);
+  }
+
+  ensureWhatConvertsScriptObserver();
+
+  return new Promise((resolve) => {
+    let completed = false;
+    let pollTimer: ReturnType<typeof setTimeout> | undefined;
+    const observedScripts = new WeakSet<HTMLScriptElement>();
+    const cleanupCallbacks: Array<() => void> = [];
+
+    const finish = (value: boolean) => {
+      if (completed) {
+        return;
+      }
+
+      completed = true;
+      if (pollTimer) {
+        clearTimeout(pollTimer);
+      }
+      for (const cleanup of cleanupCallbacks) {
+        cleanup();
+      }
+      resolve(value);
+    };
+
+    const watchScriptLoads = (scripts: HTMLScriptElement[]) => {
+      for (const script of scripts) {
+        if (observedScripts.has(script)) {
+          continue;
+        }
+
+        observedScripts.add(script);
+        const onLoad = () => finish(true);
+        script.addEventListener("load", onLoad, { once: true });
+        cleanupCallbacks.push(() => script.removeEventListener("load", onLoad));
+      }
+    };
+
+    const check = () => {
+      const readiness = getWhatConvertsReadiness();
+      if (readiness.state !== "absent") {
+        watchScriptLoads(readiness.scripts);
+        finish(true);
+        return;
+      }
+
+      pollTimer = setTimeout(check, READY_POLL_INTERVAL_MS);
+    };
+
+    const timeoutTimer = setTimeout(() => finish(false), timeoutMs);
+    cleanupCallbacks.push(() => clearTimeout(timeoutTimer));
+    check();
+  });
 }
 
 /**

@@ -107,6 +107,82 @@ describe("GlobalScripts", () => {
     expect(document.head.querySelectorAll('script[src="https://cdn.example.com/whatconverts.js"]')).toHaveLength(1);
   });
 
+  it("dedupes protocol-relative scripts against absolute SSR script URLs", () => {
+    const existing = document.createElement("script");
+    existing.src = "https://s.ksrndkehqnwntyxlhgto.com/165912.js";
+    document.head.appendChild(existing);
+    mockUseSiteSettings.mockReturnValue({
+      settings: {
+        ...baseSettings,
+        headScripts: '<script src="//s.ksrndkehqnwntyxlhgto.com/165912.js"></script>',
+        footerScripts: "",
+      },
+      isLoading: false,
+    });
+
+    act(() => {
+      root.render(<GlobalScripts />);
+    });
+
+    expect(document.head.querySelectorAll('script[src="https://s.ksrndkehqnwntyxlhgto.com/165912.js"]')).toHaveLength(1);
+  });
+
+  it("does not inject duplicate WhatConverts scripts when SSR already included them", () => {
+    document.head.innerHTML = '<script src="https://s.ksrndkehqnwntyxlhgto.com/165912.js"></script>';
+    mockUseSiteSettings.mockReturnValue({
+      settings: {
+        ...baseSettings,
+        headScripts: '<script src="//s.ksrndkehqnwntyxlhgto.com/165912.js"></script>',
+        footerScripts: "",
+      },
+      isLoading: false,
+    });
+
+    act(() => {
+      root.render(<GlobalScripts />);
+    });
+
+    expect(document.head.querySelectorAll('script[src="https://s.ksrndkehqnwntyxlhgto.com/165912.js"]')).toHaveLength(1);
+  });
+
+  it("does not inject duplicate GA4 scripts when equivalent CMS scripts exist", () => {
+    mockUseSiteSettings.mockReturnValue({
+      settings: {
+        ...baseSettings,
+        ga4MeasurementId: "G-TEST123",
+        headScripts:
+          '<script async src="https://www.googletagmanager.com/gtag/js?id=G-TEST123"></script>',
+        footerScripts: "",
+      },
+      isLoading: false,
+    });
+
+    act(() => {
+      root.render(<GlobalScripts />);
+    });
+
+    expect(document.head.querySelectorAll('script[src="https://www.googletagmanager.com/gtag/js?id=G-TEST123"]')).toHaveLength(1);
+  });
+
+  it("moves GTM noscript snippets out of head injection", () => {
+    mockUseSiteSettings.mockReturnValue({
+      settings: {
+        ...baseSettings,
+        headScripts:
+          '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TEST"></iframe></noscript>',
+        footerScripts: "",
+      },
+      isLoading: false,
+    });
+
+    act(() => {
+      root.render(<GlobalScripts />);
+    });
+
+    expect(document.head.querySelectorAll("noscript")).toHaveLength(0);
+    expect(document.body.querySelectorAll("noscript")).toHaveLength(1);
+  });
+
   it("does nothing while site settings are still loading", () => {
     mockUseSiteSettings.mockReturnValue({
       settings: baseSettings,

@@ -12,6 +12,27 @@ declare global {
   }
 }
 
+function normalizeResourceUrl(value: string): string {
+  try {
+    return new URL(value, window.location.origin).href;
+  } catch {
+    return value;
+  }
+}
+
+function findScriptByNormalizedSrc(src: string): HTMLScriptElement | null {
+  const normalizedSrc = normalizeResourceUrl(src);
+  return (
+    Array.from(document.querySelectorAll<HTMLScriptElement>("script[src]")).find(
+      (existing) => normalizeResourceUrl(existing.getAttribute("src") ?? existing.src) === normalizedSrc,
+    ) ?? null
+  );
+}
+
+function htmlContainsGoogleTagId(html: string, tagId: string): boolean {
+  return Boolean(tagId) && html.includes(tagId) && /gtag|googletagmanager|google-analytics/i.test(html);
+}
+
 function findMatchingNode(target: HTMLElement, node: Node): Node | null {
   if (node.nodeType !== Node.ELEMENT_NODE) {
     return null;
@@ -22,8 +43,9 @@ function findMatchingNode(target: HTMLElement, node: Node): Node | null {
 
   if (tagName === "script") {
     const script = element as HTMLScriptElement;
-    if (script.src) {
-      return target.querySelector(`script[src="${script.src}"]`);
+    const src = script.getAttribute("src") || script.src;
+    if (src) {
+      return findScriptByNormalizedSrc(src);
     }
 
     const inlineContent = script.textContent?.trim();
@@ -68,7 +90,24 @@ function findMatchingNode(target: HTMLElement, node: Node): Node | null {
   );
 }
 
-function injectHtmlSnippet(html: string, target: HTMLElement): Node[] {
+function appendInjectedNode(
+  target: HTMLElement,
+  node: Node,
+  options?: { prepend?: boolean },
+) {
+  if (options?.prepend && target.firstChild) {
+    target.insertBefore(node, target.firstChild);
+    return;
+  }
+
+  target.appendChild(node);
+}
+
+function injectHtmlSnippet(
+  html: string,
+  target: HTMLElement,
+  options?: { noscriptTarget?: HTMLElement; prependNoscript?: boolean },
+): Node[] {
   if (!html.trim()) {
     return [];
   }
@@ -83,11 +122,21 @@ function injectHtmlSnippet(html: string, target: HTMLElement): Node[] {
       continue;
     }
 
-    if (findMatchingNode(target, node)) {
+    if (node.nodeType !== Node.ELEMENT_NODE) {
       continue;
     }
 
-    if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName === "SCRIPT") {
+    const element = node as Element;
+    const nodeTarget =
+      element.tagName.toLowerCase() === "noscript" && options?.noscriptTarget
+        ? options.noscriptTarget
+        : target;
+
+    if (findMatchingNode(nodeTarget, node)) {
+      continue;
+    }
+
+    if (element.tagName === "SCRIPT") {
       const original = node as HTMLScriptElement;
       const script = document.createElement("script");
 
@@ -103,16 +152,16 @@ function injectHtmlSnippet(html: string, target: HTMLElement): Node[] {
         script.textContent = original.textContent;
       }
 
-      target.appendChild(script);
+      appendInjectedNode(nodeTarget, script);
       injected.push(script);
       continue;
     }
 
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      const clone = node.cloneNode(true);
-      target.appendChild(clone);
-      injected.push(clone);
-    }
+    const clone = node.cloneNode(true);
+    appendInjectedNode(nodeTarget, clone, {
+      prepend: element.tagName.toLowerCase() === "noscript" && options?.prependNoscript,
+    });
+    injected.push(clone);
   }
 
   return injected;
@@ -127,8 +176,8 @@ function injectGA4(measurementId: string): Node[] {
     return [];
   }
 
-  const existingScript = document.querySelector(
-    `script[src="https://www.googletagmanager.com/gtag/js?id=${measurementId}"]`,
+  const existingScript = findScriptByNormalizedSrc(
+    `https://www.googletagmanager.com/gtag/js?id=${measurementId}`,
   );
   if (existingScript) {
     return [];
@@ -159,8 +208,8 @@ function injectGoogleAds(adsId: string, conversionLabel: string): Node[] {
   const injected: Node[] = [];
 
   if (typeof window.gtag !== "function") {
-    const existingScript = document.querySelector(
-      `script[src="https://www.googletagmanager.com/gtag/js?id=${adsId}"]`,
+    const existingScript = findScriptByNormalizedSrc(
+      `https://www.googletagmanager.com/gtag/js?id=${adsId}`,
     );
 
     window.dataLayer = window.dataLayer || [];
@@ -199,7 +248,11 @@ export default function GlobalScripts() {
 
     const injected: Node[] = [];
 
-    if (settings.ga4MeasurementId) {
+    if (
+      settings.ga4MeasurementId
+      && !htmlContainsGoogleTagId(settings.headScripts, settings.ga4MeasurementId)
+      && !htmlContainsGoogleTagId(settings.footerScripts, settings.ga4MeasurementId)
+    ) {
       injected.push(...injectGA4(settings.ga4MeasurementId));
     }
 
@@ -213,7 +266,12 @@ export default function GlobalScripts() {
     }
 
     if (settings.headScripts) {
-      injected.push(...injectHtmlSnippet(settings.headScripts, document.head));
+      injected.push(
+        ...injectHtmlSnippet(settings.headScripts, document.head, {
+          noscriptTarget: document.body,
+          prependNoscript: true,
+        }),
+      );
     }
 
     if (settings.footerScripts) {
