@@ -32,6 +32,7 @@ export default function HeroContactActions({
     >
       <a
         href={`tel:${phoneNumber.replace(/\D/g, "")}`}
+        suppressHydrationWarning
         className={cn(
           "block overflow-hidden rounded-xl p-[6px] transition-all duration-300 group",
           isNavyTone ? "bg-brand-navy hover:bg-brand-navy-dark" : "bg-accent hover:bg-accent/90",
@@ -51,7 +52,10 @@ export default function HeroContactActions({
             <h4 className="font-inter text-[12px] md:text-[14px] leading-tight text-white pb-[4px] font-normal sm:truncate">
               {phoneLabel}
             </h4>
-            <p className="font-inter text-[16px] md:text-[24px] text-white leading-tight font-semibold sm:truncate">
+            <p
+              className="font-inter text-[16px] md:text-[24px] text-white leading-tight font-semibold sm:truncate"
+              suppressHydrationWarning
+            >
               {phoneDisplay}
             </p>
           </div>

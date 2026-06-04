@@ -66,9 +66,10 @@ export default function BlogPostHero({
           <a
             href={`tel:${phoneNumber.replace(/\D/g, "")}`}
             className="inline-flex items-center gap-3 bg-brand-accent px-5 py-3 text-black font-inter font-medium hover:bg-brand-accent-dark hover:text-white transition-colors duration-300"
+            suppressHydrationWarning
           >
             <Phone className="h-5 w-5" strokeWidth={1.5} />
-            <span>{phoneDisplay}</span>
+            <span suppressHydrationWarning>{phoneDisplay}</span>
           </a>
           <Link
             to="/contact/"

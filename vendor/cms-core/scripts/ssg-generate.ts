@@ -242,13 +242,32 @@ function getBodyStartScripts(siteSettings: SiteSettings) {
     .join("\n");
 }
 
+function deferExternalScriptTags(html: string) {
+  return html.replace(/<script\b[^>]*\bsrc=(?:"[^"]+"|'[^']+'|[^\s>]+)[^>]*>[\s\S]*?<\/script>/gi, (script) => {
+    const openingTagMatch = script.match(/^<script\b([^>]*)>/i);
+    if (!openingTagMatch) {
+      return script;
+    }
+
+    const attrs = openingTagMatch[1]
+      .replace(/\sasync(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?/gi, "")
+      .trim();
+    const hasDefer = /(?:^|\s)defer(?:\s|=|$)/i.test(attrs);
+    const nextAttrs = `${attrs}${hasDefer ? "" : " defer"}`.trim();
+
+    return script.replace(/^<script\b[^>]*>/i, `<script ${nextAttrs}>`);
+  });
+}
+
 function normalizeSiteSettingsForRender(siteSettings: SiteSettings): SiteSettings {
   const googleTagIds = [siteSettings.ga4MeasurementId, siteSettings.googleAdsId].filter(Boolean);
+  const headScripts = removeGoogleTagSnippets(removeNoscriptBlocks(siteSettings.headScripts), googleTagIds);
+  const footerScripts = removeGoogleTagSnippets(removeNoscriptBlocks(siteSettings.footerScripts), googleTagIds);
 
   return {
     ...siteSettings,
-    headScripts: removeGoogleTagSnippets(removeNoscriptBlocks(siteSettings.headScripts), googleTagIds),
-    footerScripts: removeGoogleTagSnippets(removeNoscriptBlocks(siteSettings.footerScripts), googleTagIds),
+    headScripts: deferExternalScriptTags(headScripts),
+    footerScripts: deferExternalScriptTags(footerScripts),
   };
 }
 

@@ -92,9 +92,13 @@ export default function Footer() {
           <a
             href={`tel:${phoneNumber.replace(/\D/g, "")}`}
             className="mt-6 inline-flex items-center justify-center gap-3 transition-all duration-300"
+            suppressHydrationWarning
           >
             <Phone className="h-7 w-7 text-accent" strokeWidth={1.5} />
-            <span className="font-inter text-[28px] font-semibold text-white transition-all duration-300 hover:text-accent md:text-[36px]">
+            <span
+              className="font-inter text-[28px] font-semibold text-white transition-all duration-300 hover:text-accent md:text-[36px]"
+              suppressHydrationWarning
+            >
               {phoneDisplay}
             </span>
           </a>

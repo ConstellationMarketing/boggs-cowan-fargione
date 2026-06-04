@@ -80,9 +80,10 @@ export default function MobileNavSheet({
             <a
               href={`tel:${phoneNumber.replace(/\D/g, "")}`}
               className="mt-4 flex items-center gap-3 bg-accent px-5 py-4 text-white transition-colors hover:bg-accent/90"
+              suppressHydrationWarning
             >
               <Phone className="h-6 w-6" strokeWidth={1.5} />
-              <span className="font-inter text-[22px] font-semibold">
+              <span className="font-inter text-[22px] font-semibold" suppressHydrationWarning>
                 {phoneDisplay}
               </span>
             </a>

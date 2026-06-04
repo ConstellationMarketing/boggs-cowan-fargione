@@ -100,15 +100,19 @@ export default function Header() {
               <a
                 href={`tel:${phoneNumber.replace(/\D/g, "")}`}
                 className="flex items-center gap-3 transition-all duration-300"
+                suppressHydrationWarning
               >
                 <Phone className={cn(
                   "text-accent transition-all duration-300",
                   isScrolled ? "w-6 h-6" : "w-7 h-7"
                 )} strokeWidth={1.5} />
-                <span className={cn(
-                  "font-inter font-semibold text-white hover:text-accent transition-all duration-300",
-                  isScrolled ? "text-[22px] lg:text-[22px] xl:text-[28px]" : "text-[26px] lg:text-[26px] xl:text-[36px]"
-                )}>
+                <span
+                  className={cn(
+                    "font-inter font-semibold text-white hover:text-accent transition-all duration-300",
+                    isScrolled ? "text-[22px] lg:text-[22px] xl:text-[28px]" : "text-[26px] lg:text-[26px] xl:text-[36px]"
+                  )}
+                  suppressHydrationWarning
+                >
                   {phoneDisplay}
                 </span>
               </a>

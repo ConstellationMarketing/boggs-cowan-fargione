@@ -21,6 +21,7 @@ export default function Hero() {
           <a
             href={`tel:${phoneNumber.replace(/\D/g, "")}`}
             className="bg-brand-accent rounded-lg p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block"
+            suppressHydrationWarning
           >
             <div className="flex items-start gap-4">
               <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
@@ -33,7 +34,10 @@ export default function Hero() {
                 <h4 className="font-inter text-[18px] leading-[18px] text-black pb-[10px] font-normal group-hover:text-white transition-colors duration-300">
                   {phoneLabel}
                 </h4>
-                <p className="font-inter text-[clamp(1.5rem,4vw,40px)] text-black leading-tight group-hover:text-white transition-colors duration-300">
+                <p
+                  className="font-inter text-[clamp(1.5rem,4vw,40px)] text-black leading-tight group-hover:text-white transition-colors duration-300"
+                  suppressHydrationWarning
+                >
                   {phoneDisplay}
                 </p>
               </div>

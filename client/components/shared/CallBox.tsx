@@ -53,6 +53,7 @@ export default function CallBox({
           </h4>
           <p
             className={`font-inter text-[18px] md:text-[24px] ${textColor} ${textHoverColor} leading-none whitespace-nowrap`}
+            suppressHydrationWarning
           >
             {subtitle}
           </p>
@@ -64,7 +65,7 @@ export default function CallBox({
   // Phone link takes priority over route link
   if (phone) {
     const digits = toRawDigits(phone);
-    return <a href={`tel:${digits}`} className="block">{content}</a>;
+    return <a href={`tel:${digits}`} className="block" suppressHydrationWarning>{content}</a>;
   }
 
   if (link) {
