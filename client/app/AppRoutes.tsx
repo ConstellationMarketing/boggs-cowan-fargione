@@ -7,7 +7,6 @@ import PracticeAreaPage from "../pages/PracticeAreaPage";
 import ContactPage from "../pages/ContactPage";
 import BlogIndex from "../pages/BlogIndex";
 import BlogPost from "../pages/BlogPost";
-import WcPlainTestPage from "../pages/WcPlainTestPage";
 import DynamicPage from "../pages/DynamicPage";
 
 const AdminRoutes = lazy(() => import("../pages/AdminRoutes"));
@@ -23,7 +22,6 @@ export default function AppRoutes() {
         <Route path="/contact/" element={<ContactPage />} />
         <Route path="/blog/" element={<BlogIndex />} />
         <Route path="/blog/:slug/" element={<BlogPost />} />
-        <Route path="/wc-plain-test/" element={<WcPlainTestPage />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="*" element={<DynamicPage />} />
       </Routes>
