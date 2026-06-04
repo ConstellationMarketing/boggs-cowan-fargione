@@ -18,6 +18,10 @@ declare global {
     _wci?: { run?: () => void };
     /** WhatConverts public namespace */
     WhatConverts?: { track?: () => void };
+    /** WhatConverts loader helper from the CMS inline snippet */
+    $wc_load?: (value: unknown) => unknown;
+    /** WhatConverts lead/page context from the CMS inline snippet */
+    $wc_leads?: { doc?: Record<string, unknown> };
   }
 }
 
@@ -43,12 +47,15 @@ function isBrowser(): boolean {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
 
-function hasReadyWhatConvertsApi(): boolean {
+function hasReadyWhatConvertsRuntime(): boolean {
   return Boolean(
-    Array.isArray(window._wcq)
-      || typeof window._wci?.run === "function"
+    typeof window._wci?.run === "function"
       || typeof window.WhatConverts?.track === "function",
   );
+}
+
+function hasWhatConvertsQueue(): boolean {
+  return Array.isArray(window._wcq);
 }
 
 export function isWhatConvertsScript(script: HTMLScriptElement): boolean {
@@ -197,14 +204,14 @@ export function getWhatConvertsReadiness(): WhatConvertsReadiness {
   }
 
   const scripts = collectWhatConvertsScripts();
-  if (hasReadyWhatConvertsApi()) {
+  if (hasReadyWhatConvertsRuntime()) {
     return {
       state: "ready",
       scripts,
     };
   }
 
-  if (scripts.length > 0) {
+  if (scripts.length > 0 || hasWhatConvertsQueue()) {
     return {
       state: "script-pending",
       scripts,
@@ -298,6 +305,21 @@ export function waitForWhatConvertsReady({
  * @param reason  Human-readable label used only for debug logging.
  * @param opts.force  When `true`, bypasses the throttle.
  */
+function updateWhatConvertsRouteContext(): void {
+  try {
+    const clone = window.$wc_load ?? ((value: unknown) => JSON.parse(JSON.stringify(value)));
+    window.$wc_leads = window.$wc_leads || {};
+    window.$wc_leads.doc = {
+      url: clone(document.URL),
+      ref: clone(document.referrer),
+      search: clone(window.location.search),
+      hash: clone(window.location.hash),
+    };
+  } catch {
+    // Silent — DNI should never break the app.
+  }
+}
+
 export function refreshWhatConvertsDni(
   reason: string,
   opts?: { force?: boolean; retryOnLoad?: boolean },
@@ -324,6 +346,7 @@ export function refreshWhatConvertsDni(
     observeWhatConvertsScripts(readiness.scripts, reason);
   }
 
+  updateWhatConvertsRouteContext();
   const routeContext = getRouteContext();
 
   try {
@@ -333,10 +356,9 @@ export function refreshWhatConvertsDni(
         reason,
         ...routeContext,
       });
-      return;
     }
   } catch {
-    // Silently continue to next strategy
+    // Silently continue to live runtime strategies
   }
 
   try {
@@ -344,13 +366,16 @@ export function refreshWhatConvertsDni(
       window._wci.run();
       return;
     }
-
-    if (typeof window.WhatConverts?.track === "function") {
-      window.WhatConverts.track();
-      return;
-    }
   } catch {
     // Silently continue to next strategy
+  }
+
+  try {
+    if (typeof window.WhatConverts?.track === "function") {
+      window.WhatConverts.track();
+    }
+  } catch {
+    // Silent
   }
 
 }

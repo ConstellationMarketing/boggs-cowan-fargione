@@ -46,6 +46,36 @@ describe("whatconvertsRefresh", () => {
     });
   });
 
+  it("prefers the live runtime scan API when the queue also exists", async () => {
+    const wcq: Array<Record<string, unknown>> = [];
+    const run = vi.fn();
+    (window as Window & { _wcq?: Array<Record<string, unknown>>; _wci?: { run: () => void } })._wcq = wcq;
+    (window as Window & { _wci?: { run: () => void } })._wci = { run };
+
+    const module = await import("./whatconvertsRefresh");
+    module.refreshWhatConvertsDni("route-change", { force: true });
+
+    expect(wcq).toHaveLength(1);
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it("updates the WhatConverts page context before refreshing DNI", async () => {
+    window.history.replaceState({}, "", "/family-law/?utm_source=test#top");
+    const run = vi.fn();
+    (window as Window & { _wci?: { run: () => void } })._wci = { run };
+    (window as Window & { $wc_leads?: { doc?: Record<string, unknown> } }).$wc_leads = {};
+
+    const module = await import("./whatconvertsRefresh");
+    module.refreshWhatConvertsDni("route-change", { force: true });
+
+    expect(window.$wc_leads?.doc).toMatchObject({
+      search: "?utm_source=test",
+      hash: "#top",
+    });
+    expect(String(window.$wc_leads?.doc?.url)).toContain("/family-law/");
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
   it("detects the production WhatConverts external script host", async () => {
     const module = await import("./whatconvertsRefresh");
     const script = document.createElement("script");
