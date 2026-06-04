@@ -1,10 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Seo from "@site/components/Seo";
 import Layout from "@site/components/layout/Layout";
 
 export default function WcPlainTestPage() {
-  const [iframeLoadCount, setIframeLoadCount] = useState(0);
-  const submitted = iframeLoadCount > 1;
+  const [status, setStatus] = useState<"idle" | "submitting" | "submitted">("idle");
+
+  useEffect(() => {
+    const form = document.getElementById("wc-plain-test");
+    if (!(form instanceof HTMLFormElement)) {
+      return;
+    }
+
+    const handleNativeSubmit = () => {
+      setStatus("submitting");
+    };
+
+    form.addEventListener("submit", handleNativeSubmit);
+
+    return () => {
+      form.removeEventListener("submit", handleNativeSubmit);
+    };
+  }, []);
 
   return (
     <Layout>
@@ -29,14 +45,15 @@ export default function WcPlainTestPage() {
             this test page.
           </p>
 
-          {submitted && (
+          {status !== "idle" && (
             <div
               role="status"
               aria-live="polite"
               className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800"
             >
-              Test form submitted. Check DevTools Network for a WhatConverts/Iconnode
-              lead beacon.
+              {status === "submitting"
+                ? "Submitting test form..."
+                : "Test form submitted. Check DevTools Network for a WhatConverts/Iconnode lead beacon."}
             </div>
           )}
 
@@ -113,7 +130,7 @@ export default function WcPlainTestPage() {
             name="wc-plain-test-target"
             src="about:blank"
             className="hidden"
-            onLoad={() => setIframeLoadCount((count) => count + 1)}
+            onLoad={() => setStatus((currentStatus) => currentStatus === "submitting" ? "submitted" : currentStatus)}
           />
         </div>
       </main>
