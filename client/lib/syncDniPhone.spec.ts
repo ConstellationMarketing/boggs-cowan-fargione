@@ -90,6 +90,24 @@ describe("syncDniPhone", () => {
     expect(nested.getAttribute("href")).toBe("tel:4045559999");
   });
 
+  it("detects a vendor swap from stable DNI data attributes", () => {
+    document.body.innerHTML = `
+      <a data-dni-phone="true" data-dni-original="4045551234" href="tel:4045559999">
+        <span>404-555-1234</span>
+      </a>
+      <a id="other" data-dni-phone="true" data-dni-original="4045551234" href="tel:4045551234">
+        <span>404-555-1234</span>
+      </a>
+    `;
+
+    const changed = syncPhoneNumbersNow();
+    const other = document.getElementById("other") as HTMLAnchorElement;
+
+    expect(changed).toBe(true);
+    expect(other.getAttribute("href")).toBe("tel:4045559999");
+    expect(other.textContent).toContain("404-555-9999");
+  });
+
   it("returns false when no reliable swap can be detected", () => {
     document.body.innerHTML = `
       <a href="tel:4045551234">404-555-1234</a>

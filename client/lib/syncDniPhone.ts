@@ -6,18 +6,18 @@
  * other tel link and plain-text phone occurrence in the DOM.
  */
 
+import {
+  formatDniDisplay,
+  normalizePhoneDigits,
+  notifyDniPhoneDetected,
+  storeDniNumber,
+  trackingDebugLog,
+} from "./dniPhoneState";
+
 const PHONE_TEXT_PATTERN = /(?:\+?1[\s.-]*)?(?:\(\d{3}\)|\d{3})[\s.-]*\d{3}[\s.-]*\d{4}\b/g;
 const knownOriginalDigits = new Set<string>();
 let lastSwappedDigits = "";
 let pollingTimer: ReturnType<typeof setInterval> | null = null;
-
-function normalizePhoneDigits(value: string): string {
-  const digits = value.replace(/\D/g, "");
-  if (digits.length === 11 && digits.startsWith("1")) {
-    return digits.slice(1);
-  }
-  return digits;
-}
 
 function formatPhoneVariants(digits: string): string[] {
   if (digits.length !== 10) {
@@ -34,14 +34,6 @@ function formatPhoneVariants(digits: string): string[] {
     `${a} ${b} ${c}`,
     digits,
   ];
-}
-
-function primaryFormat(digits: string): string {
-  if (digits.length !== 10) {
-    return digits;
-  }
-
-  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
 }
 
 function replaceFirstMatchingVariant(
@@ -268,11 +260,9 @@ function resolvePhoneMapping(
     return { originalDigits: textOriginal, swappedDigits: onlyTelDigits };
   }
 
-  if (lastSwappedDigits && onlyTelDigits === lastSwappedDigits) {
-    const knownOriginal = getKnownOriginalDifferentFrom(onlyTelDigits);
-    if (knownOriginal) {
-      return { originalDigits: knownOriginal, swappedDigits: onlyTelDigits };
-    }
+  const knownOriginal = getKnownOriginalDifferentFrom(onlyTelDigits);
+  if (knownOriginal) {
+    return { originalDigits: knownOriginal, swappedDigits: onlyTelDigits };
   }
 
   return null;
@@ -308,6 +298,11 @@ export function syncPhoneNumbersNow(): boolean {
 
     const telCounts = new Map<string, number>();
     for (const link of telLinks) {
+      const originalDigits = normalizePhoneDigits(link.dataset.dniOriginal);
+      if (originalDigits) {
+        knownOriginalDigits.add(originalDigits);
+      }
+
       const href = link.getAttribute("href") || link.href;
       const digits = normalizePhoneDigits(href);
       if (!digits) {
@@ -330,10 +325,22 @@ export function syncPhoneNumbersNow(): boolean {
     knownOriginalDigits.add(originalDigits);
     lastSwappedDigits = swappedDigits;
 
+    storeDniNumber(swappedDigits, originalDigits);
+    trackingDebugLog("swapped number detected", {
+      canonicalDigits: originalDigits,
+      trackingDigits: swappedDigits,
+      telTargetCount: telLinks.length,
+    });
+    notifyDniPhoneDetected({
+      canonicalDigits: originalDigits,
+      trackingDigits: swappedDigits,
+      source: "syncPhoneNumbersNow",
+    });
+
     const originalVariants = Array.from(
-      new Set([...formatPhoneVariants(originalDigits), primaryFormat(originalDigits)]),
+      new Set([...formatPhoneVariants(originalDigits), formatDniDisplay(originalDigits)]),
     );
-    const swappedFormatted = primaryFormat(swappedDigits);
+    const swappedFormatted = formatDniDisplay(swappedDigits);
 
     let changed = false;
 
@@ -370,6 +377,7 @@ export function syncPhoneNumbersNow(): boolean {
       }
     }
 
+    trackingDebugLog("phone targets updated", { changed });
     return changed;
   } catch {
     return false;

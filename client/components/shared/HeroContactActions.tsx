@@ -1,5 +1,6 @@
 import { MessageSquare, Phone } from "lucide-react";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "@site/components/shared/PhoneLink";
 import { cn } from "@site/lib/utils";
 
 interface HeroContactActionsProps {
@@ -19,7 +20,7 @@ export default function HeroContactActions({
   consultationButtonClassName,
   ctaTone = "green",
 }: HeroContactActionsProps) {
-  const { phoneNumber, phoneDisplay, phoneLabel } = useGlobalPhone();
+  const { activePhoneDisplay, phoneLabel } = useDniPhone();
   const isNavyTone = ctaTone === "navy";
 
   return (
@@ -30,9 +31,7 @@ export default function HeroContactActions({
         className,
       )}
     >
-      <a
-        href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-        suppressHydrationWarning
+      <PhoneLink
         className={cn(
           "block overflow-hidden rounded-xl p-[6px] transition-all duration-300 group",
           isNavyTone ? "bg-brand-navy hover:bg-brand-navy-dark" : "bg-accent hover:bg-accent/90",
@@ -56,11 +55,11 @@ export default function HeroContactActions({
               className="font-inter text-[16px] md:text-[24px] text-white leading-tight font-semibold sm:truncate"
               suppressHydrationWarning
             >
-              {phoneDisplay}
+              {activePhoneDisplay}
             </p>
           </div>
         </div>
-      </a>
+      </PhoneLink>
 
       {consultationButtonText ? (
         <a

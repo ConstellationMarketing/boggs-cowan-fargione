@@ -10,6 +10,8 @@
  * when the WC globals don't exist (not installed or ad-blocked).
  */
 
+import { trackingDebugLog } from "./dniPhoneState";
+
 declare global {
   interface Window {
     /** WhatConverts command queue (official SPA API) */
@@ -331,6 +333,11 @@ export function refreshWhatConvertsDni(
   ensureWhatConvertsScriptObserver();
 
   const readiness = getWhatConvertsReadiness();
+  trackingDebugLog("WhatConverts script present", {
+    reason,
+    state: readiness.state,
+    scriptCount: readiness.scripts.length,
+  });
   if (readiness.state === "absent") {
     return;
   }
@@ -348,6 +355,7 @@ export function refreshWhatConvertsDni(
 
   updateWhatConvertsRouteContext();
   const routeContext = getRouteContext();
+  trackingDebugLog("route context updated", { reason, routeContext });
 
   try {
     if (Array.isArray(window._wcq)) {
@@ -364,6 +372,7 @@ export function refreshWhatConvertsDni(
   try {
     if (typeof window._wci?.run === "function") {
       window._wci.run();
+      trackingDebugLog("WhatConverts runtime refresh attempted", { reason, runtime: "_wci.run" });
       return;
     }
   } catch {
@@ -373,6 +382,7 @@ export function refreshWhatConvertsDni(
   try {
     if (typeof window.WhatConverts?.track === "function") {
       window.WhatConverts.track();
+      trackingDebugLog("WhatConverts runtime refresh attempted", { reason, runtime: "WhatConverts.track" });
     }
   } catch {
     // Silent

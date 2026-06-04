@@ -1,6 +1,7 @@
 import { Phone, Calendar as CalendarIcon, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "@site/components/shared/PhoneLink";
 
 interface BlogPostHeroProps {
   title: string;
@@ -15,7 +16,7 @@ export default function BlogPostHero({
   publishedDate,
   featuredImage,
 }: BlogPostHeroProps) {
-  const { phoneDisplay, phoneNumber, phoneLabel } = useGlobalPhone();
+  const { activePhoneDisplay } = useDniPhone();
 
   const formattedDate = new Date(publishedDate).toLocaleDateString("en-US", {
     month: "long",
@@ -63,14 +64,10 @@ export default function BlogPostHero({
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 mt-8">
-          <a
-            href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-            className="inline-flex items-center gap-3 bg-brand-accent px-5 py-3 text-black font-inter font-medium hover:bg-brand-accent-dark hover:text-white transition-colors duration-300"
-            suppressHydrationWarning
-          >
+          <PhoneLink className="inline-flex items-center gap-3 bg-brand-accent px-5 py-3 text-black font-inter font-medium hover:bg-brand-accent-dark hover:text-white transition-colors duration-300">
             <Phone className="h-5 w-5" strokeWidth={1.5} />
-            <span suppressHydrationWarning>{phoneDisplay}</span>
-          </a>
+            <span suppressHydrationWarning>{activePhoneDisplay}</span>
+          </PhoneLink>
           <Link
             to="/contact/"
             className="inline-flex items-center gap-3 border border-white/40 px-5 py-3 text-white font-inter font-medium hover:bg-white/10 transition-colors duration-300"

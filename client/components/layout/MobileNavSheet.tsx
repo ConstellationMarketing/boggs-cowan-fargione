@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu, Phone } from "lucide-react";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "@site/components/shared/PhoneLink";
 import { cn } from "@/lib/utils";
 
 export interface MobileNavGrandchildItem {
@@ -34,10 +36,9 @@ interface MobileNavSheetProps {
 
 export default function MobileNavSheet({
   navItems,
-  phoneDisplay,
-  phoneNumber,
   variant = "header",
 }: MobileNavSheetProps) {
+  const { activePhoneDisplay, activePhoneNumber } = useDniPhone();
   const trigger =
     variant === "header" ? (
       <Button
@@ -76,17 +77,13 @@ export default function MobileNavSheet({
             );
           })}
 
-          {phoneDisplay && phoneNumber ? (
-            <a
-              href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-              className="mt-4 flex items-center gap-3 bg-accent px-5 py-4 text-white transition-colors hover:bg-accent/90"
-              suppressHydrationWarning
-            >
+          {activePhoneNumber ? (
+            <PhoneLink className="mt-4 flex items-center gap-3 bg-accent px-5 py-4 text-white transition-colors hover:bg-accent/90">
               <Phone className="h-6 w-6" strokeWidth={1.5} />
               <span className="font-inter text-[22px] font-semibold" suppressHydrationWarning>
-                {phoneDisplay}
+                {activePhoneDisplay}
               </span>
-            </a>
+            </PhoneLink>
           ) : null}
         </nav>
       </SheetContent>

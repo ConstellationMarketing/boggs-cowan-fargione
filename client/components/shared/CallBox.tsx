@@ -1,5 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "./PhoneLink";
 
 interface CallBoxProps {
   icon: LucideIcon;
@@ -13,11 +15,6 @@ interface CallBoxProps {
   variant?: "light" | "dark"; // light = black text on light bg, dark = white text on dark bg
 }
 
-/** Strip all non-digit characters for use in tel: href */
-function toRawDigits(value: string): string {
-  return value.replace(/\D/g, "");
-}
-
 export default function CallBox({
   icon: Icon,
   title,
@@ -27,6 +24,9 @@ export default function CallBox({
   className = "",
   variant = "light",
 }: CallBoxProps) {
+  const { activePhoneDisplay } = useDniPhone();
+  const displaySubtitle = phone ? activePhoneDisplay || subtitle : subtitle;
+
   // Text colors based on variant - only affects text, not icons
   const textColor = variant === "dark" ? "text-white" : "text-black";
   const textHoverColor =
@@ -55,7 +55,7 @@ export default function CallBox({
             className={`font-inter text-[18px] md:text-[24px] ${textColor} ${textHoverColor} leading-none whitespace-nowrap`}
             suppressHydrationWarning
           >
-            {subtitle}
+            {displaySubtitle}
           </p>
         </div>
       </div>
@@ -64,8 +64,7 @@ export default function CallBox({
 
   // Phone link takes priority over route link
   if (phone) {
-    const digits = toRawDigits(phone);
-    return <a href={`tel:${digits}`} className="block" suppressHydrationWarning>{content}</a>;
+    return <PhoneLink className="block">{content}</PhoneLink>;
   }
 
   if (link) {

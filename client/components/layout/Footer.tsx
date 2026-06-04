@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone } from "lucide-react";
-import { useSiteSettings, useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import { useSiteSettings } from "@site/contexts/SiteSettingsContext";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "@site/components/shared/PhoneLink";
 import RichText from "@site/components/shared/RichText";
 import MobileNavSheet from "./MobileNavSheet";
 import NavDropdown from "./NavDropdown";
@@ -37,7 +39,7 @@ function FooterPolicyLink({ href, label }: { href: string; label: string }) {
 
 export default function Footer() {
   const { settings } = useSiteSettings();
-  const { phoneNumber, phoneDisplay } = useGlobalPhone();
+  const { activePhoneDisplay, activePhoneNumber } = useDniPhone();
 
   const logoUrl = settings.logoUrl?.trim() || "";
   const logoAlt = settings.logoAlt?.trim() || settings.siteName?.trim() || "Logo";
@@ -88,20 +90,16 @@ export default function Footer() {
           />
         ) : null}
 
-        {phoneDisplay ? (
-          <a
-            href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-            className="mt-6 inline-flex items-center justify-center gap-3 transition-all duration-300"
-            suppressHydrationWarning
-          >
+        {activePhoneNumber ? (
+          <PhoneLink className="mt-6 inline-flex items-center justify-center gap-3 transition-all duration-300">
             <Phone className="h-7 w-7 text-accent" strokeWidth={1.5} />
             <span
               className="font-inter text-[28px] font-semibold text-white transition-all duration-300 hover:text-accent md:text-[36px]"
               suppressHydrationWarning
             >
-              {phoneDisplay}
+              {activePhoneDisplay}
             </span>
-          </a>
+          </PhoneLink>
         ) : null}
 
         {footerDescription ? (
@@ -158,8 +156,6 @@ export default function Footer() {
             <div className="mt-8 lg:hidden">
               <MobileNavSheet
                 navItems={navItems}
-                phoneDisplay={phoneDisplay}
-                phoneNumber={phoneNumber}
                 variant="footer"
               />
             </div>

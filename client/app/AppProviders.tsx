@@ -6,6 +6,7 @@ import { TooltipProvider } from "../components/ui/tooltip";
 import { Toaster } from "../components/ui/toaster";
 import { Toaster as Sonner } from "../components/ui/sonner";
 import { SiteSettingsProvider } from "../contexts/SiteSettingsContext";
+import { DniPhoneProvider } from "../contexts/DniPhoneContext";
 import type { SiteSettings } from "../lib/cms/publicLoaders";
 
 const helmetModule = ReactHelmetAsync as Record<string, unknown>;
@@ -42,11 +43,13 @@ export default function AppProviders({
     <HelmetProvider context={helmetContext}>
       <QueryClientProvider client={queryClient}>
         <SiteSettingsProvider initialSettings={initialSiteSettings}>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            {children}
-          </TooltipProvider>
+          <DniPhoneProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              {children}
+            </TooltipProvider>
+          </DniPhoneProvider>
         </SiteSettingsProvider>
       </QueryClientProvider>
     </HelmetProvider>

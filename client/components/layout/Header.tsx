@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Phone } from "lucide-react";
-import { useSiteSettings, useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import { useSiteSettings } from "@site/contexts/SiteSettingsContext";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "@site/components/shared/PhoneLink";
 import { cn } from "@/lib/utils";
 import MobileNavSheet from "./MobileNavSheet";
 import NavDropdown from "./NavDropdown";
 
 export default function Header() {
   const { settings } = useSiteSettings();
-  const { phoneNumber, phoneDisplay } = useGlobalPhone();
+  const { activePhoneDisplay, activePhoneNumber } = useDniPhone();
   const [isScrolled, setIsScrolled] = useState(false);
 
   const logoUrl = settings.logoUrl?.trim() || "";
@@ -96,12 +98,8 @@ export default function Header() {
 
           {/* Phone Number Display - Desktop */}
           <div className="hidden lg:block flex-shrink-0">
-            {phoneDisplay ? (
-              <a
-                href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-                className="flex items-center gap-3 transition-all duration-300"
-                suppressHydrationWarning
-              >
+            {activePhoneNumber ? (
+              <PhoneLink className="flex items-center gap-3 transition-all duration-300">
                 <Phone className={cn(
                   "text-accent transition-all duration-300",
                   isScrolled ? "w-6 h-6" : "w-7 h-7"
@@ -113,17 +111,15 @@ export default function Header() {
                   )}
                   suppressHydrationWarning
                 >
-                  {phoneDisplay}
+                  {activePhoneDisplay}
                 </span>
-              </a>
+              </PhoneLink>
             ) : null}
           </div>
 
           {/* Mobile Menu */}
           <MobileNavSheet
             navItems={navItems}
-            phoneDisplay={phoneDisplay}
-            phoneNumber={phoneNumber}
             variant="header"
           />
         </div>

@@ -1,8 +1,9 @@
 import { Phone } from "lucide-react";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import { useDniPhone } from "@site/contexts/DniPhoneContext";
+import PhoneLink from "@site/components/shared/PhoneLink";
 
 export default function Hero() {
-  const { phoneDisplay, phoneLabel, phoneNumber } = useGlobalPhone();
+  const { activePhoneDisplay, phoneLabel } = useDniPhone();
 
   return (
     <div className="max-w-[2560px] mx-auto w-[95%] py-[27px] my-[40px]">
@@ -18,11 +19,7 @@ export default function Hero() {
           </div>
 
           {/* Call Box */}
-          <a
-            href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-            className="bg-brand-accent rounded-lg p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block"
-            suppressHydrationWarning
-          >
+          <PhoneLink className="bg-brand-accent rounded-lg p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block">
             <div className="flex items-start gap-4">
               <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
                 <Phone
@@ -38,11 +35,11 @@ export default function Hero() {
                   className="font-inter text-[clamp(1.5rem,4vw,40px)] text-black leading-tight group-hover:text-white transition-colors duration-300"
                   suppressHydrationWarning
                 >
-                  {phoneDisplay}
+                  {activePhoneDisplay}
                 </p>
               </div>
             </div>
-          </a>
+          </PhoneLink>
         </div>
 
         {/* Spacer for form (will be added separately) */}
