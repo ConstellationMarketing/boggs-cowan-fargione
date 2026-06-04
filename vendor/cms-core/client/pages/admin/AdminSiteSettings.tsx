@@ -64,6 +64,16 @@ import ImageUploader from "@/components/admin/ImageUploader";
 import { getFaviconSettingsSignature } from "@site/lib/seo/favicon";
 import { processFaviconSource } from "@site/lib/seo/faviconProcessing";
 
+function getAnalyticsAndScriptsSignature(settings: SiteSettings) {
+  return JSON.stringify({
+    ga4MeasurementId: settings.ga4MeasurementId,
+    googleAdsId: settings.googleAdsId,
+    googleAdsConversionLabel: settings.googleAdsConversionLabel,
+    headScripts: settings.headScripts,
+    footerScripts: settings.footerScripts,
+  });
+}
+
 export default function AdminSiteSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -72,6 +82,9 @@ export default function AdminSiteSettings() {
   const [originalNoindex, setOriginalNoindex] = useState<boolean>(false);
   const [originalFaviconSignature, setOriginalFaviconSignature] = useState<string>(
     getFaviconSettingsSignature(DEFAULT_SITE_SETTINGS),
+  );
+  const [originalAnalyticsAndScriptsSignature, setOriginalAnalyticsAndScriptsSignature] = useState<string>(
+    getAnalyticsAndScriptsSignature(DEFAULT_SITE_SETTINGS),
   );
   const [faviconProcessing, setFaviconProcessing] = useState(false);
   const [faviconError, setFaviconError] = useState<string | null>(null);
@@ -104,6 +117,7 @@ export default function AdminSiteSettings() {
       setSettings(parsed);
       setOriginalNoindex(parsed.siteNoindex ?? false);
       setOriginalFaviconSignature(getFaviconSettingsSignature(parsed));
+      setOriginalAnalyticsAndScriptsSignature(getAnalyticsAndScriptsSignature(parsed));
     }
     setLoading(false);
   };
@@ -147,9 +161,11 @@ export default function AdminSiteSettings() {
       clearSiteSettingsCache();
 
       const nextFaviconSignature = getFaviconSettingsSignature(settings);
+      const nextAnalyticsAndScriptsSignature = getAnalyticsAndScriptsSignature(settings);
       const shouldTriggerRebuild =
         originalNoindex !== settings.siteNoindex
-        || originalFaviconSignature !== nextFaviconSignature;
+        || originalFaviconSignature !== nextFaviconSignature
+        || originalAnalyticsAndScriptsSignature !== nextAnalyticsAndScriptsSignature;
 
       if (shouldTriggerRebuild) {
         setRebuildStatus(null);
@@ -158,7 +174,7 @@ export default function AdminSiteSettings() {
           setRebuildStatus({
             type: "success",
             message:
-              "SEO or favicon settings changed — site rebuild triggered. Changes will be live after the deploy completes.",
+              "SEO, favicon, analytics, or custom script settings changed — site rebuild triggered. Changes will be live after the deploy completes.",
           });
         } else {
           setRebuildStatus({
@@ -168,6 +184,7 @@ export default function AdminSiteSettings() {
         }
         setOriginalNoindex(settings.siteNoindex);
         setOriginalFaviconSignature(nextFaviconSignature);
+        setOriginalAnalyticsAndScriptsSignature(nextAnalyticsAndScriptsSignature);
       }
 
       toast.success("Settings saved successfully!");
