@@ -28,7 +28,7 @@ export default function Index() {
   // Use CMS content for hero and partner logos
   const heroContent = content.hero;
   const partnerLogos = content.partnerLogos;
-  const homepageButtonTone = "navy" as const;
+  const homepageButtonTone = "green" as const;
 
   return (
     <Layout>
