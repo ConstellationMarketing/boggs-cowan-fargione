@@ -73,6 +73,7 @@ export default function AboutUs() {
       <PageHero
         content={content.hero}
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
+        compactDesktop
       />
 
       <AboutSection

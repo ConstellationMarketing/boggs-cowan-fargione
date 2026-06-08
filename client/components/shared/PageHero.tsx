@@ -9,6 +9,8 @@ interface PageHeroProps {
   underHeader?: boolean;
   awardLogos?: Array<{ src: string; alt: string }>;
   ctaTone?: "green" | "navy";
+  /** Reduce height on desktop (lg+). Apply to all pages except the homepage. */
+  compactDesktop?: boolean;
 }
 
 function renderHeadline(content: SharedHeroContent) {
@@ -54,12 +56,17 @@ export default function PageHero({
   underHeader = true,
   awardLogos = [],
   ctaTone = "green",
+  compactDesktop = false,
 }: PageHeroProps) {
   const heroImage = content.heroImage?.trim() || "";
 
   return (
     <div
-      className={`relative overflow-hidden bg-brand-dark flex flex-col ${underHeader ? "-mt-[10rem] min-h-[80vh] lg:min-h-[55vh]" : ""}`}
+      className={`relative overflow-hidden bg-brand-dark flex flex-col ${
+        underHeader
+          ? `-mt-[10rem] min-h-[80vh]${compactDesktop ? " lg:min-h-[50vh]" : ""}`
+          : ""
+      }`}
     >
       {content.backgroundImage ? (
         <div
@@ -72,7 +79,11 @@ export default function PageHero({
 
       <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-[3%] flex-1">
-          <div className={`lg:w-[65.667%] flex flex-col items-center justify-center pb-[36px] text-center md:pb-[48px] lg:pb-[32px] lg:items-start lg:text-left ${underHeader ? "pt-[12.5rem] md:pt-[13.5rem] lg:pt-[9rem]" : "pt-[3rem] md:pt-[4rem] lg:pt-[7rem]"}`}>
+          <div className={`lg:w-[65.667%] flex flex-col items-center justify-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${
+            underHeader
+              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[10.5rem] lg:pb-[28px]" : ""}`
+              : "pt-[3rem] md:pt-[4rem]"
+          }`}>
             <div className="mb-[20px] md:mb-[24px]">
               {content.h1Title ? (
                 <DynamicHeading
@@ -141,7 +152,11 @@ export default function PageHero({
             </div>
           ) : null}
 
-          <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${underHeader ? "pt-[7rem]" : "pt-[3rem]"}`}>
+          <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${
+            underHeader
+              ? compactDesktop ? "pt-[8rem]" : "pt-[10rem]"
+              : "pt-[3rem]"
+          }`}>
             {heroImage ? (
               <img
                 src={heroImage}

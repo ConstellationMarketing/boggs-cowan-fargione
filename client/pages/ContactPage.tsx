@@ -31,6 +31,7 @@ export default function ContactPage() {
       <PageHero
         content={content.hero}
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
+        compactDesktop
       />
 
       <ContactUsSection

@@ -17,6 +17,7 @@ export default function PracticeAreaHero({
       content={content}
       headingTag={headingTags?.["hero.h1Title"] || headingTags?.["hero.sectionLabel"]}
       awardLogos={awards}
+      compactDesktop
     />
   );
 }
