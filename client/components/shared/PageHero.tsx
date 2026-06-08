@@ -11,6 +11,8 @@ interface PageHeroProps {
   ctaTone?: "green" | "navy";
   /** Reduce height on desktop (lg+). Apply to all pages except the homepage. */
   compactDesktop?: boolean;
+  /** Hide the mobile/tablet hero image (below lg). */
+  hideMobileImage?: boolean;
 }
 
 function renderHeadline(content: SharedHeroContent) {
@@ -57,6 +59,7 @@ export default function PageHero({
   awardLogos = [],
   ctaTone = "green",
   compactDesktop = false,
+  hideMobileImage = false,
 }: PageHeroProps) {
   const heroImage = content.heroImage?.trim() || "";
 
@@ -142,7 +145,7 @@ export default function PageHero({
             ) : null}
           </div>
 
-          {heroImage ? (
+          {heroImage && !hideMobileImage ? (
             <div className="mt-auto flex w-full items-end justify-center px-4 sm:px-6 lg:hidden">
               <img
                 src={heroImage}
