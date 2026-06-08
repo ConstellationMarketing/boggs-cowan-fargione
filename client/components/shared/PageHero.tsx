@@ -64,7 +64,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden bg-brand-dark flex flex-col ${
         underHeader
-          ? `-mt-[10rem] min-h-[80vh]${compactDesktop ? " lg:min-h-[35vh]" : ""}`
+          ? `-mt-[10rem] min-h-[80vh]${compactDesktop ? " lg:min-h-[20vh]" : ""}`
           : ""
       }`}
     >
@@ -81,7 +81,7 @@ export default function PageHero({
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-[3%] flex-1">
           <div className={`lg:w-[65.667%] flex flex-col items-center justify-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${
             underHeader
-              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[9.5rem] lg:pb-[20px]" : ""}`
+              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[8rem] lg:pb-[16px]" : ""}`
               : "pt-[3rem] md:pt-[4rem]"
           }`}>
             <div className="mb-[20px] md:mb-[24px]">
@@ -96,7 +96,7 @@ export default function PageHero({
               ) : null}
 
               <div className={`relative ${content.h1Title ? "mt-[8px] md:mt-[12px]" : ""}`}>
-                <p className="font-playfair text-[clamp(2.5rem,7vw,68.8px)] font-light leading-[1.2] text-white text-center lg:text-left">
+                <p className={`font-playfair font-light leading-[1.2] text-white text-center lg:text-left ${compactDesktop ? "text-[clamp(2rem,5vw,50px)]" : "text-[clamp(2.5rem,7vw,68.8px)]"}`}>
                   {renderHeadline(content)}
                 </p>
               </div>
@@ -104,7 +104,7 @@ export default function PageHero({
               {content.description ? (
                 <RichText
                   html={content.description}
-                  className="mt-[12px] max-w-[720px] font-inter text-[15px] md:text-[18px] leading-[24px] md:leading-[30px] text-center text-white/85 lg:text-left"
+                  className={`mt-[12px] max-w-[720px] font-inter leading-[24px] md:leading-[30px] text-center text-white/85 lg:text-left ${compactDesktop ? "text-[15px] md:text-[16px] lg:text-[15px]" : "text-[15px] md:text-[18px]"}`}
                 />
               ) : null}
             </div>
@@ -154,7 +154,7 @@ export default function PageHero({
 
           <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${
             underHeader
-              ? compactDesktop ? "pt-[7rem]" : "pt-[10rem]"
+              ? compactDesktop ? "pt-[6rem]" : "pt-[10rem]"
               : "pt-[3rem]"
           }`}>
             {heroImage ? (
