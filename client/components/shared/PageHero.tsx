@@ -160,14 +160,14 @@ export default function PageHero({
 
           <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${
             underHeader
-              ? compactDesktop ? "pt-[9.5rem] overflow-hidden" : "pt-[10rem]"
+              ? compactDesktop ? "pt-[9.5rem]" : "pt-[10rem]"
               : "pt-[3rem]"
           }`}>
             {heroImage ? (
               <img
                 src={heroImage}
                 alt={content.heroImageAlt || "Hero"}
-                className="block w-full h-full object-cover object-top"
+                className="block w-full h-full object-contain object-bottom"
               />
             ) : null}
           </div>
