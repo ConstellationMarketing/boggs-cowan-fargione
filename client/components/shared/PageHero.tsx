@@ -13,6 +13,8 @@ interface PageHeroProps {
   compactDesktop?: boolean;
   /** Hide the mobile/tablet hero image (below lg). */
   hideMobileImage?: boolean;
+  /** Reduce hero min-height on mobile/tablet (below lg). */
+  compactMobile?: boolean;
 }
 
 function renderHeadline(content: SharedHeroContent) {
@@ -60,6 +62,7 @@ export default function PageHero({
   ctaTone = "green",
   compactDesktop = false,
   hideMobileImage = false,
+  compactMobile = false,
 }: PageHeroProps) {
   const heroImage = content.heroImage?.trim() || "";
 
@@ -67,7 +70,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden bg-brand-dark flex flex-col ${
         underHeader
-          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[700px] lg:min-h-0" : " min-h-[80vh]"}`
+          ? `-mt-[10rem] ${compactMobile ? "min-h-0" : "min-h-[80vh]"}${compactDesktop ? " lg:h-[700px] lg:min-h-0" : ""}`
           : ""
       }`}
     >

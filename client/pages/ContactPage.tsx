@@ -33,6 +33,7 @@ export default function ContactPage() {
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
         compactDesktop
         hideMobileImage
+        compactMobile
       />
 
       <ContactUsSection
