@@ -158,19 +158,29 @@ export default function PageHero({
             </div>
           ) : null}
 
-          <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${
-            underHeader
-              ? compactDesktop ? "pt-[9.5rem]" : "pt-[10rem]"
-              : "pt-[3rem]"
-          }`}>
-            {heroImage ? (
-              <img
-                src={heroImage}
-                alt={content.heroImageAlt || "Hero"}
-                className="block w-full h-full object-contain object-bottom"
-              />
-            ) : null}
-          </div>
+          {compactDesktop ? (
+            heroImage ? (
+              <div className="hidden lg:block absolute right-0 top-[234px] bottom-0 w-[31.3333%]">
+                <img
+                  src={heroImage}
+                  alt={content.heroImageAlt || "Hero"}
+                  className="block w-full h-full object-contain object-bottom"
+                />
+              </div>
+            ) : null
+          ) : (
+            <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${
+              underHeader ? "pt-[10rem]" : "pt-[3rem]"
+            }`}>
+              {heroImage ? (
+                <img
+                  src={heroImage}
+                  alt={content.heroImageAlt || "Hero"}
+                  className="block w-full h-full object-contain object-bottom"
+                />
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     </div>
