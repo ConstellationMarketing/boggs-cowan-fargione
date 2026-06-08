@@ -85,7 +85,7 @@ export default function PageHero({
 
       <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
         <div className={`flex flex-col gap-6 lg:gap-[3%] flex-1 ${compactDesktop ? "lg:flex-row lg:items-start" : "lg:flex-row lg:items-center"}`}>
-          <div className={`lg:w-[65.667%] flex flex-col items-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${compactDesktop ? "justify-start" : "justify-center"} ${
+          <div className={`lg:w-[65.667%] flex flex-col items-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${compactDesktop ? "justify-start lg:justify-center lg:self-stretch" : "justify-center"} ${
             underHeader
               ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[234px] lg:pb-[100px]" : ""}`
               : "pt-[3rem] md:pt-[4rem]"
