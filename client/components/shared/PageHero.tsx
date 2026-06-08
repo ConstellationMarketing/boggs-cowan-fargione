@@ -64,7 +64,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden bg-brand-dark flex flex-col ${
         underHeader
-          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[360px] lg:min-h-0" : " min-h-[80vh]"}`
+          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[420px] lg:min-h-0" : " min-h-[80vh]"}`
           : ""
       }`}
     >
@@ -81,7 +81,7 @@ export default function PageHero({
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-[3%] flex-1">
           <div className={`lg:w-[65.667%] flex flex-col items-center justify-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${
             underHeader
-              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[7rem] lg:pb-[16px]" : ""}`
+              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[11rem] lg:pb-[16px]" : ""}`
               : "pt-[3rem] md:pt-[4rem]"
           }`}>
             <div className="mb-[20px] md:mb-[24px]">
@@ -154,7 +154,7 @@ export default function PageHero({
 
           <div className={`hidden lg:block lg:w-[31.3333%] self-stretch ${
             underHeader
-              ? compactDesktop ? "pt-[5.5rem] overflow-hidden" : "pt-[10rem]"
+              ? compactDesktop ? "pt-[9rem] overflow-hidden" : "pt-[10rem]"
               : "pt-[3rem]"
           }`}>
             {heroImage ? (
