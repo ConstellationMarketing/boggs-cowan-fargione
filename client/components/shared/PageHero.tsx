@@ -64,7 +64,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden bg-brand-dark flex flex-col ${
         underHeader
-          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[660px] lg:min-h-0" : " min-h-[80vh]"}`
+          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[700px] lg:min-h-0" : " min-h-[80vh]"}`
           : ""
       }`}
     >
@@ -81,7 +81,7 @@ export default function PageHero({
         <div className={`flex flex-col gap-6 lg:gap-[3%] flex-1 ${compactDesktop ? "lg:flex-row lg:items-start" : "lg:flex-row lg:items-center"}`}>
           <div className={`lg:w-[65.667%] flex flex-col items-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${compactDesktop ? "justify-start" : "justify-center"} ${
             underHeader
-              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[234px] lg:pb-[70px]" : ""}`
+              ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[234px] lg:pb-[100px]" : ""}`
               : "pt-[3rem] md:pt-[4rem]"
           }`}>
             <div className="mb-[20px] md:mb-[24px]">
