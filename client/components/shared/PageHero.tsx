@@ -64,7 +64,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden bg-brand-dark flex flex-col ${
         underHeader
-          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[600px] lg:min-h-0" : " min-h-[80vh]"}`
+          ? `-mt-[10rem]${compactDesktop ? " min-h-[80vh] lg:h-[660px] lg:min-h-0" : " min-h-[80vh]"}`
           : ""
       }`}
     >
