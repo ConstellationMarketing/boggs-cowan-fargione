@@ -771,7 +771,7 @@ function createEmptyRecord(
   if (templateType === "practice") {
     return {
       title,
-      url_path: `/practice-areas/${slugify(title)}/`,
+      url_path: `/${slugify(title)}/`,
       page_type: "practice",
       content: {
         hero: defaultPracticeAreaPageContent.hero,

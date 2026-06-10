@@ -116,7 +116,7 @@ function scoreStructural(
       flags.push("missing_title");
     }
 
-    if (!p.url_path || p.url_path === "/practice-areas//") {
+    if (!p.url_path || p.url_path.trim() === "" || p.url_path.trim() === "/") {
       score -= 0.3;
       details.push("Missing URL path");
       flags.push("missing_url_path");
@@ -326,8 +326,9 @@ function scoreValidation(
 
     // Slug format check
     if (p.url_path) {
-      const slug = p.url_path.replace(/^\/practice-areas\//, "").replace(/\/$/, "");
-      if (slug && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(slug)) {
+      const segments = p.url_path.replace(/^\/|\/$/, "").split("/").filter(Boolean);
+      const hasInvalidSegment = segments.some((s) => !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(s));
+      if (hasInvalidSegment || segments.length === 0) {
         score -= 0.3;
         details.push("Invalid slug format");
       } else {

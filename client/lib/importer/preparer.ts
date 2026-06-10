@@ -656,7 +656,7 @@ export function quickValidateRecord(
       });
     }
 
-    if (!p.url_path || p.url_path === "/practice-areas//") {
+    if (!p.url_path || p.url_path.trim() === "" || p.url_path.trim() === "/") {
       errors.push({
         rowIndex,
         field: "url_path",
@@ -664,12 +664,13 @@ export function quickValidateRecord(
         severity: "error",
       });
     } else {
-      const slug = p.url_path.replace(/^\/practice-areas\//, "").replace(/\/$/, "");
-      if (slug && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(slug)) {
+      const segments = p.url_path.replace(/^\/|\/$/, "").split("/").filter(Boolean);
+      const invalidSegment = segments.find((s) => !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(s));
+      if (invalidSegment || segments.length === 0) {
         errors.push({
           rowIndex,
           field: "url_path",
-          message: "Slug must be lowercase, alphanumeric with hyphens only",
+          message: "Path must be lowercase, alphanumeric with hyphens only (e.g. /my-page/)",
           severity: "error",
         });
       }
