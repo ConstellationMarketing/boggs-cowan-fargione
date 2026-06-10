@@ -52,6 +52,7 @@ import {
   ensureHtml,
   stripH1Tags,
   normalizeUrlSlug,
+  extractIntroBeforeH2,
   resolveImportPublishDate,
   syncPracticeSourceImageFields,
 } from "./preparer";
@@ -429,6 +430,18 @@ function buildPracticeRecord(
       }));
       // Remove FAQ content from body to prevent duplication
       bodyHtml = removeFaqFromHtml(bodyHtml, detected);
+    }
+  }
+
+  // --- Step 1b: Extract intro paragraph(s) before first H2 → hero description ---
+  let introHtml = "";
+  if (bodyHtml && !defaultHero.description) {
+    const extracted = extractIntroBeforeH2(bodyHtml);
+    if (extracted.intro) {
+      introHtml = extracted.intro;
+      bodyHtml = extracted.body;
+      // Strip tags to get plain text for hero description
+      defaultHero.description = extracted.intro.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     }
   }
 

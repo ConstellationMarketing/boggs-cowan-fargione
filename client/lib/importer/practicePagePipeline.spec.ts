@@ -6,6 +6,7 @@ import {
   normalizeImportedPublishDate,
   normalizeUrlSlug,
   splitOnH2,
+  extractIntroBeforeH2,
   stripH1Tags,
   removeFaqFromHtml,
   detectFaqPatterns,
@@ -397,10 +398,12 @@ describe("splitOnH2 — intro content merging", () => {
       "<p>Intro paragraph here.</p>" +
       "<h2>Section One</h2><p>Content one.</p>" +
       "<h2>Section Two</h2><p>Content two.</p>";
-    const sections = splitOnH2(html);
+    // extractIntroBeforeH2 should be called first; splitOnH2 receives only the H2+ content
+    const { body } = extractIntroBeforeH2(html);
+    const sections = splitOnH2(body);
     expect(sections).toHaveLength(2);
-    // First section starts with the intro, then the H2
-    expect(sections[0]).toContain("Intro paragraph here.");
+    // Intro is NOT merged into sections — it goes to hero description
+    expect(sections[0]).not.toContain("Intro paragraph here.");
     expect(sections[0]).toContain("<h2");
     expect(sections[0]).toContain("Section One");
     // Second section is just the second H2
@@ -539,13 +542,16 @@ describe("Full pipeline with H1, intro, and FAQ", () => {
     expect(allBodies).not.toContain("<h1");
   });
 
-  it("intro paragraph is merged into first content section", () => {
+  it("intro paragraph is extracted to hero description, not first content section", () => {
     const sections = (result.content as Record<string, any>)
       .contentSections as any[];
-    // First section should contain both intro and first H2 content
-    expect(sections[0].body).toContain(
-      "We are a leading personal injury firm",
-    );
+    // Intro should NOT appear in content sections
+    const allBodies = sections.map((s: any) => s.body).join(" ");
+    expect(allBodies).not.toContain("We are a leading personal injury firm");
+    // Intro should appear in hero description instead
+    const hero = (result.content as Record<string, any>).hero as any;
+    expect(hero.description).toContain("We are a leading personal injury firm");
+    // First section should still contain its H2 heading
     expect(sections[0].body).toContain("Why Choose Us");
   });
 

@@ -248,6 +248,21 @@ function preparePracticePage(
   }
 
   // -----------------------------------------------------------------------
+  // Step 1b: Extract intro paragraph(s) before first H2 → hero description
+  // -----------------------------------------------------------------------
+  let introDescription = mapped["hero.description"]
+    ? ensureHtml(String(mapped["hero.description"]))
+    : "";
+
+  if (!introDescription && bodyHtml && contentSections.length === 0) {
+    const extracted = extractIntroBeforeH2(bodyHtml);
+    if (extracted.intro) {
+      introDescription = extracted.intro.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      bodyHtml = extracted.body;
+    }
+  }
+
+  // -----------------------------------------------------------------------
   // Step 2: Split into Sections
   // -----------------------------------------------------------------------
   if (contentSections.length === 0 && bodyHtml) {
@@ -311,9 +326,7 @@ function preparePracticePage(
       highlightedText: mapped["hero.highlightedText"]
         ? String(mapped["hero.highlightedText"])
         : "",
-      description: mapped["hero.description"]
-        ? ensureHtml(String(mapped["hero.description"]))
-        : "",
+      description: introDescription,
       backgroundImage: heroImage,
       heroImage: mapped["hero.heroImage"]
         ? String(mapped["hero.heroImage"])
@@ -483,11 +496,39 @@ export function normalizeUrlSlug(raw: string, title: string): string {
 // ---------------------------------------------------------------------------
 
 /**
+ * Extract paragraph content that appears before the first <h2> in an HTML string.
+ * This intro content is removed from the body and returned separately so it can
+ * be used as the hero description instead of being prepended to the first section.
+ *
+ * Returns `{ intro, body }` where:
+ * - `intro` is the HTML before the first <h2> (empty string if none / no paragraphs found)
+ * - `body`  is the remaining HTML starting at the first <h2>
+ */
+export function extractIntroBeforeH2(html: string): { intro: string; body: string } {
+  if (!html || html.trim() === "") return { intro: "", body: html };
+
+  const h2Match = /<h2[\s>]/i.exec(html);
+  if (!h2Match) return { intro: "", body: html };
+
+  const beforeFirst = html.slice(0, h2Match.index).trim();
+  const body = html.slice(h2Match.index);
+
+  // Only treat it as an intro if there is at least one actual paragraph
+  if (!beforeFirst || !/<p[\s>]/i.test(beforeFirst)) {
+    return { intro: "", body: html };
+  }
+
+  return { intro: beforeFirst, body };
+}
+
+/**
  * Split HTML body content on `<h2>` boundaries.
  * Each resulting section includes the <h2> heading and everything up to
  * the next <h2> (or end of string).
  *
  * If no <h2> tags found, returns a single section with the full body.
+ * NOTE: any content before the first <h2> should be extracted via
+ * `extractIntroBeforeH2` before calling this function.
  */
 export function splitOnH2(html: string): string[] {
   if (!html || html.trim() === "") return [];
@@ -505,22 +546,12 @@ export function splitOnH2(html: string): string[] {
 
   const sections: string[] = [];
 
-  // Content before the first H2 (intro paragraphs after H1 stripping).
-  // Instead of creating a standalone section, we prepend it to the first
-  // H2 section so it reads as an intro to that section.
-  const beforeFirst = html.slice(0, positions[0]).trim();
-
   for (let i = 0; i < positions.length; i++) {
     const start = positions[i];
     const end = i + 1 < positions.length ? positions[i + 1] : html.length;
     const section = html.slice(start, end).trim();
     if (section) {
-      // Prepend intro content to the first H2 section
-      if (i === 0 && beforeFirst) {
-        sections.push(beforeFirst + section);
-      } else {
-        sections.push(section);
-      }
+      sections.push(section);
     }
   }
 
