@@ -25,10 +25,18 @@ export interface PracticeAreaGridItem {
   subPractices: PracticeAreaSubItem[];
 }
 
+export interface PracticeAreasGridCta {
+  label: string;
+  link: string;
+  variant: "primary" | "outline"; // primary = filled accent, outline = bordered
+}
+
 export interface PracticeAreasGridContent {
   heading: string; // "Our Areas of Practice"
   description: string; // Intro paragraph
   areas: PracticeAreaGridItem[];
+  footerTitle: string; // Centered title below all cards/subpractices
+  footerButtons: PracticeAreasGridCta[]; // Up to 2 CTA buttons
 }
 
 export interface WhyChooseItem {
@@ -86,6 +94,8 @@ export const defaultPracticeAreasContent: PracticeAreasPageContent = {
     heading: "",
     description: "",
     areas: [],
+    footerTitle: "",
+    footerButtons: [],
   },
   whyChoose: {
     sectionLabel: "",

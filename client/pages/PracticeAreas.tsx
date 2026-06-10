@@ -43,6 +43,8 @@ export default function PracticeAreas() {
         description={content.grid.description}
         areas={content.grid.areas}
         headingTag={content.headingTags?.["grid.heading"]}
+        footerTitle={content.grid.footerTitle}
+        footerButtons={content.grid.footerButtons}
       />
 
       <WhyChooseUsSection

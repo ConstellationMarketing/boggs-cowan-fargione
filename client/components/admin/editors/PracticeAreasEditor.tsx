@@ -194,6 +194,50 @@ function GridSection({ content, update }: SectionProps) {
             </div>
           )}
         />
+
+        {/* Footer CTA */}
+        <div className="border-t pt-4 mt-2">
+          <h4 className="font-medium mb-3 text-sm">Grid Footer CTA</h4>
+          <div className="grid gap-3">
+            <div>
+              <Label>Footer Title</Label>
+              <Input
+                value={grid.footerTitle || ""}
+                onChange={(e) => set({ footerTitle: e.target.value })}
+                placeholder="e.g. Not sure which practice area fits your case?"
+              />
+            </div>
+            <ArrayEditor
+              items={grid.footerButtons || []}
+              onChange={(items) => set({ footerButtons: items })}
+              itemLabel="Button"
+              newItem={() => ({ label: "", link: "", variant: "primary" as const })}
+              renderItem={(btn, _, updBtn) => (
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                  <div>
+                    <Label>Label</Label>
+                    <Input value={btn.label} onChange={(e) => updBtn({ ...btn, label: e.target.value })} placeholder="Contact Us" />
+                  </div>
+                  <div>
+                    <Label>Link</Label>
+                    <Input value={btn.link} onChange={(e) => updBtn({ ...btn, link: e.target.value })} placeholder="/contact/" />
+                  </div>
+                  <div>
+                    <Label>Style</Label>
+                    <select
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      value={btn.variant}
+                      onChange={(e) => updBtn({ ...btn, variant: e.target.value as "primary" | "outline" })}
+                    >
+                      <option value="primary">Filled (Primary)</option>
+                      <option value="outline">Outline</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+            />
+          </div>
+        </div>
       </div>
     </Section>
   );

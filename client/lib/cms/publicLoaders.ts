@@ -713,6 +713,14 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
     grid: {
       ...defaults.grid,
       ...cmsContent.grid,
+      footerTitle: typeof cmsContent.grid?.footerTitle === "string" ? cmsContent.grid.footerTitle : defaults.grid.footerTitle,
+      footerButtons: Array.isArray(cmsContent.grid?.footerButtons)
+        ? cmsContent.grid.footerButtons.map((btn) => ({
+            label: typeof btn.label === "string" ? btn.label : "",
+            link: typeof btn.link === "string" ? btn.link : "",
+            variant: btn.variant === "outline" ? "outline" : "primary",
+          }))
+        : defaults.grid.footerButtons,
       areas: cmsContent.grid?.areas?.length
         ? cmsContent.grid.areas.map((area) => ({
             ...area,

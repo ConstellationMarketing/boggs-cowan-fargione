@@ -3,13 +3,15 @@ import * as LucideIcons from "lucide-react";
 import { ArrowRight, Scale, type LucideIcon } from "lucide-react";
 import RichText from "@site/components/shared/RichText";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
-import type { PracticeAreaGridItem } from "@site/lib/cms/practiceAreasPageTypes";
+import type { PracticeAreaGridItem, PracticeAreasGridCta } from "@site/lib/cms/practiceAreasPageTypes";
 
 interface PracticeAreasOverviewGridProps {
   heading: string;
   description: string;
   areas: PracticeAreaGridItem[];
   headingTag?: string;
+  footerTitle?: string;
+  footerButtons?: PracticeAreasGridCta[];
 }
 
 const normalizedIconMap = Object.entries(LucideIcons).reduce<Record<string, LucideIcon>>((acc, [name, icon]) => {
@@ -27,7 +29,7 @@ function resolveIcon(iconName: string | null | undefined, fallback: LucideIcon =
   return normalizedIconMap[key] || fallback;
 }
 
-export default function PracticeAreasOverviewGrid({ heading, description, areas, headingTag }: PracticeAreasOverviewGridProps) {
+export default function PracticeAreasOverviewGrid({ heading, description, areas, headingTag, footerTitle, footerButtons }: PracticeAreasOverviewGridProps) {
   if (!heading && !description && areas.length === 0) {
     return null;
   }
@@ -188,6 +190,37 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
             </div>
           );
         })}
+
+        {/* Footer CTA */}
+        {(footerTitle || (footerButtons && footerButtons.length > 0)) && (
+          <div className="mt-[56px] md:mt-[72px] flex flex-col items-center text-center">
+            {footerTitle ? (
+              <p className="font-playfair text-[24px] leading-snug text-white md:text-[32px] max-w-[700px]">
+                {footerTitle}
+              </p>
+            ) : null}
+            {footerButtons && footerButtons.length > 0 ? (
+              <div className="mt-6 flex flex-wrap justify-center gap-4">
+                {footerButtons.map((btn, i) =>
+                  btn.link ? (
+                    <Link
+                      key={i}
+                      to={btn.link}
+                      className={
+                        btn.variant === "outline"
+                          ? "inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-brand-accent px-7 font-inter text-[15px] font-medium text-brand-accent transition-colors duration-300 hover:bg-brand-accent hover:text-white"
+                          : "inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-accent px-7 font-inter text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                      }
+                    >
+                      {btn.label}
+                      {btn.variant !== "outline" && <ArrowRight className="h-4 w-4" />}
+                    </Link>
+                  ) : null
+                )}
+              </div>
+            ) : null}
+          </div>
+        )}
 
       </div>
     </section>
