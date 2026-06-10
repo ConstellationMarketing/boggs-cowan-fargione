@@ -95,9 +95,11 @@ function validatePracticeRecord(record: Record<string, unknown>): string | null 
     return "url_path is required";
   }
 
-  const pathPattern = /^\/practice-areas\/[a-z0-9][a-z0-9-]*[a-z0-9]?\/$/;
+  // Validate that url_path is a valid slug path: starts and ends with /,
+  // each segment is lowercase alphanumeric with hyphens
+  const pathPattern = /^(\/[a-z0-9][a-z0-9-]*[a-z0-9]?)+\/$/;
   if (!pathPattern.test(record.url_path as string)) {
-    return `url_path "${record.url_path}" must match /practice-areas/<slug>/ pattern`;
+    return `url_path "${record.url_path}" must be a valid path like /my-page/ or /section/my-page/`;
   }
 
   if (record.page_type !== "practice") {
