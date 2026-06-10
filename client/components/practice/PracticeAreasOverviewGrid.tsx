@@ -16,19 +16,15 @@ const normalizedIconMap = Object.entries(LucideIcons).reduce<Record<string, Luci
   if (name === "default" || name === "icons" || name === "aliases") {
     return acc;
   }
-
   const normalizedName = name.replace(/[^a-z0-9]/gi, "").toLowerCase();
   acc[normalizedName] = icon as LucideIcon;
   return acc;
 }, {});
 
-function resolvePracticeAreaIcon(iconName: string | null | undefined): LucideIcon {
-  if (!iconName || typeof iconName !== "string") {
-    return Scale;
-  }
-
-  const normalizedInput = iconName.replace(/[^a-z0-9]/gi, "").toLowerCase();
-  return normalizedIconMap[normalizedInput] || Scale;
+function resolveIcon(iconName: string | null | undefined, fallback: LucideIcon = Scale): LucideIcon {
+  if (!iconName || typeof iconName !== "string") return fallback;
+  const key = iconName.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  return normalizedIconMap[key] || fallback;
 }
 
 export default function PracticeAreasOverviewGrid({ heading, description, areas, headingTag }: PracticeAreasOverviewGridProps) {
@@ -68,48 +64,72 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
           </div>
         )}
 
-        {/* Main practice area cards — 3 in one row */}
+        {/* Main practice area cards — image background, centered content, description hover-only on desktop */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
           {areas.map((area, index) => {
-            const Icon = resolvePracticeAreaIcon(area.icon);
+            const hasImage = Boolean((area as { image?: string }).image);
+            const bgImage = (area as { image?: string }).image || "";
 
             return (
-              <article
-                key={`${area.title}-${index}`}
-                className="flex flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 shadow-[0_14px_40px_rgba(0,0,0,0.22)]"
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className="h-6 w-6 shrink-0 text-brand-accent" strokeWidth={1.75} />
-                  <h3 className="font-playfair text-[26px] leading-tight text-black md:text-[28px]">
-                    {area.title}
-                  </h3>
-                </div>
+              <div key={`${area.title}-${index}`} className="flex flex-col items-center">
+                {/* Card */}
+                <article
+                  className="group relative w-full overflow-hidden rounded-2xl shadow-[0_14px_40px_rgba(0,0,0,0.35)]"
+                  style={{ minHeight: "260px" }}
+                >
+                  {/* Background image or gradient fallback */}
+                  {hasImage ? (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                      style={{ backgroundImage: `url(${bgImage})` }}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary to-brand-dark" />
+                  )}
 
-                <div className="mt-4 h-[2px] w-full bg-brand-accent/70" />
+                  {/* Dark overlay — lighter on hover to reveal description */}
+                  <div className="absolute inset-0 bg-black/55 transition-all duration-500 group-hover:bg-black/70" />
 
-                {area.description ? (
-                  <RichText
-                    html={area.description}
-                    className="mt-4 flex-1 font-inter text-[15px] leading-[1.75] text-black/80 md:text-[16px] [&_p]:my-0 [&_p+p]:mt-3"
-                  />
-                ) : null}
+                  {/* Card content */}
+                  <div className="relative flex flex-col items-center justify-center px-6 py-10 text-center h-full" style={{ minHeight: "260px" }}>
+                    {/* Title — always visible */}
+                    <h3 className="font-playfair text-[26px] leading-tight text-white drop-shadow md:text-[30px]">
+                      {area.title}
+                    </h3>
 
+                    {/* Accent line */}
+                    <div className="mx-auto mt-3 h-[2px] w-[50px] bg-brand-accent transition-all duration-300 group-hover:w-[70px]" />
+
+                    {/* Description — hidden on desktop until hover, always visible on mobile */}
+                    {area.description ? (
+                      <div className="mt-4 md:max-h-0 md:overflow-hidden md:opacity-0 md:transition-all md:duration-500 md:group-hover:max-h-[300px] md:group-hover:opacity-100">
+                        <RichText
+                          html={area.description}
+                          className="font-inter text-[14px] leading-[1.75] text-white/90 md:text-[15px] [&_p]:my-0 [&_p+p]:mt-2"
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                </article>
+
+                {/* Button below card — always visible, centered */}
                 {area.link ? (
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <Link
                       to={area.link}
-                      className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                      className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-brand-accent px-6 font-inter text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
                     >
                       {area.linkText || "View Practice"}
+                      <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
                 ) : null}
-              </article>
+              </div>
             );
           })}
         </div>
 
-        {/* Sub-practice sections — one section per main practice area */}
+        {/* Sub-practice sections — one per main practice area */}
         {areasWithSubs.map((area, areaIndex) => {
           const subPractices = area.subPractices.filter((s) => s && (s.title || s.link));
           const sectionTitle = area.subgroupTitle?.trim() || `${area.title} Services`;
@@ -124,37 +144,46 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                 <div className="mx-auto mt-3 h-[2px] w-[60px] bg-brand-accent" />
               </div>
 
-              {/* Sub-practices grid — 2 or 3 per row */}
+              {/* Sub-practice cards — white background, dark text, green titles */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
-                {subPractices.map((sub, subIndex) => (
-                  <div
-                    key={`${sub.title}-${subIndex}`}
-                    className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-5 py-5 transition-colors duration-200 hover:bg-white/10"
-                  >
-                    {sub.title ? (
-                      <h4 className="font-inter text-[16px] font-semibold uppercase tracking-wide text-brand-accent md:text-[17px]">
-                        {sub.title}
-                      </h4>
-                    ) : null}
+                {subPractices.map((sub, subIndex) => {
+                  const SubIcon = sub.icon ? resolveIcon(sub.icon) : null;
 
-                    {sub.description ? (
-                      <RichText
-                        html={sub.description}
-                        className="mt-2 flex-1 font-inter text-[14px] leading-[1.7] text-white/75 md:text-[15px] [&_p]:my-0 [&_p+p]:mt-2"
-                      />
-                    ) : null}
+                  return (
+                    <div
+                      key={`${sub.title}-${subIndex}`}
+                      className="flex flex-col rounded-xl bg-white px-5 py-5 shadow-[0_4px_20px_rgba(0,0,0,0.10)] transition-shadow duration-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+                    >
+                      {sub.title ? (
+                        <div className="flex items-center gap-2">
+                          {SubIcon ? (
+                            <SubIcon className="h-5 w-5 shrink-0 text-brand-accent" strokeWidth={1.75} />
+                          ) : null}
+                          <h4 className="font-inter text-[16px] font-semibold text-brand-accent md:text-[17px]">
+                            {sub.title}
+                          </h4>
+                        </div>
+                      ) : null}
 
-                    {sub.link ? (
-                      <Link
-                        to={sub.link}
-                        className="mt-4 inline-flex items-center gap-2 font-inter text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-brand-accent md:text-[15px]"
-                      >
-                        Learn More
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    ) : null}
-                  </div>
-                ))}
+                      {sub.description ? (
+                        <RichText
+                          html={sub.description}
+                          className="mt-2 flex-1 font-inter text-[14px] leading-[1.7] text-black/75 md:text-[15px] [&_p]:my-0 [&_p+p]:mt-2"
+                        />
+                      ) : null}
+
+                      {sub.link ? (
+                        <Link
+                          to={sub.link}
+                          className="mt-4 inline-flex items-center gap-2 font-inter text-[14px] font-medium text-brand-accent transition-colors duration-200 hover:text-brand-accent-dark md:text-[15px]"
+                        >
+                          Learn More
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      ) : null}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );

@@ -116,19 +116,19 @@ function GridSection({ content, update }: SectionProps) {
           items={grid.areas}
           onChange={(items) => set({ areas: items })}
           itemLabel="Practice Area"
-          newItem={() => ({ icon: "Scale", title: "", description: "", link: "/practice-areas/", linkText: "View Practice", subgroupTitle: "", subPractices: [] })}
+          newItem={() => ({ icon: "", image: "", title: "", description: "", link: "/practice-areas/", linkText: "View Practice", subgroupTitle: "", subPractices: [] })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-4">
-              <div className="grid grid-cols-4 gap-3">
-                <div>
-                  <Label>Icon</Label>
-                  <Input value={item.icon} onChange={(e) => upd({ ...item, icon: e.target.value })} placeholder="Lucide icon name" />
-                </div>
-                <div className="col-span-3">
-                  <Label>Main Practice Title</Label>
-                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
-                </div>
+              <div>
+                <Label>Main Practice Title</Label>
+                <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
               </div>
+              <ImageField
+                label="Card Background Image"
+                value={(item as { image?: string }).image || ""}
+                onChange={(url) => upd({ ...item, image: url } as typeof item)}
+                folder="practice-areas"
+              />
               <RichTextField label="Main Practice Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div>
@@ -154,15 +154,25 @@ function GridSection({ content, update }: SectionProps) {
                   items={item.subPractices || []}
                   onChange={(subPractices) => upd({ ...item, subPractices })}
                   itemLabel="Sub-practice"
-                  newItem={() => ({ title: "", description: "", link: "" })}
+                  newItem={() => ({ icon: "", title: "", description: "", link: "" })}
                   renderItem={(subPractice, _, updateSubPractice) => (
                     <div className="grid gap-3">
-                      <div>
-                        <Label>Sub-practice Title</Label>
-                        <Input
-                          value={subPractice.title}
-                          onChange={(e) => updateSubPractice({ ...subPractice, title: e.target.value })}
-                        />
+                      <div className="grid grid-cols-4 gap-3">
+                        <div>
+                          <Label>Icon</Label>
+                          <Input
+                            value={(subPractice as { icon?: string }).icon || ""}
+                            onChange={(e) => updateSubPractice({ ...subPractice, icon: e.target.value } as typeof subPractice)}
+                            placeholder="Lucide name"
+                          />
+                        </div>
+                        <div className="col-span-3">
+                          <Label>Sub-practice Title</Label>
+                          <Input
+                            value={subPractice.title}
+                            onChange={(e) => updateSubPractice({ ...subPractice, title: e.target.value })}
+                          />
+                        </div>
                       </div>
                       <RichTextField
                         label="Sub-practice Description"

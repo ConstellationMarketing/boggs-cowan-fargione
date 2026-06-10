@@ -716,6 +716,9 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
       areas: cmsContent.grid?.areas?.length
         ? cmsContent.grid.areas.map((area) => ({
             ...area,
+            image: typeof (area as { image?: unknown }).image === "string"
+              ? (area as { image: string }).image
+              : "",
             linkText: typeof area.linkText === "string" && area.linkText.trim().length > 0
               ? area.linkText
               : "View Practice",
@@ -727,6 +730,9 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
                   const legacySubPractice = subPractice as unknown as { text?: unknown };
 
                   return {
+                    icon: typeof (subPractice as { icon?: unknown }).icon === "string"
+                      ? (subPractice as { icon: string }).icon
+                      : "",
                     title: typeof subPractice.title === "string"
                       ? subPractice.title
                       : typeof legacySubPractice.text === "string"

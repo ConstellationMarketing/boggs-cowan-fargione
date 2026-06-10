@@ -7,6 +7,7 @@ import { defaultSharedHeroContent } from "./sharedHero";
 export type PracticeAreasHeroContent = SharedHeroContent;
 
 export interface PracticeAreaSubItem {
+  icon: string; // Lucide icon name for the sub-practice
   title: string;
   description: string;
   link: string;
@@ -14,6 +15,7 @@ export interface PracticeAreaSubItem {
 
 export interface PracticeAreaGridItem {
   icon: string; // Lucide icon name
+  image: string; // Background image URL for the main practice card
   title: string; // "Personal Injury"
   description: string; // Rich text description for the main practice
   link: string; // Link to main practice page
