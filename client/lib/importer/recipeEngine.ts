@@ -433,15 +433,13 @@ function buildPracticeRecord(
     }
   }
 
-  // --- Step 1b: Extract intro paragraph(s) before first H2 → hero description ---
-  let introHtml = "";
-  if (bodyHtml && !defaultHero.description) {
+  // --- Step 1b: Extract intro paragraph(s) before first H2 → hero headline ---
+  if (bodyHtml && !defaultHero.headline) {
     const extracted = extractIntroBeforeH2(bodyHtml);
     if (extracted.intro) {
-      introHtml = extracted.intro;
       bodyHtml = extracted.body;
-      // Strip tags to get plain text for hero description
-      defaultHero.description = extracted.intro.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      // Strip tags to get plain text for hero headline
+      defaultHero.headline = extracted.intro.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     }
   }
 

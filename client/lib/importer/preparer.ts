@@ -248,16 +248,18 @@ function preparePracticePage(
   }
 
   // -----------------------------------------------------------------------
-  // Step 1b: Extract intro paragraph(s) before first H2 → hero description
+  // Step 1b: Extract intro paragraph(s) before first H2 → hero headline
   // -----------------------------------------------------------------------
-  let introDescription = mapped["hero.description"]
-    ? ensureHtml(String(mapped["hero.description"]))
-    : "";
+  let introHeadline = mapped["hero.headline"]
+    ? String(mapped["hero.headline"])
+    : mapped["hero.tagline"]
+      ? String(mapped["hero.tagline"])
+      : "";
 
-  if (!introDescription && bodyHtml && contentSections.length === 0) {
+  if (!introHeadline && bodyHtml && contentSections.length === 0) {
     const extracted = extractIntroBeforeH2(bodyHtml);
     if (extracted.intro) {
-      introDescription = extracted.intro.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      introHeadline = extracted.intro.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
       bodyHtml = extracted.body;
     }
   }
@@ -318,15 +320,13 @@ function preparePracticePage(
         : mapped["hero.sectionLabel"]
           ? String(mapped["hero.sectionLabel"])
           : title,
-      headline: mapped["hero.headline"]
-        ? String(mapped["hero.headline"])
-        : mapped["hero.tagline"]
-          ? String(mapped["hero.tagline"])
-          : "",
+      headline: introHeadline,
       highlightedText: mapped["hero.highlightedText"]
         ? String(mapped["hero.highlightedText"])
         : "",
-      description: introDescription,
+      description: mapped["hero.description"]
+        ? ensureHtml(String(mapped["hero.description"]))
+        : "",
       backgroundImage: heroImage,
       heroImage: mapped["hero.heroImage"]
         ? String(mapped["hero.heroImage"])

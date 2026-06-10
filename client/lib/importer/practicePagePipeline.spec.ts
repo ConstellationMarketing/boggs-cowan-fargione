@@ -548,9 +548,9 @@ describe("Full pipeline with H1, intro, and FAQ", () => {
     // Intro should NOT appear in content sections
     const allBodies = sections.map((s: any) => s.body).join(" ");
     expect(allBodies).not.toContain("We are a leading personal injury firm");
-    // Intro should appear in hero description instead
+    // Intro should appear in hero headline instead
     const hero = (result.content as Record<string, any>).hero as any;
-    expect(hero.description).toContain("We are a leading personal injury firm");
+    expect(hero.headline).toContain("We are a leading personal injury firm");
     // First section should still contain its H2 heading
     expect(sections[0].body).toContain("Why Choose Us");
   });
