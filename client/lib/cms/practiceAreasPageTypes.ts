@@ -18,6 +18,8 @@ export interface PracticeAreaGridItem {
   description: string; // Rich text description for the main practice
   link: string; // Link to main practice page
   linkText: string;
+  /** Title for the sub-practices section below the main cards, e.g. "Personal Injury Services" */
+  subgroupTitle: string;
   subPractices: PracticeAreaSubItem[];
 }
 

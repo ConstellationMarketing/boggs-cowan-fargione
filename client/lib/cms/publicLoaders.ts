@@ -719,6 +719,9 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
             linkText: typeof area.linkText === "string" && area.linkText.trim().length > 0
               ? area.linkText
               : "View Practice",
+            subgroupTitle: typeof (area as { subgroupTitle?: unknown }).subgroupTitle === "string"
+              ? (area as { subgroupTitle: string }).subgroupTitle
+              : "",
             subPractices: Array.isArray(area.subPractices)
               ? area.subPractices.map((subPractice) => {
                   const legacySubPractice = subPractice as unknown as { text?: unknown };

@@ -116,7 +116,7 @@ function GridSection({ content, update }: SectionProps) {
           items={grid.areas}
           onChange={(items) => set({ areas: items })}
           itemLabel="Practice Area"
-          newItem={() => ({ icon: "Scale", title: "", description: "", link: "/practice-areas/", linkText: "View Practice", subPractices: [] })}
+          newItem={() => ({ icon: "Scale", title: "", description: "", link: "/practice-areas/", linkText: "View Practice", subgroupTitle: "", subPractices: [] })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-4">
               <div className="grid grid-cols-4 gap-3">
@@ -139,6 +139,14 @@ function GridSection({ content, update }: SectionProps) {
                   <Label>Main Practice Link Text</Label>
                   <Input value={item.linkText || ""} onChange={(e) => upd({ ...item, linkText: e.target.value })} placeholder="View Practice" />
                 </div>
+              </div>
+              <div>
+                <Label>Sub-practices Section Title</Label>
+                <Input
+                  value={item.subgroupTitle || ""}
+                  onChange={(e) => upd({ ...item, subgroupTitle: e.target.value })}
+                  placeholder={`${item.title || "Practice Area"} Services`}
+                />
               </div>
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Sub-practices</h4>

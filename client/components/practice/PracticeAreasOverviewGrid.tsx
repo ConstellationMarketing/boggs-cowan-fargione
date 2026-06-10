@@ -36,9 +36,18 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
     return null;
   }
 
+  const areasWithSubs = areas.filter((area) => {
+    const subs = Array.isArray(area.subPractices)
+      ? area.subPractices.filter((s) => s && (s.title || s.link))
+      : [];
+    return subs.length > 0;
+  });
+
   return (
     <section className="bg-brand-dark py-[40px] md:py-[60px]">
       <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
+
+        {/* Section header */}
         {(heading || description) && (
           <div className="mx-auto mb-[30px] max-w-[900px] text-center md:mb-[50px]">
             {heading ? (
@@ -59,21 +68,19 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
           </div>
         )}
 
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:gap-8">
+        {/* Main practice area cards — 3 in one row */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
           {areas.map((area, index) => {
             const Icon = resolvePracticeAreaIcon(area.icon);
-            const subPractices = Array.isArray(area.subPractices)
-              ? area.subPractices.filter((item) => item && (item.title || item.description || item.link))
-              : [];
 
             return (
               <article
                 key={`${area.title}-${index}`}
-                className="flex h-full flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 text-center shadow-[0_14px_40px_rgba(0,0,0,0.18)] md:px-8 md:pb-8 md:pt-6 md:text-left"
+                className="flex flex-col overflow-hidden rounded-xl bg-white px-6 pb-6 pt-5 shadow-[0_14px_40px_rgba(0,0,0,0.22)]"
               >
-                <div className="flex items-center justify-center gap-3 md:justify-start">
+                <div className="flex items-center gap-3">
                   <Icon className="h-6 w-6 shrink-0 text-brand-accent" strokeWidth={1.75} />
-                  <h3 className="font-playfair text-[30px] leading-tight text-black md:text-[34px]">
+                  <h3 className="font-playfair text-[26px] leading-tight text-black md:text-[28px]">
                     {area.title}
                   </h3>
                 </div>
@@ -83,53 +90,76 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                 {area.description ? (
                   <RichText
                     html={area.description}
-                    className="mt-5 font-inter text-[16px] leading-[1.75] text-black/85 md:text-[18px] [&_p]:my-0 [&_p+p]:mt-4"
+                    className="mt-4 flex-1 font-inter text-[15px] leading-[1.75] text-black/80 md:text-[16px] [&_p]:my-0 [&_p+p]:mt-3"
                   />
                 ) : null}
 
                 {area.link ? (
-                  <div className="mt-6 flex justify-center md:justify-start">
+                  <div className="mt-6">
                     <Link
                       to={area.link}
-                      className="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[16px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                      className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-brand-accent px-6 font-inter text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
                     >
                       {area.linkText || "View Practice"}
                     </Link>
-                  </div>
-                ) : null}
-
-                {subPractices.length > 0 ? (
-                  <div className="mt-7 space-y-4 border-t border-black/10 pt-6 md:mt-8 md:space-y-5 md:pt-7">
-                    {subPractices.map((subPractice, subIndex) => (
-                      <div key={`${subPractice.title}-${subIndex}`} className="border-l-2 border-brand-accent/80 pl-4 text-left md:pl-5">
-                        {subPractice.title ? (
-                          <h4 className="font-inter text-[18px] font-semibold uppercase leading-tight text-brand-accent md:text-[20px]">
-                            {subPractice.title}
-                          </h4>
-                        ) : null}
-                        {subPractice.description ? (
-                          <RichText
-                            html={subPractice.description}
-                            className="mt-2 font-inter text-[15px] leading-[1.7] text-black/80 md:text-[17px] [&_p]:my-0 [&_p+p]:mt-3"
-                          />
-                        ) : null}
-                        {subPractice.link ? (
-                          <Link
-                            to={subPractice.link}
-                            className="mt-3 inline-flex items-center gap-2 font-inter text-[15px] font-medium text-black transition-colors duration-200 hover:text-brand-accent md:text-[16px]"
-                          >
-                            Learn More
-                            <ArrowRight className="h-4 w-4" />
-                          </Link>
-                        ) : null}
-                      </div>
-                    ))}
                   </div>
                 ) : null}
               </article>
             );
           })}
         </div>
+
+        {/* Sub-practice sections — one section per main practice area */}
+        {areasWithSubs.map((area, areaIndex) => {
+          const subPractices = area.subPractices.filter((s) => s && (s.title || s.link));
+          const sectionTitle = area.subgroupTitle?.trim() || `${area.title} Services`;
+
+          return (
+            <div key={`subs-${area.title}-${areaIndex}`} className="mt-[48px] md:mt-[64px]">
+              {/* Sub-group heading */}
+              <div className="mb-[24px] text-center md:mb-[32px]">
+                <h3 className="font-playfair text-[26px] leading-tight text-white md:text-[34px]">
+                  {sectionTitle}
+                </h3>
+                <div className="mx-auto mt-3 h-[2px] w-[60px] bg-brand-accent" />
+              </div>
+
+              {/* Sub-practices grid — 2 or 3 per row */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
+                {subPractices.map((sub, subIndex) => (
+                  <div
+                    key={`${sub.title}-${subIndex}`}
+                    className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-5 py-5 transition-colors duration-200 hover:bg-white/10"
+                  >
+                    {sub.title ? (
+                      <h4 className="font-inter text-[16px] font-semibold uppercase tracking-wide text-brand-accent md:text-[17px]">
+                        {sub.title}
+                      </h4>
+                    ) : null}
+
+                    {sub.description ? (
+                      <RichText
+                        html={sub.description}
+                        className="mt-2 flex-1 font-inter text-[14px] leading-[1.7] text-white/75 md:text-[15px] [&_p]:my-0 [&_p+p]:mt-2"
+                      />
+                    ) : null}
+
+                    {sub.link ? (
+                      <Link
+                        to={sub.link}
+                        className="mt-4 inline-flex items-center gap-2 font-inter text-[14px] font-medium text-white/90 transition-colors duration-200 hover:text-brand-accent md:text-[15px]"
+                      >
+                        Learn More
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
       </div>
     </section>
   );
