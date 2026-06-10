@@ -11,6 +11,7 @@ interface PracticeAreasOverviewGridProps {
   areas: PracticeAreaGridItem[];
   headingTag?: string;
   footerTitle?: string;
+  footerSubtitle?: string;
   footerButtons?: PracticeAreasGridCta[];
 }
 
@@ -29,7 +30,7 @@ function resolveIcon(iconName: string | null | undefined, fallback: LucideIcon =
   return normalizedIconMap[key] || fallback;
 }
 
-export default function PracticeAreasOverviewGrid({ heading, description, areas, headingTag, footerTitle, footerButtons }: PracticeAreasOverviewGridProps) {
+export default function PracticeAreasOverviewGrid({ heading, description, areas, headingTag, footerTitle, footerSubtitle, footerButtons }: PracticeAreasOverviewGridProps) {
   if (!heading && !description && areas.length === 0) {
     return null;
   }
@@ -192,11 +193,16 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
         })}
 
         {/* Footer CTA */}
-        {(footerTitle || (footerButtons && footerButtons.length > 0)) && (
+        {(footerTitle || footerSubtitle || (footerButtons && footerButtons.length > 0)) && (
           <div className="mt-[56px] md:mt-[72px] flex flex-col items-center text-center">
             {footerTitle ? (
               <p className="font-playfair text-[24px] leading-snug text-white md:text-[32px] max-w-[700px]">
                 {footerTitle}
+              </p>
+            ) : null}
+            {footerSubtitle ? (
+              <p className="mt-3 max-w-[600px] font-inter text-[15px] leading-[1.7] text-white/75 md:text-[17px]">
+                {footerSubtitle}
               </p>
             ) : null}
             {footerButtons && footerButtons.length > 0 ? (
@@ -208,12 +214,11 @@ export default function PracticeAreasOverviewGrid({ heading, description, areas,
                       to={btn.link}
                       className={
                         btn.variant === "outline"
-                          ? "inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-brand-accent px-7 font-inter text-[15px] font-medium text-brand-accent transition-colors duration-300 hover:bg-brand-accent hover:text-white"
-                          : "inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-accent px-7 font-inter text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
+                          ? "inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-brand-accent bg-white px-7 font-inter text-[15px] font-medium text-brand-accent transition-colors duration-300 hover:bg-brand-accent hover:text-white"
+                          : "inline-flex min-h-[48px] items-center justify-center rounded-xl bg-brand-accent px-7 font-inter text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand-accent-dark"
                       }
                     >
                       {btn.label}
-                      {btn.variant !== "outline" && <ArrowRight className="h-4 w-4" />}
                     </Link>
                   ) : null
                 )}

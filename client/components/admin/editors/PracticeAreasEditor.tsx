@@ -207,6 +207,15 @@ function GridSection({ content, update }: SectionProps) {
                 placeholder="e.g. Not sure which practice area fits your case?"
               />
             </div>
+            <div>
+              <Label>Footer Subtitle / Description</Label>
+              <Textarea
+                value={grid.footerSubtitle || ""}
+                onChange={(e) => set({ footerSubtitle: e.target.value })}
+                placeholder="e.g. Our attorneys are ready to help you navigate any legal challenge."
+                rows={2}
+              />
+            </div>
             <ArrayEditor
               items={grid.footerButtons || []}
               onChange={(items) => set({ footerButtons: items })}

@@ -714,6 +714,7 @@ export function mergePracticeAreasContentWithDefaults(cmsContent: Partial<Practi
       ...defaults.grid,
       ...cmsContent.grid,
       footerTitle: typeof cmsContent.grid?.footerTitle === "string" ? cmsContent.grid.footerTitle : defaults.grid.footerTitle,
+      footerSubtitle: typeof cmsContent.grid?.footerSubtitle === "string" ? cmsContent.grid.footerSubtitle : defaults.grid.footerSubtitle,
       footerButtons: Array.isArray(cmsContent.grid?.footerButtons)
         ? cmsContent.grid.footerButtons.map((btn) => ({
             label: typeof btn.label === "string" ? btn.label : "",

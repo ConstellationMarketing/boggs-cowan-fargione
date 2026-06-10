@@ -36,6 +36,7 @@ export interface PracticeAreasGridContent {
   description: string; // Intro paragraph
   areas: PracticeAreaGridItem[];
   footerTitle: string; // Centered title below all cards/subpractices
+  footerSubtitle: string; // Centered subtitle/description below the title
   footerButtons: PracticeAreasGridCta[]; // Up to 2 CTA buttons
 }
 
@@ -95,6 +96,7 @@ export const defaultPracticeAreasContent: PracticeAreasPageContent = {
     description: "",
     areas: [],
     footerTitle: "",
+    footerSubtitle: "",
     footerButtons: [],
   },
   whyChoose: {
