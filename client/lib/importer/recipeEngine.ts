@@ -707,11 +707,10 @@ function resolveSlugCollision(
 
       while (usedSlugs.has(newSlug) && suffix <= maxSuffix) {
         if (templateType === "practice") {
-          // For practice pages: /practice-areas/slug/ → /practice-areas/slug-1/
-          const baseSlug = currentSlug
-            .replace(/^\/practice-areas\//, "")
-            .replace(/\/$/, "");
-          newSlug = `/practice-areas/${baseSlug}-${suffix}/`;
+          // For practice pages: /slug/ → /slug-1/ (no prefix assumed)
+          const withoutTrailing = currentSlug.replace(/\/$/, "");
+          const withoutSuffix = withoutTrailing.replace(/-\d+$/, "");
+          newSlug = `${withoutSuffix}-${suffix}/`;
         } else {
           // For posts: slug → slug-1
           const baseSlug = currentSlug.replace(/-\d+$/, "");

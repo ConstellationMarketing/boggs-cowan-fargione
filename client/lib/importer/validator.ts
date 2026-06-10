@@ -365,7 +365,7 @@ function validatePreparedPracticePage(
   }
 
   // Required: url_path
-  if (!record.url_path || record.url_path === "/practice-areas//") {
+  if (!record.url_path || record.url_path.trim() === "/" || record.url_path.trim() === "") {
     issues.push({
       rowIndex,
       field: "url_path",
@@ -374,12 +374,14 @@ function validatePreparedPracticePage(
     });
     errorRows.add(rowIndex);
   } else {
-    const slug = record.url_path.replace(/^\/practice-areas\//, "").replace(/\/$/, "");
-    if (slug && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(slug)) {
+    // Validate each path segment is lowercase alphanumeric with hyphens
+    const segments = record.url_path.replace(/^\/|\/$/, "").split("/").filter(Boolean);
+    const invalidSegment = segments.find((s) => !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(s));
+    if (invalidSegment) {
       issues.push({
         rowIndex,
         field: "url_path",
-        message: `Slug "${truncate(slug, 40)}" must be lowercase, alphanumeric with hyphens only`,
+        message: `Path segment "${truncate(invalidSegment, 40)}" must be lowercase, alphanumeric with hyphens only`,
         severity: "error",
       });
       errorRows.add(rowIndex);
@@ -517,7 +519,7 @@ export async function checkDuplicateSlugsInDB(
     if (templateType === "practice") {
       const paths = slugs.map((s) => {
         if (s.startsWith("/")) return s;
-        return `/practice-areas/${s}/`;
+        return `/${s}/`;
       });
       const { data } = await supabase
         .from("pages")

@@ -450,7 +450,7 @@ function validateConfidenceRecords(
         issues.push({ rowIndex: i, field: "title", message: "Title is required", severity: "error" });
         errorRows.add(i);
       }
-      if (!p.url_path || p.url_path === "/practice-areas//") {
+      if (!p.url_path || p.url_path.trim() === "" || p.url_path.trim() === "/") {
         issues.push({ rowIndex: i, field: "url_path", message: "URL path is required", severity: "error" });
         errorRows.add(i);
       }
