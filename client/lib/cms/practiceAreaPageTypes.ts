@@ -3,6 +3,8 @@
 import type { SharedHeroContent } from "./sharedHero";
 import { defaultSharedHeroContent } from "./sharedHero";
 
+export const DEFAULT_PRACTICE_HERO_IMAGE = "https://zbouydkozqcneyauykju.supabase.co/storage/v1/object/public/media/hero/1777560376849-e7dw8p.webp";
+
 export type PracticeAreaHeroContent = SharedHeroContent;
 
 export interface PracticeAreaTestimonialItem extends Record<string, unknown> {
@@ -87,6 +89,7 @@ export function normalizePracticeAreaContentSections(
 export const defaultPracticeAreaPageContent: PracticeAreaPageContent = {
   hero: {
     ...defaultSharedHeroContent,
+    heroImage: DEFAULT_PRACTICE_HERO_IMAGE,
   },
   socialProof: {
     mode: "awards",

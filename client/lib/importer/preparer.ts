@@ -37,6 +37,7 @@ import type {
 } from "./types";
 import { applyMapping, collectRepeaterData, slugify } from "./fieldMapping";
 import {
+  DEFAULT_PRACTICE_HERO_IMAGE,
   createPracticeAreaContentSection,
   defaultPracticeAreaPageContent,
   normalizePracticeAreaContentSections,
@@ -276,8 +277,12 @@ function preparePracticePage(
         ? splitByParagraphGroups(bodyHtml)
         : splitResult;
 
-    // Remove low-quality sections (< 50 chars, no paragraph content)
-    const sections = removeEmptySections(rawSections);
+    // Remove low-quality sections, pull FAQ sections out, then merge very short sections upward
+    const { sections: nonFaqSections, faqItems: sectionFaqItems } = extractFaqFromHtmlSections(removeEmptySections(rawSections));
+    if (sectionFaqItems.length > 0) {
+      faqItems = [...faqItems, ...sectionFaqItems];
+    }
+    const sections = mergeShortHtmlSections(nonFaqSections);
 
     contentSections = sections.map((section, idx) =>
       createPracticeAreaContentSection(idx, {
@@ -330,18 +335,18 @@ function preparePracticePage(
       backgroundImage: heroImage,
       heroImage: mapped["hero.heroImage"]
         ? String(mapped["hero.heroImage"])
-        : "",
-      heroImageAlt: mapped["hero.heroImageAlt"]
-        ? String(mapped["hero.heroImageAlt"])
-        : mapped["hero.backgroundImageAlt"]
-          ? String(mapped["hero.backgroundImageAlt"])
-          : "",
+        : DEFAULT_PRACTICE_HERO_IMAGE,
+      heroImageAlt: mapped["hero.h1Title"]
+        ? String(mapped["hero.h1Title"])
+        : mapped["hero.sectionLabel"]
+          ? String(mapped["hero.sectionLabel"])
+          : title,
       consultationButtonText: mapped["hero.consultationButtonText"]
         ? String(mapped["hero.consultationButtonText"])
-        : "",
+        : defaultPracticeAreaPageContent.hero.consultationButtonText,
       consultationButtonLink: mapped["hero.consultationButtonLink"]
         ? String(mapped["hero.consultationButtonLink"])
-        : "",
+        : defaultPracticeAreaPageContent.hero.consultationButtonLink,
     },
     socialProof: {
       mode: "awards" as const,
@@ -558,6 +563,63 @@ export function splitOnH2(html: string): string[] {
   return sections;
 }
 
+function getSectionBodyText(html: string): string {
+  return stripTags(html.replace(/<h2[^>]*>[\s\S]*?<\/h2>/i, "")).replace(/\s+/g, " ").trim();
+}
+
+function isVeryShortSection(html: string): boolean {
+  const text = getSectionBodyText(html);
+  if (!text) return true;
+
+  const paragraphCount = (html.match(/<p[\s>]/gi) ?? []).length;
+  return text.length < 160 || paragraphCount <= 1 || (paragraphCount <= 2 && text.length < 260);
+}
+
+export function mergeShortHtmlSections(sections: string[]): string[] {
+  const merged: string[] = [];
+
+  for (const section of sections) {
+    if (merged.length > 0 && isVeryShortSection(section)) {
+      merged[merged.length - 1] = `${merged[merged.length - 1]}\n\n${section}`;
+    } else if (section.trim()) {
+      merged.push(section);
+    }
+  }
+
+  return merged;
+}
+
+function hasFaqHeading(html: string): boolean {
+  return /<h2[^>]*>\s*(?:frequently\s+asked\s+questions|faq|faqs|common\s+questions|q\s*(?:&amp;|&)\s*a|questions\s*(?:&amp;|&|and)\s*answers)\s*<\/h2>/i.test(html);
+}
+
+export function extractFaqFromHtmlSections(sections: string[]): { sections: string[]; faqItems: Array<{ question: string; answer: string }> } {
+  const cleanSections: string[] = [];
+  const faqItems: Array<{ question: string; answer: string }> = [];
+
+  for (const section of sections) {
+    const detected = detectFaqPatterns(section);
+    const isFaqSection = hasFaqHeading(section);
+
+    if (detected.length > 0 && (isFaqSection || detected.length >= 2)) {
+      faqItems.push(...detected);
+      const cleaned = removeFaqFromHtml(section, detected).trim();
+      if (cleaned && !hasFaqHeading(cleaned) && getSectionBodyText(cleaned)) {
+        cleanSections.push(cleaned);
+      }
+      continue;
+    }
+
+    if (isFaqSection) {
+      continue;
+    }
+
+    cleanSections.push(section);
+  }
+
+  return { sections: cleanSections, faqItems };
+}
+
 /**
  * Re-split sections from the original mapped body content.
  */
@@ -599,6 +661,8 @@ export function detectFaqPatterns(
 
   const items: Array<{ question: string; answer: string }> = [];
 
+  const hasExplicitFaqHeading = /<h2[^>]*>\s*(?:frequently\s+asked\s+questions|faq|faqs|common\s+questions|q\s*(?:&amp;|&)\s*a|questions\s*(?:&amp;|&|and)\s*answers)\s*<\/h2>/i.test(html);
+
   // Pattern 1: <dl>/<dt>/<dd> structure
   const dlRegex = /<dt[^>]*>([\s\S]*?)<\/dt>\s*<dd[^>]*>([\s\S]*?)<\/dd>/gi;
   let dlMatch: RegExpExecArray | null;
@@ -609,7 +673,7 @@ export function detectFaqPatterns(
       items.push({ question, answer });
     }
   }
-  if (items.length >= 2) return items;
+  if (items.length >= 2 || (hasExplicitFaqHeading && items.length > 0)) return items;
 
   // Pattern 2: <h3> followed by content (common FAQ format)
   const h3Regex =
@@ -623,7 +687,7 @@ export function detectFaqPatterns(
       h3Items.push({ question, answer });
     }
   }
-  if (h3Items.length >= 2) return h3Items;
+  if (h3Items.length >= 2 || (hasExplicitFaqHeading && h3Items.length > 0)) return h3Items;
 
   return [];
 }

@@ -8,6 +8,7 @@ import type { PageMeta, PageMetaImageInput } from "./pageMeta";
 import { emptyPageMeta } from "./pageMeta";
 import type { PracticeAreaPageContent } from "./practiceAreaPageTypes";
 import {
+  DEFAULT_PRACTICE_HERO_IMAGE,
   defaultPracticeAreaPageContent,
   normalizePracticeAreaContentSections,
 } from "./practiceAreaPageTypes";
@@ -825,8 +826,15 @@ export function mergePracticeAreaPageContentWithDefaults(cmsContent: Partial<Pra
     return defaults;
   }
 
+  const normalizedHero = normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero });
+  const heroH1Title = normalizedHero.h1Title || normalizedHero.sectionLabel || "";
+
   return {
-    hero: normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero }),
+    hero: {
+      ...normalizedHero,
+      heroImage: normalizedHero.heroImage || DEFAULT_PRACTICE_HERO_IMAGE,
+      heroImageAlt: heroH1Title,
+    },
     socialProof: {
       ...defaults.socialProof,
       ...cmsContent.socialProof,

@@ -184,22 +184,19 @@ describe("Practice page full pipeline (prepareRecords)", () => {
     );
   });
 
-  it("body → content sections (H2 split)", () => {
+  it("body → content sections (H2 split, short sections merged upward)", () => {
     const sections = (result.content as Record<string, any>)
       .contentSections as any[];
-    // Should have 2 H2 sections (FAQ h3s are extracted)
-    expect(sections.length).toBeGreaterThanOrEqual(2);
-    // First section should contain "Why Choose Us"
+    // Very short H2 sections are merged upward instead of standing alone
+    expect(sections).toHaveLength(1);
     expect(sections[0].body).toContain("Why Choose Us");
-    // Second section should contain "Types of Cases"
-    expect(sections[1].body).toContain("Types of Cases");
+    expect(sections[0].body).toContain("Types of Cases");
   });
 
-  it("defaults CTA visibility on alternating content sections", () => {
+  it("defaults CTA visibility on resulting content sections", () => {
     const sections = (result.content as Record<string, any>)
       .contentSections as any[];
     expect(sections[0].showCTAs).toBe(true);
-    expect(sections[1].showCTAs).toBe(false);
   });
 
   it("FAQ extracted when present (2 items from h3?)", () => {
@@ -555,10 +552,12 @@ describe("Full pipeline with H1, intro, and FAQ", () => {
     expect(sections[0].body).toContain("Why Choose Us");
   });
 
-  it("produces exactly 2 content sections (one per H2)", () => {
+  it("merges very short H2 sections upward", () => {
     const sections = (result.content as Record<string, any>)
       .contentSections as any[];
-    expect(sections).toHaveLength(2);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].body).toContain("Why Choose Us");
+    expect(sections[0].body).toContain("Types of Cases");
   });
 
   it("FAQ items are extracted correctly", () => {

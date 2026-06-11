@@ -8,11 +8,14 @@ import type {
 } from "./types";
 import { applyMapping, collectRepeaterData, slugify } from "./fieldMapping";
 import {
+  DEFAULT_PRACTICE_HERO_IMAGE,
   createPracticeAreaContentSection,
   defaultPracticeAreaPageContent,
   normalizePracticeAreaContentSections,
 } from "@site/lib/cms/practiceAreaPageTypes";
 import {
+  extractFaqFromHtmlSections,
+  mergeShortHtmlSections,
   resolveImportPublishDate,
   syncPracticeSourceImageFields,
 } from "./preparer";
@@ -82,15 +85,21 @@ function transformPracticePage(
     ];
   }
 
+  const { sections: nonFaqSectionBodies, faqItems: sectionFaqItems } = extractFaqFromHtmlSections(
+    contentSections.map((section) => ensureHtml(String(section.body ?? ""))),
+  );
+  const mergedSectionBodies = mergeShortHtmlSections(nonFaqSectionBodies);
+
   // Normalize content sections
   const normalizedSections = normalizePracticeAreaContentSections(
-    contentSections.map((section) => ({
-      body: ensureHtml(String(section.body ?? "")),
-      image: String(section.image ?? ""),
-      imageAlt: String(section.imageAlt ?? ""),
-      imagePosition: section.imagePosition as "left" | "right" | undefined,
+    mergedSectionBodies.map((body, index) => ({
+      ...(contentSections[index] ?? {}),
+      body,
+      image: String(contentSections[index]?.image ?? ""),
+      imageAlt: String(contentSections[index]?.imageAlt ?? ""),
+      imagePosition: contentSections[index]?.imagePosition as "left" | "right" | undefined,
       showCTAs:
-        typeof section.showCTAs === "boolean" ? section.showCTAs : undefined,
+        typeof contentSections[index]?.showCTAs === "boolean" ? contentSections[index]?.showCTAs as boolean : undefined,
     })),
   );
 
@@ -101,6 +110,10 @@ function transformPracticePage(
     "faq.items",
     config,
   );
+
+  if (sectionFaqItems.length > 0) {
+    faqItems = [...faqItems, ...sectionFaqItems];
+  }
 
   // Normalize FAQ items
   const normalizedFaq = faqItems.map((item) => ({
@@ -134,12 +147,12 @@ function transformPracticePage(
           : "",
       heroImage: mapped["hero.heroImage"]
         ? String(mapped["hero.heroImage"])
-        : defaultPracticeAreaPageContent.hero.heroImage,
-      heroImageAlt: mapped["hero.heroImageAlt"]
-        ? String(mapped["hero.heroImageAlt"])
-        : mapped["hero.backgroundImageAlt"]
-          ? String(mapped["hero.backgroundImageAlt"])
-          : defaultPracticeAreaPageContent.hero.heroImageAlt,
+        : DEFAULT_PRACTICE_HERO_IMAGE,
+      heroImageAlt: mapped["hero.h1Title"]
+        ? String(mapped["hero.h1Title"])
+        : mapped["hero.sectionLabel"]
+          ? String(mapped["hero.sectionLabel"])
+          : title,
       consultationButtonText: mapped["hero.consultationButtonText"]
         ? String(mapped["hero.consultationButtonText"])
         : defaultPracticeAreaPageContent.hero.consultationButtonText,

@@ -70,7 +70,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden bg-brand-dark flex flex-col ${
         underHeader
-          ? `-mt-[10rem] ${compactMobile ? "min-h-0" : "min-h-[80vh]"}${compactDesktop ? " lg:h-[700px] lg:min-h-0" : ""}`
+          ? `-mt-[10rem] ${compactMobile ? "min-h-0" : "min-h-[80vh]"}${compactDesktop ? " lg:min-h-[700px]" : ""}`
           : ""
       }`}
     >
@@ -152,7 +152,7 @@ export default function PageHero({
             <div className="mt-auto flex w-full items-end justify-center px-4 sm:px-6 lg:hidden">
               <img
                 src={heroImage}
-                alt={content.heroImageAlt || "Hero"}
+                alt={content.heroImageAlt || content.h1Title || "Hero"}
                 className="block h-auto max-h-[320px] w-full max-w-[520px] object-contain object-bottom sm:max-h-[420px]"
               />
             </div>
@@ -163,7 +163,7 @@ export default function PageHero({
               <div className="hidden lg:block absolute right-0 top-[234px] bottom-0 w-[31.3333%]">
                 <img
                   src={heroImage}
-                  alt={content.heroImageAlt || "Hero"}
+                  alt={content.heroImageAlt || content.h1Title || "Hero"}
                   className="block w-full h-full object-contain object-bottom"
                 />
               </div>
@@ -175,7 +175,7 @@ export default function PageHero({
               {heroImage ? (
                 <img
                   src={heroImage}
-                  alt={content.heroImageAlt || "Hero"}
+                  alt={content.heroImageAlt || content.h1Title || "Hero"}
                   className="block w-full h-full object-contain object-bottom"
                 />
               ) : null}

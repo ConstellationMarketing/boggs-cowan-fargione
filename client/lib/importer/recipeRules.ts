@@ -9,7 +9,7 @@
 // ============================================================================
 
 import type { MappedRecord, FieldConfidence, RuleExecutionResult, RecipeRuleType } from "./recipeTypes";
-import { splitOnH2, splitByParagraphGroups, extractSectionImages, stripH1Tags, removeFaqFromHtml, detectFaqPatterns } from "./preparer";
+import { splitOnH2, splitByParagraphGroups, extractSectionImages, stripH1Tags, removeFaqFromHtml, detectFaqPatterns, extractFaqFromHtmlSections, mergeShortHtmlSections } from "./preparer";
 import { createPracticeAreaContentSection } from "@site/lib/cms/practiceAreaPageTypes";
 import { slugify } from "./fieldMapping";
 
@@ -297,11 +297,14 @@ function executeH2Split(
     ? splitByParagraphGroups(html)
     : h2Sections;
 
-  if (sections.length === 0) {
+  const { sections: nonFaqSections } = extractFaqFromHtmlSections(sections);
+  const mergedSections = mergeShortHtmlSections(nonFaqSections);
+
+  if (mergedSections.length === 0) {
     return emptyResult(ctx, "h2_split", "Body was empty after splitting");
   }
 
-  let contentSections = sections.map((body, idx) =>
+  let contentSections = mergedSections.map((body, idx) =>
     createPracticeAreaContentSection(idx, {
       body,
     }),
@@ -312,7 +315,7 @@ function executeH2Split(
     contentSections = extractSectionImages(contentSections) as typeof contentSections;
   }
 
-  const confidence = sections.length >= 2 ? 0.9 : 0.6;
+  const confidence = mergedSections.length >= 2 ? 0.9 : 0.6;
   const method = usedFallback ? "paragraph grouping" : "H2 boundaries";
 
   return {
@@ -321,7 +324,7 @@ function executeH2Split(
       field: ctx.targetField,
       score: confidence,
       category: "extraction",
-      reason: `Split into ${sections.length} section(s) via ${method}`,
+      reason: `Split into ${mergedSections.length} section(s) via ${method}`,
     },
     log: {
       ruleId: ctx.ruleId,
@@ -329,7 +332,7 @@ function executeH2Split(
       ruleType: "h2_split",
       aiUsed: false,
       confidence,
-      description: `Split body into ${sections.length} section(s) via ${method}`,
+      description: `Split body into ${mergedSections.length} section(s) via ${method}`,
       timestamp: new Date().toISOString(),
     },
   };

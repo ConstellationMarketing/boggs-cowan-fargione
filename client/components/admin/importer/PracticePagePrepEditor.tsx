@@ -39,6 +39,8 @@ import {
   extractSectionImages,
   detectFaqPatterns,
   removeFaqFromHtml,
+  extractFaqFromHtmlSections,
+  mergeShortHtmlSections,
   ensureHtml,
   stripH1Tags,
 } from "@site/lib/importer/preparer";
@@ -326,8 +328,17 @@ export default function PracticePagePrepEditor({
                     ? splitByParagraphGroups(bodyHtml)
                     : h2Sections;
 
-                // Step 4: Remove low-quality/empty sections
-                const cleanSections = removeEmptySections(rawSections);
+                // Step 4: Remove low-quality/empty sections, pull FAQ out, and merge very short sections upward
+                const { sections: nonFaqSections, faqItems: sectionFaqItems } = extractFaqFromHtmlSections(removeEmptySections(rawSections));
+                if (sectionFaqItems.length > 0) {
+                  const existingItems = Array.isArray(faq.items) ? faq.items : [];
+                  updateContent("faq.items", [...existingItems, ...sectionFaqItems]);
+                  updateContent("faq.enabled", true);
+                  if (!faq.heading || String(faq.heading) === "") {
+                    updateContent("faq.heading", "Frequently Asked Questions");
+                  }
+                }
+                const cleanSections = mergeShortHtmlSections(nonFaqSections);
 
                 // Step 5: Extract section images
                 const newSections = extractSectionImages(

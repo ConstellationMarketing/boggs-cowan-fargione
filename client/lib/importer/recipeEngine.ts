@@ -38,6 +38,7 @@ import { scoreRecord } from "./confidenceScorer";
 import { slugify } from "./fieldMapping";
 import { DEFAULT_BATCH_CONFIG } from "./recipeTypes";
 import {
+  DEFAULT_PRACTICE_HERO_IMAGE,
   createPracticeAreaContentSection,
   defaultPracticeAreaPageContent,
   normalizePracticeAreaContentSections,
@@ -53,6 +54,8 @@ import {
   stripH1Tags,
   normalizeUrlSlug,
   extractIntroBeforeH2,
+  extractFaqFromHtmlSections,
+  mergeShortHtmlSections,
   resolveImportPublishDate,
   syncPracticeSourceImageFields,
 } from "./preparer";
@@ -397,18 +400,14 @@ function buildPracticeRecord(
     backgroundImage: defaultHeroImage,
     heroImage: mapped["hero.heroImage"]
       ? String(mapped["hero.heroImage"])
-      : "",
-    heroImageAlt: mapped["hero.heroImageAlt"]
-      ? String(mapped["hero.heroImageAlt"])
-      : mapped["hero.backgroundImageAlt"]
-        ? String(mapped["hero.backgroundImageAlt"])
-        : "",
+      : DEFAULT_PRACTICE_HERO_IMAGE,
+    heroImageAlt: String(mapped["hero.h1Title"] ?? mapped["hero.sectionLabel"] ?? title),
     consultationButtonText: mapped["hero.consultationButtonText"]
       ? String(mapped["hero.consultationButtonText"])
-      : "",
+      : defaultPracticeAreaPageContent.hero.consultationButtonText,
     consultationButtonLink: mapped["hero.consultationButtonLink"]
       ? String(mapped["hero.consultationButtonLink"])
-      : "",
+      : defaultPracticeAreaPageContent.hero.consultationButtonLink,
   };
 
   // --- Step 1: Extract body & strip H1 ---
@@ -452,8 +451,12 @@ function buildPracticeRecord(
         ? splitByParagraphGroups(bodyHtml)
         : splitResult;
 
-    // Remove low-quality sections (< 50 chars, heading-only, no paragraph content)
-    const sections = removeEmptySections(rawSections);
+    // Remove low-quality sections, pull FAQ sections out, then merge very short sections upward
+    const { sections: nonFaqSections, faqItems: sectionFaqItems } = extractFaqFromHtmlSections(removeEmptySections(rawSections));
+    if (sectionFaqItems.length > 0) {
+      defaultFaqItems = [...defaultFaqItems, ...sectionFaqItems];
+    }
+    const sections = mergeShortHtmlSections(nonFaqSections);
 
     defaultSections = sections.map((body, idx) =>
       createPracticeAreaContentSection(idx, {
@@ -512,16 +515,17 @@ function buildPracticeRecord(
         defaultHero.backgroundImage,
     ),
     heroImage: String(
-      heroOutput?.heroImage ??
-        outputs["hero.heroImage"] ??
-        defaultHero.heroImage,
+      heroOutput?.heroImage ||
+        outputs["hero.heroImage"] ||
+        defaultHero.heroImage ||
+        DEFAULT_PRACTICE_HERO_IMAGE,
     ),
     heroImageAlt: String(
-      heroOutput?.heroImageAlt ??
-        heroOutput?.backgroundImageAlt ??
-        outputs["hero.heroImageAlt"] ??
-        outputs["hero.backgroundImageAlt"] ??
-        defaultHero.heroImageAlt,
+      heroOutput?.h1Title ??
+        heroOutput?.sectionLabel ??
+        outputs["hero.h1Title"] ??
+        outputs["hero.sectionLabel"] ??
+        defaultHero.h1Title,
     ),
     consultationButtonText: String(
       heroOutput?.consultationButtonText ??
@@ -538,12 +542,19 @@ function buildPracticeRecord(
   // Content sections: recipe overrides if present and non-empty
   const ruleContentSections =
     outputs["contentSections"] as Array<Record<string, unknown>> | undefined;
+  const selectedSections = Array.isArray(ruleContentSections) && ruleContentSections.length > 0
+    ? ruleContentSections
+    : defaultSections.length > 0
+      ? defaultSections
+      : defaultPracticeAreaPageContent.contentSections;
+  const { sections: contentSectionBodies, faqItems: faqItemsFromSections } = extractFaqFromHtmlSections(
+    selectedSections.map((section) => String(section.body ?? "")),
+  );
   const contentSections = normalizePracticeAreaContentSections(
-    Array.isArray(ruleContentSections) && ruleContentSections.length > 0
-      ? ruleContentSections
-      : defaultSections.length > 0
-        ? defaultSections
-        : defaultPracticeAreaPageContent.contentSections,
+    mergeShortHtmlSections(contentSectionBodies).map((body, index) => ({
+      ...(selectedSections[index] ?? {}),
+      body,
+    })),
   );
 
   // FAQ: recipe overrides if present and non-empty
@@ -551,7 +562,7 @@ function buildPracticeRecord(
   const faqItems =
     Array.isArray(ruleFaqOutput) && ruleFaqOutput.length > 0
       ? ruleFaqOutput
-      : defaultFaqItems;
+      : [...defaultFaqItems, ...faqItemsFromSections];
 
   const faq = {
     enabled:
