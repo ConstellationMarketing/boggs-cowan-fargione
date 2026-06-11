@@ -103,26 +103,13 @@ function transformPracticePage(
     })),
   );
 
-  let heroBackgroundImage = syncedMapped["hero.backgroundImage"]
+  const heroBackgroundImage = syncedMapped["hero.backgroundImage"]
     ? String(syncedMapped["hero.backgroundImage"])
     : syncedMapped["featured_image"]
       ? String(syncedMapped["featured_image"])
-      : "";
-  const sharedPracticeFeaturedImage = heroBackgroundImage || normalizedSections[0]?.image || "";
-  if (sharedPracticeFeaturedImage) {
-    heroBackgroundImage = sharedPracticeFeaturedImage;
-    if (normalizedSections.length > 0) {
-      normalizedSections = normalizedSections.map((section, index) =>
-        index === 0
-          ? {
-              ...section,
-              image: sharedPracticeFeaturedImage,
-              imageAlt: section.imageAlt || title,
-            }
-          : section,
-      );
-    }
-  }
+      : syncedMapped["og_image"]
+        ? String(syncedMapped["og_image"])
+        : "";
 
   // Build FAQ items
   let faqItems = collectRepeaterData(
@@ -141,6 +128,14 @@ function transformPracticePage(
     question: String(item.question ?? ""),
     answer: ensureHtml(String(item.answer ?? "")),
   }));
+
+  const metaTitle = mapped["meta_title"] ? String(mapped["meta_title"]) : undefined;
+  const metaDescription = mapped["meta_description"]
+    ? String(mapped["meta_description"])
+    : undefined;
+  const socialImage = syncedMapped["og_image"]
+    ? String(syncedMapped["og_image"])
+    : heroBackgroundImage || null;
 
   // Build the content object matching PracticeAreaPageContent
   const content: Record<string, unknown> = {
@@ -206,14 +201,12 @@ function transformPracticePage(
     url_path: urlPath,
     page_type: "practice",
     content,
-    meta_title: mapped["meta_title"] ? String(mapped["meta_title"]) : undefined,
-    meta_description: mapped["meta_description"]
-      ? String(mapped["meta_description"])
-      : undefined,
+    meta_title: metaTitle,
+    meta_description: metaDescription,
     canonical_url: null,
-    og_title: null,
-    og_description: null,
-    og_image: null,
+    og_title: metaTitle ?? null,
+    og_description: metaDescription ?? null,
+    og_image: socialImage,
     noindex: false,
     schema_type: null,
     schema_data: null,

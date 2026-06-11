@@ -557,22 +557,6 @@ function buildPracticeRecord(
     })),
   );
 
-  const sharedPracticeFeaturedImage = hero.backgroundImage || contentSections[0]?.image || "";
-  if (sharedPracticeFeaturedImage) {
-    hero.backgroundImage = sharedPracticeFeaturedImage;
-    if (contentSections.length > 0) {
-      contentSections = contentSections.map((section, index) =>
-        index === 0
-          ? {
-              ...section,
-              image: sharedPracticeFeaturedImage,
-              imageAlt: section.imageAlt || hero.h1Title,
-            }
-          : section,
-      );
-    }
-  }
-
   // FAQ: recipe overrides if present and non-empty
   const ruleFaqOutput = outputs["faq"] as Array<Record<string, unknown>> | undefined;
   const faqItems =
@@ -603,6 +587,18 @@ function buildPracticeRecord(
         : defaultPracticeAreaPageContent.faq.items,
   };
 
+  const metaTitle = String(
+    outputs["meta_title"] ??
+      mapped["meta_title"] ??
+      (siteName ? `${title} | ${siteName}` : title),
+  );
+  const metaDescription = outputs["meta_description"]
+    ? String(outputs["meta_description"])
+    : mapped["meta_description"]
+      ? String(mapped["meta_description"])
+      : undefined;
+  const socialImage = (outputs["og_image"] ?? mapped["og_image"] ?? hero.backgroundImage ?? null) as string | null;
+
   const content: Record<string, unknown> = {
     hero,
     socialProof: {
@@ -619,20 +615,12 @@ function buildPracticeRecord(
     url_path: urlPath,
     page_type: "practice",
     content,
-    meta_title: String(
-      outputs["meta_title"] ??
-        mapped["meta_title"] ??
-        (siteName ? `${title} | ${siteName}` : title),
-    ),
-    meta_description: outputs["meta_description"]
-      ? String(outputs["meta_description"])
-      : mapped["meta_description"]
-        ? String(mapped["meta_description"])
-        : undefined,
+    meta_title: metaTitle,
+    meta_description: metaDescription,
     canonical_url: (outputs["canonical_url"] ?? mapped["canonical_url"] ?? null) as string | null,
-    og_title: (outputs["og_title"] ?? mapped["og_title"] ?? null) as string | null,
-    og_description: (outputs["og_description"] ?? mapped["og_description"] ?? null) as string | null,
-    og_image: (outputs["og_image"] ?? mapped["og_image"] ?? null) as string | null,
+    og_title: (outputs["og_title"] ?? mapped["og_title"] ?? metaTitle) as string | null,
+    og_description: (outputs["og_description"] ?? mapped["og_description"] ?? metaDescription ?? null) as string | null,
+    og_image: socialImage,
     noindex:
       outputs["noindex"] === true ||
       outputs["noindex"] === "true" ||

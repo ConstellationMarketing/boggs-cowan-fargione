@@ -110,10 +110,10 @@ export function syncPracticeSourceImageFields(
   const featuredImage = mapped["featured_image"]
     ? String(mapped["featured_image"])
     : "";
-  const sectionImage = mapped["contentSections.image"]
-    ? String(mapped["contentSections.image"])
+  const ogImage = mapped["og_image"]
+    ? String(mapped["og_image"])
     : "";
-  const sharedImage = heroBackgroundImage || featuredImage || sectionImage;
+  const sharedImage = heroBackgroundImage || featuredImage || ogImage;
 
   if (!sharedImage) {
     return mapped;
@@ -123,7 +123,7 @@ export function syncPracticeSourceImageFields(
     ...mapped,
     "hero.backgroundImage": sharedImage,
     featured_image: sharedImage,
-    "contentSections.image": sharedImage,
+    og_image: sharedImage,
   };
 }
 
@@ -314,22 +314,6 @@ function preparePracticePage(
   // -----------------------------------------------------------------------
   normalizedSections = extractSectionImages(normalizedSections) as typeof normalizedSections;
 
-  const sharedPracticeFeaturedImage = heroImage || normalizedSections[0]?.image || "";
-  if (sharedPracticeFeaturedImage) {
-    heroImage = sharedPracticeFeaturedImage;
-    if (normalizedSections.length > 0) {
-      normalizedSections = normalizedSections.map((section, index) =>
-        index === 0
-          ? {
-              ...section,
-              image: sharedPracticeFeaturedImage,
-              imageAlt: section.imageAlt || title,
-            }
-          : section,
-      );
-    }
-  }
-
   // -----------------------------------------------------------------------
   // Finalize FAQ
   // -----------------------------------------------------------------------
@@ -337,6 +321,18 @@ function preparePracticePage(
     question: String(item.question ?? ""),
     answer: ensureHtml(String(item.answer ?? "")),
   }));
+
+  const metaTitle = mapped["meta_title"]
+    ? String(mapped["meta_title"])
+    : siteName
+      ? `${title} | ${siteName}`
+      : title;
+  const metaDescription = mapped["meta_description"]
+    ? String(mapped["meta_description"])
+    : undefined;
+  const socialImage = syncedMapped["og_image"]
+    ? String(syncedMapped["og_image"])
+    : heroImage || null;
 
   const content: Record<string, unknown> = {
     hero: {
@@ -399,22 +395,16 @@ function preparePracticePage(
     url_path: urlPath,
     page_type: "practice",
     content,
-    meta_title: mapped["meta_title"]
-      ? String(mapped["meta_title"])
-      : siteName
-        ? `${title} | ${siteName}`
-        : title,
-    meta_description: mapped["meta_description"]
-      ? String(mapped["meta_description"])
-      : undefined,
+    meta_title: metaTitle,
+    meta_description: metaDescription,
     canonical_url: mapped["canonical_url"]
       ? String(mapped["canonical_url"])
       : null,
-    og_title: mapped["og_title"] ? String(mapped["og_title"]) : null,
+    og_title: mapped["og_title"] ? String(mapped["og_title"]) : metaTitle,
     og_description: mapped["og_description"]
       ? String(mapped["og_description"])
-      : null,
-    og_image: mapped["og_image"] ? String(mapped["og_image"]) : null,
+      : metaDescription ?? null,
+    og_image: socialImage,
     noindex: mapped["noindex"] === true || mapped["noindex"] === "true",
     schema_type: null,
     schema_data: null,
@@ -523,7 +513,7 @@ export function normalizeUrlSlug(raw: string, title: string): string {
 /**
  * Extract paragraph content that appears before the first <h2> in an HTML string.
  * This intro content is removed from the body and returned separately so it can
- * be used as the hero description instead of being prepended to the first section.
+ * be used as the hero headline instead of being prepended to the first section.
  *
  * Returns `{ intro, body }` where:
  * - `intro` is the HTML before the first <h2> (empty string if none / no paragraphs found)

@@ -235,6 +235,33 @@ export default function AdminPageEdit() {
     setPage({ ...page, ...updates });
   };
 
+  const updateSeoMeta = (updates: Partial<Page>) => {
+    if (!page) return;
+
+    const nextUpdates: Partial<Page> = { ...updates };
+    if (Object.prototype.hasOwnProperty.call(updates, "meta_title")) {
+      nextUpdates.og_title = updates.meta_title ?? null;
+    }
+    if (Object.prototype.hasOwnProperty.call(updates, "meta_description")) {
+      nextUpdates.og_description = updates.meta_description ?? null;
+    }
+    if (Object.prototype.hasOwnProperty.call(updates, "og_image") && isPracticeAreaPage) {
+      const content = page.content && typeof page.content === "object" && !Array.isArray(page.content)
+        ? page.content as Partial<PracticeAreaPageContent>
+        : {};
+      nextUpdates.content = {
+        ...content,
+        hero: {
+          ...defaultPracticeAreaPageContent.hero,
+          ...content.hero,
+          backgroundImage: typeof updates.og_image === "string" ? updates.og_image : "",
+        },
+      } as unknown as ContentBlock[];
+    }
+
+    setPage({ ...page, ...nextUpdates });
+  };
+
   const handleContentChange = (content: ContentBlock[]) => {
     updatePage({ content });
   };
@@ -340,6 +367,15 @@ export default function AdminPageEdit() {
   const hasExplicitFaqSchema = parseSchemaTypes(page?.schema_type).includes("FAQPage");
 
   const handleStructuredContentChange = (content: unknown) => {
+    if (isPracticeAreaPage && content && typeof content === "object" && !Array.isArray(content)) {
+      const practiceContent = content as Partial<PracticeAreaPageContent>;
+      const heroBackgroundImage = practiceContent.hero?.backgroundImage;
+      if (typeof heroBackgroundImage === "string") {
+        updatePage({ content: content as ContentBlock[], og_image: heroBackgroundImage });
+        return;
+      }
+    }
+
     updatePage({ content: content as ContentBlock[] });
   };
 
@@ -465,7 +501,7 @@ export default function AdminPageEdit() {
                 <Input
                   id="metaTitle"
                   value={page.meta_title || ""}
-                  onChange={(e) => updatePage({ meta_title: e.target.value })}
+                  onChange={(e) => updateSeoMeta({ meta_title: e.target.value })}
                   placeholder="Page Title | Your Site Name"
                 />
                 <p className="text-sm text-gray-500">
@@ -479,7 +515,7 @@ export default function AdminPageEdit() {
                   id="metaDescription"
                   value={page.meta_description || ""}
                   onChange={(e) =>
-                    updatePage({ meta_description: e.target.value })
+                    updateSeoMeta({ meta_description: e.target.value })
                   }
                   placeholder="A brief description of this page..."
                   rows={3}
@@ -513,7 +549,7 @@ export default function AdminPageEdit() {
                 <Input
                   id="ogTitle"
                   value={page.og_title || ""}
-                  onChange={(e) => updatePage({ og_title: e.target.value })}
+                  onChange={(e) => updateSeoMeta({ og_title: e.target.value })}
                   placeholder="Leave blank to use Meta Title"
                 />
               </div>
@@ -524,7 +560,7 @@ export default function AdminPageEdit() {
                   id="ogDescription"
                   value={page.og_description || ""}
                   onChange={(e) =>
-                    updatePage({ og_description: e.target.value })
+                    updateSeoMeta({ og_description: e.target.value })
                   }
                   placeholder="Leave blank to use Meta Description"
                   rows={2}
@@ -534,11 +570,11 @@ export default function AdminPageEdit() {
               <div className="space-y-2">
                 <Label>OG / Social Image</Label>
                 <p className="text-sm text-gray-500 mb-2">
-                  This image is used for social sharing tags like Open Graph and Twitter cards. It does not control the page hero image.
+                  This image is used for social sharing tags like Open Graph and Twitter cards. On practice pages, it also controls the hero background image.
                 </p>
                 <ImageUploader
                   value={page.og_image || ""}
-                  onChange={(url) => updatePage({ og_image: url })}
+                  onChange={(url) => updateSeoMeta({ og_image: url })}
                   folder="og-images"
                   placeholder="Upload an image for social sharing"
                 />
