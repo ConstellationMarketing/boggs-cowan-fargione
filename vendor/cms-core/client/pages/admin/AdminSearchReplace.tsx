@@ -431,8 +431,9 @@ export default function AdminSearchReplace() {
             <CardHeader>
               <CardTitle>Find and Replace</CardTitle>
               <CardDescription>
-                Search for text in titles, meta fields, content blocks, site
-                settings, and templates
+                Search for visible text in titles, meta fields, rich text content,
+                site settings, and templates. Formatting like bold or italic is
+                ignored when matching rich text.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -485,7 +486,7 @@ export default function AdminSearchReplace() {
                     </SelectContent>
                   </Select>
                   <span className="text-xs text-gray-400">
-                    (applies to pages &amp; posts only)
+                    All includes published and draft pages/posts
                   </span>
                 </div>
 

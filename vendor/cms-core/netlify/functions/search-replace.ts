@@ -144,7 +144,18 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function replaceString(
+function rawContainsSearch(
+  value: string,
+  search: string,
+  caseSensitive: boolean,
+): boolean {
+  if (caseSensitive) {
+    return value.includes(search);
+  }
+  return value.toLowerCase().includes(search.toLowerCase());
+}
+
+function replaceRawString(
   value: string,
   search: string,
   replace: string,
@@ -156,15 +167,135 @@ function replaceString(
   return value.replace(new RegExp(escapeRegex(search), "gi"), replace);
 }
 
+function decodeHtmlEntity(entity: string): string | null {
+  const namedEntities: Record<string, string> = {
+    amp: "&",
+    apos: "'",
+    gt: ">",
+    lt: "<",
+    nbsp: " ",
+    quot: '"',
+  };
+
+  if (entity.startsWith("#x") || entity.startsWith("#X")) {
+    const codePoint = Number.parseInt(entity.slice(2), 16);
+    return Number.isNaN(codePoint) ? null : String.fromCodePoint(codePoint);
+  }
+
+  if (entity.startsWith("#")) {
+    const codePoint = Number.parseInt(entity.slice(1), 10);
+    return Number.isNaN(codePoint) ? null : String.fromCodePoint(codePoint);
+  }
+
+  return namedEntities[entity] ?? null;
+}
+
+function buildVisibleTextMap(value: string): {
+  visibleText: string;
+  map: Array<{ start: number; end: number }>;
+} {
+  let visibleText = "";
+  const map: Array<{ start: number; end: number }> = [];
+
+  for (let i = 0; i < value.length; i += 1) {
+    if (value[i] === "<" && /^<\/?[a-z][\s\S]*?>/i.test(value.slice(i))) {
+      const tagEnd = value.indexOf(">", i + 1);
+      if (tagEnd !== -1) {
+        i = tagEnd;
+        continue;
+      }
+    }
+
+    if (value[i] === "&") {
+      const entityEnd = value.indexOf(";", i + 1);
+      if (entityEnd !== -1 && entityEnd - i <= 12) {
+        const decoded = decodeHtmlEntity(value.slice(i + 1, entityEnd));
+        if (decoded !== null) {
+          for (const char of decoded) {
+            visibleText += char;
+            map.push({ start: i, end: entityEnd + 1 });
+          }
+          i = entityEnd;
+          continue;
+        }
+      }
+    }
+
+    visibleText += value[i];
+    map.push({ start: i, end: i + 1 });
+  }
+
+  return { visibleText, map };
+}
+
+function findVisibleSearchRanges(
+  value: string,
+  search: string,
+  caseSensitive: boolean,
+): Array<{ start: number; end: number }> {
+  const { visibleText, map } = buildVisibleTextMap(value);
+  const haystack = caseSensitive ? visibleText : visibleText.toLowerCase();
+  const needle = caseSensitive ? search : search.toLowerCase();
+  const ranges: Array<{ start: number; end: number }> = [];
+
+  let searchFrom = 0;
+  while (searchFrom < haystack.length) {
+    const visibleIndex = haystack.indexOf(needle, searchFrom);
+    if (visibleIndex === -1) break;
+
+    const lastVisibleIndex = visibleIndex + needle.length - 1;
+    if (map[visibleIndex] && map[lastVisibleIndex]) {
+      ranges.push({
+        start: map[visibleIndex].start,
+        end: map[lastVisibleIndex].end,
+      });
+    }
+
+    searchFrom = visibleIndex + needle.length;
+  }
+
+  return ranges;
+}
+
+function replaceVisibleString(
+  value: string,
+  search: string,
+  replace: string,
+  caseSensitive: boolean,
+): string {
+  const ranges = findVisibleSearchRanges(value, search, caseSensitive);
+  if (ranges.length === 0) return value;
+
+  let result = value;
+  for (let i = ranges.length - 1; i >= 0; i -= 1) {
+    const range = ranges[i];
+    result = result.slice(0, range.start) + replace + result.slice(range.end);
+  }
+
+  return result;
+}
+
+function replaceString(
+  value: string,
+  search: string,
+  replace: string,
+  caseSensitive: boolean,
+): string {
+  if (rawContainsSearch(value, search, caseSensitive)) {
+    return replaceRawString(value, search, replace, caseSensitive);
+  }
+  return replaceVisibleString(value, search, replace, caseSensitive);
+}
+
 function containsSearch(
   value: string,
   search: string,
   caseSensitive: boolean,
 ): boolean {
-  if (caseSensitive) {
-    return value.includes(search);
-  }
-  return value.toLowerCase().includes(search.toLowerCase());
+  return (
+    rawContainsSearch(value, search, caseSensitive) ||
+    findVisibleSearchRanges(value, search, caseSensitive).length > 0
+  );
 }
 
 function traverseAndReplace(
