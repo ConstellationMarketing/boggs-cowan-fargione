@@ -550,12 +550,28 @@ function buildPracticeRecord(
   const { sections: contentSectionBodies, faqItems: faqItemsFromSections } = extractFaqFromHtmlSections(
     selectedSections.map((section) => String(section.body ?? "")),
   );
-  const contentSections = normalizePracticeAreaContentSections(
+  let contentSections = normalizePracticeAreaContentSections(
     mergeShortHtmlSections(contentSectionBodies).map((body, index) => ({
       ...(selectedSections[index] ?? {}),
       body,
     })),
   );
+
+  const sharedPracticeFeaturedImage = hero.backgroundImage || contentSections[0]?.image || "";
+  if (sharedPracticeFeaturedImage) {
+    hero.backgroundImage = sharedPracticeFeaturedImage;
+    if (contentSections.length > 0) {
+      contentSections = contentSections.map((section, index) =>
+        index === 0
+          ? {
+              ...section,
+              image: sharedPracticeFeaturedImage,
+              imageAlt: section.imageAlt || hero.h1Title,
+            }
+          : section,
+      );
+    }
+  }
 
   // FAQ: recipe overrides if present and non-empty
   const ruleFaqOutput = outputs["faq"] as Array<Record<string, unknown>> | undefined;

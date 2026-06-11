@@ -91,7 +91,7 @@ function transformPracticePage(
   const mergedSectionBodies = mergeShortHtmlSections(nonFaqSectionBodies);
 
   // Normalize content sections
-  const normalizedSections = normalizePracticeAreaContentSections(
+  let normalizedSections = normalizePracticeAreaContentSections(
     mergedSectionBodies.map((body, index) => ({
       ...(contentSections[index] ?? {}),
       body,
@@ -102,6 +102,27 @@ function transformPracticePage(
         typeof contentSections[index]?.showCTAs === "boolean" ? contentSections[index]?.showCTAs as boolean : undefined,
     })),
   );
+
+  let heroBackgroundImage = syncedMapped["hero.backgroundImage"]
+    ? String(syncedMapped["hero.backgroundImage"])
+    : syncedMapped["featured_image"]
+      ? String(syncedMapped["featured_image"])
+      : "";
+  const sharedPracticeFeaturedImage = heroBackgroundImage || normalizedSections[0]?.image || "";
+  if (sharedPracticeFeaturedImage) {
+    heroBackgroundImage = sharedPracticeFeaturedImage;
+    if (normalizedSections.length > 0) {
+      normalizedSections = normalizedSections.map((section, index) =>
+        index === 0
+          ? {
+              ...section,
+              image: sharedPracticeFeaturedImage,
+              imageAlt: section.imageAlt || title,
+            }
+          : section,
+      );
+    }
+  }
 
   // Build FAQ items
   let faqItems = collectRepeaterData(
@@ -140,11 +161,7 @@ function transformPracticePage(
       description: mapped["hero.description"]
         ? ensureHtml(String(mapped["hero.description"]))
         : defaultPracticeAreaPageContent.hero.description,
-      backgroundImage: syncedMapped["hero.backgroundImage"]
-        ? String(syncedMapped["hero.backgroundImage"])
-        : syncedMapped["featured_image"]
-          ? String(syncedMapped["featured_image"])
-          : "",
+      backgroundImage: heroBackgroundImage,
       heroImage: mapped["hero.heroImage"]
         ? String(mapped["hero.heroImage"])
         : DEFAULT_PRACTICE_HERO_IMAGE,

@@ -828,10 +828,28 @@ export function mergePracticeAreaPageContentWithDefaults(cmsContent: Partial<Pra
 
   const normalizedHero = normalizeSharedHeroContent({ ...defaults.hero, ...cmsContent.hero });
   const heroH1Title = normalizedHero.h1Title || normalizedHero.sectionLabel || "";
+  const normalizedContentSections = normalizePracticeAreaContentSections(
+    cmsContent.contentSections?.length
+      ? cmsContent.contentSections
+      : defaults.contentSections,
+  );
+  const sharedPracticeImage = normalizedHero.backgroundImage || normalizedContentSections[0]?.image || "";
+  const syncedContentSections = sharedPracticeImage && normalizedContentSections.length > 0
+    ? normalizedContentSections.map((section, index) =>
+        index === 0
+          ? {
+              ...section,
+              image: sharedPracticeImage,
+              imageAlt: section.imageAlt || heroH1Title,
+            }
+          : section,
+      )
+    : normalizedContentSections;
 
   return {
     hero: {
       ...normalizedHero,
+      backgroundImage: sharedPracticeImage,
       heroImage: normalizedHero.heroImage || DEFAULT_PRACTICE_HERO_IMAGE,
       heroImageAlt: heroH1Title,
     },
@@ -845,11 +863,7 @@ export function mergePracticeAreaPageContentWithDefaults(cmsContent: Partial<Pra
         logos: cmsContent.socialProof?.awards?.logos?.length ? cmsContent.socialProof.awards.logos : defaults.socialProof.awards.logos,
       },
     },
-    contentSections: normalizePracticeAreaContentSections(
-      cmsContent.contentSections?.length
-        ? cmsContent.contentSections
-        : defaults.contentSections,
-    ),
+    contentSections: syncedContentSections,
     faq: {
       ...defaults.faq,
       ...cmsContent.faq,

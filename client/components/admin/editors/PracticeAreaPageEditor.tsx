@@ -40,9 +40,9 @@ export default function PracticeAreaPageEditor({
 
   return (
     <div className="space-y-6">
-      <HeroSection content={content} update={update} />
+      <HeroSection content={content} update={update} onChange={onChange} />
       <SocialProofSection content={content} update={update} />
-      <ContentSectionsEditor content={content} update={update} />
+      <ContentSectionsEditor content={content} update={update} onChange={onChange} />
       <FaqSection content={content} update={update} />
     </div>
   );
@@ -53,7 +53,7 @@ type Updater = <K extends keyof PracticeAreaPageContent>(
   key: K,
   value: PracticeAreaPageContent[K],
 ) => void;
-type SectionProps = { content: PracticeAreaPageContent; update: Updater };
+type SectionProps = { content: PracticeAreaPageContent; update: Updater; onChange?: (c: PracticeAreaPageContent) => void };
 
 function useHeadingTag(content: PracticeAreaPageContent, update: Updater) {
   return {
@@ -66,10 +66,21 @@ function useHeadingTag(content: PracticeAreaPageContent, update: Updater) {
 /* ------------------------------------------------------------------ */
 /*  Hero Section                                                       */
 /* ------------------------------------------------------------------ */
-function HeroSection({ content, update }: SectionProps) {
+function HeroSection({ content, update, onChange }: SectionProps) {
   const hero = content.hero;
   const set = (patch: Partial<typeof hero>) =>
     update("hero", { ...hero, ...patch });
+  const setSharedImage = (image: string) => {
+    const contentSections = content.contentSections.map((section, index) =>
+      index === 0 ? { ...section, image } : section,
+    );
+
+    onChange?.({
+      ...content,
+      hero: { ...hero, backgroundImage: image },
+      contentSections,
+    });
+  };
   const ht = useHeadingTag(content, update);
 
   return (
@@ -107,7 +118,7 @@ function HeroSection({ content, update }: SectionProps) {
         <ImageField
           label="Hero Background Image"
           value={hero.backgroundImage}
-          onChange={(url) => set({ backgroundImage: url })}
+          onChange={(url) => setSharedImage(url)}
           folder="hero"
         />
         <ImageField
@@ -288,7 +299,33 @@ function SocialProofSection({ content, update }: SectionProps) {
 /* ------------------------------------------------------------------ */
 /*  Content Sections (repeatable)                                      */
 /* ------------------------------------------------------------------ */
-function ContentSectionsEditor({ content, update }: SectionProps) {
+function ContentSectionsEditor({ content, update, onChange }: SectionProps) {
+  const setSharedImage = (index: number, image: string, imageAlt?: string) => {
+    if (index !== 0 || !onChange) {
+      return null;
+    }
+
+    const contentSections = content.contentSections.map((section, sectionIndex) =>
+      sectionIndex === 0
+        ? {
+            ...section,
+            image,
+            imageAlt: imageAlt ?? section.imageAlt,
+          }
+        : section,
+    );
+
+    onChange({
+      ...content,
+      hero: {
+        ...content.hero,
+        backgroundImage: image,
+      },
+      contentSections,
+    });
+
+    return true;
+  };
   return (
     <Section title="Content Sections" defaultOpen={false}>
       <p className="text-sm text-gray-500 mb-4">
@@ -314,11 +351,17 @@ function ContentSectionsEditor({ content, update }: SectionProps) {
             <ImageField
               label="Section Image"
               value={item.image}
-              onChange={(url) => upd({ ...item, image: url })}
+              onChange={(url) => {
+                if (!setSharedImage(index, url)) {
+                  upd({ ...item, image: url });
+                }
+              }}
               altValue={item.imageAlt}
-              onChangeWithAlt={(image, imageAlt) =>
-                upd({ ...item, image, imageAlt })
-              }
+              onChangeWithAlt={(image, imageAlt) => {
+                if (!setSharedImage(index, image, imageAlt)) {
+                  upd({ ...item, image, imageAlt });
+                }
+              }}
               folder="practice-areas"
             />
             <div>

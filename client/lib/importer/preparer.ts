@@ -110,7 +110,10 @@ export function syncPracticeSourceImageFields(
   const featuredImage = mapped["featured_image"]
     ? String(mapped["featured_image"])
     : "";
-  const sharedImage = heroBackgroundImage || featuredImage;
+  const sectionImage = mapped["contentSections.image"]
+    ? String(mapped["contentSections.image"])
+    : "";
+  const sharedImage = heroBackgroundImage || featuredImage || sectionImage;
 
   if (!sharedImage) {
     return mapped;
@@ -120,6 +123,7 @@ export function syncPracticeSourceImageFields(
     ...mapped,
     "hero.backgroundImage": sharedImage,
     featured_image: sharedImage,
+    "contentSections.image": sharedImage,
   };
 }
 
@@ -202,7 +206,7 @@ function preparePracticePage(
   // - headline → only from explicit mapping, empty otherwise
   // - description → always empty by default
   // - featured_image → hero background
-  const heroImage = syncedMapped["hero.backgroundImage"]
+  let heroImage = syncedMapped["hero.backgroundImage"]
     ? String(syncedMapped["hero.backgroundImage"])
     : syncedMapped["featured_image"]
       ? String(syncedMapped["featured_image"])
@@ -309,6 +313,22 @@ function preparePracticePage(
   // Remaining images stay in the rich text body.
   // -----------------------------------------------------------------------
   normalizedSections = extractSectionImages(normalizedSections) as typeof normalizedSections;
+
+  const sharedPracticeFeaturedImage = heroImage || normalizedSections[0]?.image || "";
+  if (sharedPracticeFeaturedImage) {
+    heroImage = sharedPracticeFeaturedImage;
+    if (normalizedSections.length > 0) {
+      normalizedSections = normalizedSections.map((section, index) =>
+        index === 0
+          ? {
+              ...section,
+              image: sharedPracticeFeaturedImage,
+              imageAlt: section.imageAlt || title,
+            }
+          : section,
+      );
+    }
+  }
 
   // -----------------------------------------------------------------------
   // Finalize FAQ
