@@ -344,7 +344,7 @@ function buildRecord(
   importTimestamp?: string,
 ): TransformedRecord {
   if (isPracticeTemplateType(templateType)) {
-    return buildPracticeRecord(mapped, ruleOutputs, siteName, importTimestamp);
+    return buildPracticeRecord(mapped, ruleOutputs, templateType, siteName, importTimestamp);
   }
   return buildBlogRecord(mapped, ruleOutputs, importTimestamp);
 }
@@ -352,6 +352,7 @@ function buildRecord(
 function buildPracticeRecord(
   mapped: Record<string, unknown>,
   outputs: Record<string, unknown>,
+  pageType: "practice" | "areas-served" = "practice",
   siteName?: string,
   importTimestamp?: string,
 ): TransformedPracticePage {
@@ -614,7 +615,7 @@ function buildPracticeRecord(
   return {
     title,
     url_path: urlPath,
-    page_type: "practice",
+    page_type: pageType,
     content,
     meta_title: metaTitle,
     meta_description: metaDescription,
@@ -788,7 +789,7 @@ function createEmptyRecord(
     return {
       title,
       url_path: `/${slugify(title)}/`,
-      page_type: "practice",
+      page_type: templateType,
       content: {
         hero: defaultPracticeAreaPageContent.hero,
         socialProof: { mode: "awards", testimonials: [], awards: { logos: [] } },

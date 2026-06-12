@@ -39,7 +39,7 @@ export function transformRecords(
         : applyMapping(source, mappingConfig);
 
     if (isPracticeTemplateType(templateType)) {
-      return transformPracticePage(mapped, source, mappingConfig, importTimestamp);
+      return transformPracticePage(mapped, source, mappingConfig, importTimestamp, templateType);
     }
     return transformBlogPost(mapped, importTimestamp);
   });
@@ -54,6 +54,7 @@ function transformPracticePage(
   sourceRecord: SourceRecord,
   config: MappingConfig,
   importTimestamp: string,
+  pageType: "practice" | "areas-served" = "practice",
 ): TransformedPracticePage {
   const syncedMapped = syncPracticeSourceImageFields(mapped);
   const title = String(mapped["title"] ?? "Untitled");
@@ -200,7 +201,7 @@ function transformPracticePage(
   return {
     title,
     url_path: urlPath,
-    page_type: "practice",
+    page_type: pageType,
     content,
     meta_title: metaTitle,
     meta_description: metaDescription,

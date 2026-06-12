@@ -90,7 +90,7 @@ export type ContentBlock =
     };
 
 export type PageStatus = "draft" | "published";
-export type PageType = "standard" | "practice" | "landing" | "post";
+export type PageType = "standard" | "practice" | "areas-served" | "landing" | "post";
 
 export interface Page {
   id: string;

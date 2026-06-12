@@ -18,7 +18,7 @@ const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 // Types
 // ---------------------------------------------------------------------------
 
-type TemplateType = "practice" | "post";
+type TemplateType = "practice" | "areas-served" | "post";
 type ImportMode = "create" | "update" | "upsert" | "skip_duplicates";
 
 interface BatchRequest {
@@ -49,8 +49,8 @@ function validatePayload(body: unknown): { valid: boolean; error?: string; data?
 
   const b = body as Record<string, unknown>;
 
-  if (!b.template_type || !["practice", "post"].includes(b.template_type as string)) {
-    return { valid: false, error: "template_type must be 'practice' or 'post'" };
+  if (!b.template_type || !["practice", "areas-served", "post"].includes(b.template_type as string)) {
+    return { valid: false, error: "template_type must be 'practice', 'areas-served', or 'post'" };
   }
 
   if (!b.mode || !["create", "update", "upsert", "skip_duplicates"].includes(b.mode as string)) {
@@ -102,8 +102,8 @@ function validatePracticeRecord(record: Record<string, unknown>): string | null 
     return `url_path "${record.url_path}" must be a valid path like /my-page/ or /section/my-page/`;
   }
 
-  if (record.page_type !== "practice") {
-    return "page_type must be 'practice'";
+  if (record.page_type !== "practice" && record.page_type !== "areas-served") {
+    return "page_type must be 'practice' or 'areas-served'";
   }
 
   if (!record.content || typeof record.content !== "object" || Array.isArray(record.content)) {
@@ -595,7 +595,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
       const globalIndex = batch_index * 15 + i;
 
       try {
-        if (template_type === "practice") {
+        if (template_type === "practice" || template_type === "areas-served") {
           const result = await processPracticeRecord(record, mode, supabase, globalIndex, job_id);
           results.push(result);
         } else {
@@ -732,7 +732,7 @@ async function processPracticeRecord(
   const pageRow = {
     title: record.title,
     url_path: urlPath,
-    page_type: "practice",
+    page_type: record.page_type,
     content: record.content,
     meta_title: record.meta_title ?? null,
     meta_description: record.meta_description ?? null,

@@ -19,7 +19,7 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from "sonner";
 
 function getDefaultContent(pageType: PageType): unknown {
-  if (pageType === 'practice') {
+  if (pageType === 'practice' || pageType === 'areas-served') {
     return defaultPracticeAreaPageContent;
   }
   // standard / landing use empty block arrays
@@ -103,12 +103,13 @@ export default function AdminTemplateNew() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="practice">Practice Area Page</SelectItem>
+                  <SelectItem value="areas-served">Areas Served Page</SelectItem>
                   <SelectItem value="standard">Standard Page</SelectItem>
                   <SelectItem value="landing">Landing Page</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-sm text-gray-500">
-                {pageType === 'practice'
+                {pageType === 'practice' || pageType === 'areas-served'
                   ? 'Uses the structured editor (Hero, Social Proof, Content Sections, FAQ).'
                   : 'Uses the block-based editor with drag-and-drop content blocks.'}
               </p>

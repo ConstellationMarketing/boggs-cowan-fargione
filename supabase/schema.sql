@@ -18,7 +18,7 @@ CREATE TABLE public.pages (
   title text NOT NULL,
   url_path text NOT NULL UNIQUE,
   page_type text NOT NULL DEFAULT 'standard'
-    CHECK (page_type IN ('standard', 'practice', 'landing')),
+    CHECK (page_type IN ('standard', 'practice', 'areas-served', 'landing')),
   content jsonb DEFAULT '[]'::jsonb,
   meta_title text,
   meta_description text,
@@ -40,7 +40,7 @@ CREATE TABLE public.templates (
   id uuid PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
   name text NOT NULL,
   page_type text NOT NULL
-    CHECK (page_type IN ('standard', 'practice', 'landing', 'post')),
+    CHECK (page_type IN ('standard', 'practice', 'areas-served', 'landing', 'post')),
   default_content jsonb DEFAULT '[]'::jsonb,
   default_meta_title text,
   default_meta_description text,
@@ -576,7 +576,7 @@ SELECT 'Practice Page Template', 'practice',
 WHERE NOT EXISTS (SELECT 1 FROM public.templates WHERE name = 'Practice Page Template');
 
 INSERT INTO public.templates (name, page_type, default_content, default_meta_title, default_meta_description)
-SELECT 'Areas Served template', page_type, default_content, default_meta_title, default_meta_description
+SELECT 'Areas Served template', 'areas-served', default_content, default_meta_title, default_meta_description
 FROM public.templates
 WHERE name = 'Practice Page Template'
   AND NOT EXISTS (SELECT 1 FROM public.templates WHERE name = 'Areas Served template')
@@ -615,7 +615,7 @@ ON CONFLICT (name) DO NOTHING;
 CREATE TABLE public.import_mapping_presets (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL,
-  template_type text NOT NULL CHECK (template_type IN ('practice', 'post')),
+  template_type text NOT NULL CHECK (template_type IN ('practice', 'areas-served', 'post')),
   mapping_json jsonb NOT NULL DEFAULT '{}'::jsonb,
   created_by uuid,
   created_at timestamptz DEFAULT now(),
@@ -670,7 +670,7 @@ CREATE TABLE public.import_migration_sessions (
 CREATE TABLE public.import_jobs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   source_type text NOT NULL CHECK (source_type IN ('csv', 'api', 'json')),
-  template_type text NOT NULL CHECK (template_type IN ('practice', 'post')),
+  template_type text NOT NULL CHECK (template_type IN ('practice', 'areas-served', 'post')),
   mode text NOT NULL DEFAULT 'create' CHECK (mode IN ('create', 'update', 'upsert', 'skip_duplicates')),
   status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
   total_records integer DEFAULT 0,

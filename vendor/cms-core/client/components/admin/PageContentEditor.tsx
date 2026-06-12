@@ -28,7 +28,7 @@ export default function PageContentEditor({ pageId, pageKey, content, onChange, 
     return <PracticeAreasEditor content={content as any} onChange={onChange as any} />;
 
   // Individual practice area pages — detected by page_type
-  if (pageType === "practice")
+  if (pageType === "practice" || pageType === "areas-served")
     return <PracticeAreaPageEditor content={content as any} onChange={onChange as any} />;
 
   // Fallback: raw JSON editor for unknown page types

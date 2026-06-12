@@ -60,6 +60,10 @@ function normalizePath(p: string): string {
   return p === "/" ? p : p.replace(/\/+$/, "");
 }
 
+function isPracticeLikePageType(pageType: Page["page_type"] | undefined): boolean {
+  return pageType === "practice" || pageType === "areas-served";
+}
+
 // Generic deep merge utility for content normalization
 function mergeWithDefaults<T extends Record<string, any>>(
   cmsContent: Partial<T> | null | undefined,
@@ -308,7 +312,7 @@ export default function AdminPageEdit() {
   };
 
   // Check if this is a structured page using stable page_id (not URL path)
-  const isPracticeAreaPage = page?.page_type === "practice";
+  const isPracticeAreaPage = isPracticeLikePageType(page?.page_type);
 
   const isStructuredPage =
     Object.values(STRUCTURED_PAGE_IDS).includes(page?.page_id as number) ||
@@ -706,6 +710,7 @@ export default function AdminPageEdit() {
                   <SelectContent>
                     <SelectItem value="standard">Standard Page</SelectItem>
                     <SelectItem value="practice">Practice Area Page</SelectItem>
+                    <SelectItem value="areas-served">Areas Served Page</SelectItem>
                     <SelectItem value="landing">Landing Page</SelectItem>
                   </SelectContent>
                 </Select>

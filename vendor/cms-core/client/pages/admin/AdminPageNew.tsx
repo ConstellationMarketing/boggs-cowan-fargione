@@ -174,12 +174,13 @@ export default function AdminPageNew() {
                 <SelectContent>
                   <SelectItem value="standard">Standard Page</SelectItem>
                   <SelectItem value="practice">Practice Area Page</SelectItem>
+                  <SelectItem value="areas-served">Areas Served Page</SelectItem>
                   <SelectItem value="landing">Landing Page</SelectItem>
                 </SelectContent>
               </Select>
-              {pageType === 'practice' && (
+              {(pageType === 'practice' || pageType === 'areas-served') && (
                 <p className="text-sm text-blue-600">
-                  Practice area pages can use any path you choose.
+                  {pageType === 'areas-served' ? 'Areas served pages' : 'Practice area pages'} can use any path you choose.
                 </p>
               )}
             </div>

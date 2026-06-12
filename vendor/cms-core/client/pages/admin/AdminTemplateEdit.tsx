@@ -105,7 +105,7 @@ export default function AdminTemplateEdit() {
     setTemplate({ ...template, ...updates });
   };
 
-  const isPracticeType = template?.page_type === 'practice';
+  const isPracticeType = template?.page_type === 'practice' || template?.page_type === 'areas-served';
 
   // Normalize practice content by merging with defaults
   const normalizedContent = useMemo(() => {
@@ -241,7 +241,7 @@ function TemplateContentEditor({
   content: unknown;
   onChange: (content: unknown) => void;
 }) {
-  if (pageType === 'practice') {
+  if (pageType === 'practice' || pageType === 'areas-served') {
     return (
       <PracticeAreaPageEditor
         content={content as PracticeAreaPageContent}

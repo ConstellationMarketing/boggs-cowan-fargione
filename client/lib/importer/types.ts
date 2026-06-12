@@ -15,8 +15,8 @@ export function isPracticeTemplateType(
   return templateType === "practice" || templateType === "areas-served";
 }
 
-export function getImportStorageTemplateType(templateType: TemplateType): "practice" | "post" {
-  return isPracticeTemplateType(templateType) ? "practice" : "post";
+export function getImportStorageTemplateType(templateType: TemplateType): TemplateType {
+  return templateType;
 }
 
 export function getTemplateTypeLabel(templateType: TemplateType): string {
@@ -133,7 +133,7 @@ export type ImportPublishDateSource = "mapped" | "fallback";
 export interface TransformedPracticePage {
   title: string;
   url_path: string;
-  page_type: "practice";
+  page_type: PracticeLikeTemplateType;
   content: Record<string, unknown>;
   meta_title?: string;
   meta_description?: string;

@@ -60,6 +60,8 @@ export interface PrepareOptions {
   siteName?: string;
   /** Import run timestamp used for publish-date fallback */
   importTimestamp?: string;
+  /** Practice-like page type to save on generated page records. */
+  pageType?: "practice" | "areas-served";
 }
 
 export function prepareRecords(
@@ -81,6 +83,7 @@ export function prepareRecords(
         ? preparePracticePage(mapped, source, mappingConfig, {
             ...options,
             importTimestamp,
+            pageType: templateType,
           })
         : prepareBlogPost(mapped, importTimestamp);
 
@@ -394,7 +397,7 @@ function preparePracticePage(
   return {
     title,
     url_path: urlPath,
-    page_type: "practice",
+    page_type: options?.pageType ?? "practice",
     content,
     meta_title: metaTitle,
     meta_description: metaDescription,

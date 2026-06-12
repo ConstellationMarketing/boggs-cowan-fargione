@@ -10,7 +10,7 @@ export function resolvePageTemplate(
     return "generic";
   }
 
-  if (document.pageType === "practice") {
+  if (document.pageType === "practice" || document.pageType === "areas-served") {
     return "practice";
   }
 
