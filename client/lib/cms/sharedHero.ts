@@ -4,6 +4,7 @@ export interface SharedHeroContent {
   highlightedText: string;
   description: string;
   backgroundImage: string;
+  backgroundImageCredit: string;
   heroImage: string;
   heroImageAlt: string;
   consultationButtonText: string;
@@ -20,6 +21,7 @@ export const defaultSharedHeroContent: SharedHeroContent = {
   highlightedText: "",
   description: "",
   backgroundImage: "",
+  backgroundImageCredit: "",
   heroImage: "",
   heroImageAlt: "",
   consultationButtonText: "Free Consultation",
@@ -47,6 +49,7 @@ export function normalizeSharedHeroContent(content: unknown): SharedHeroContent 
   const highlightedText = readString(content.highlightedText);
   const description = readString(content.description);
   const backgroundImage = readString(content.backgroundImage);
+  const backgroundImageCredit = readString(content.backgroundImageCredit);
   const heroImage = readString(content.heroImage);
   const heroImageAlt = readString(content.heroImageAlt, readString(content.backgroundImageAlt));
   const consultationButtonText = readString(content.consultationButtonText) || defaultSharedHeroContent.consultationButtonText;
@@ -58,6 +61,7 @@ export function normalizeSharedHeroContent(content: unknown): SharedHeroContent 
     highlightedText,
     description,
     backgroundImage,
+    backgroundImageCredit,
     heroImage,
     heroImageAlt,
     consultationButtonText,

@@ -110,6 +110,17 @@ function HeroSection({ content, update }: SectionProps) {
           onChange={(url) => set({ backgroundImage: url })}
           folder="hero"
         />
+        <div>
+          <Label>Hero Background Image Credit</Label>
+          <Input
+            value={hero.backgroundImageCredit}
+            onChange={(e) => set({ backgroundImageCredit: e.target.value })}
+            placeholder="Photo: Author Name"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Displayed subtly over the hero background image.
+          </p>
+        </div>
         <ImageField
           label="Hero Side Image"
           value={hero.heroImage}

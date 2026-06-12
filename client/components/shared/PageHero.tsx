@@ -75,12 +75,19 @@ export default function PageHero({
       }`}
     >
       {content.backgroundImage ? (
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.85) 65%, rgba(0,0,0,0.60) 100%), url(${content.backgroundImage})`,
-          }}
-        />
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.85) 65%, rgba(0,0,0,0.60) 100%), url(${content.backgroundImage})`,
+            }}
+          />
+          {content.backgroundImageCredit ? (
+            <p className="absolute bottom-3 right-4 z-10 font-inter text-[10px] leading-none text-white/35 md:bottom-4 md:right-5 md:text-[11px]">
+              {content.backgroundImageCredit}
+            </p>
+          ) : null}
+        </>
       ) : null}
 
       <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
