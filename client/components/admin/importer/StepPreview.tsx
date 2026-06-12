@@ -23,6 +23,7 @@ import type {
   ValidationResult,
   PreparedRecord,
 } from "@site/lib/importer/types";
+import { isPracticeTemplateType } from "@site/lib/importer/types";
 import type { TransformedRecordWithConfidence } from "@site/lib/importer/recipeTypes";
 import {
   getConfidenceColor,
@@ -162,19 +163,19 @@ export default function StepPreview({
         {visibleItems.map((item) => {
           const record = item.record;
           const title =
-            templateType === "practice"
+            isPracticeTemplateType(templateType)
               ? (record as TransformedPracticePage).title
               : (record as TransformedBlogPost).title;
           const slug =
-            templateType === "practice"
+            isPracticeTemplateType(templateType)
               ? (record as TransformedPracticePage).url_path
               : `/blog/${(record as TransformedBlogPost).slug}`;
           const publishDate =
-            templateType === "practice"
+            isPracticeTemplateType(templateType)
               ? (record as TransformedPracticePage).published_at
               : (record as TransformedBlogPost).published_at;
           const publishDateSource =
-            templateType === "practice"
+            isPracticeTemplateType(templateType)
               ? (record as TransformedPracticePage).publish_date_source
               : (record as TransformedBlogPost).publish_date_source;
 
@@ -226,7 +227,7 @@ export default function StepPreview({
                   </p>
                 )}
 
-                {templateType === "practice" ? (
+                {isPracticeTemplateType(templateType) ? (
                   <PracticePagePreview
                     record={record as TransformedPracticePage}
                   />

@@ -33,6 +33,7 @@ import type {
   TransformedPracticePage,
   TransformedBlogPost,
 } from "@site/lib/importer/types";
+import { isPracticeTemplateType } from "@site/lib/importer/types";
 import type { ImportRecipe, RecipeRule } from "@site/lib/importer/recipeTypes";
 import { applyMapping } from "@site/lib/importer/fieldMapping";
 import { cleanSingleRecord } from "@site/lib/importer/sourceCleaner";
@@ -85,7 +86,7 @@ export default function StepTeachRecipe({
     const cleaned = cleanSingleRecord(raw, {
       filterOptions: {
         templateType,
-        removeContactBlocks: templateType === "practice",
+        removeContactBlocks: isPracticeTemplateType(templateType),
       },
     });
     const mapped = applyMapping(cleaned.data, mappingConfig);
@@ -227,7 +228,7 @@ export default function StepTeachRecipe({
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 overflow-auto">
-            {currentOutput && templateType === "practice" && (
+            {currentOutput && isPracticeTemplateType(templateType) && (
               <PracticePagePrepEditor
                 record={currentOutput as TransformedPracticePage}
                 onChange={(updated) => handleOutputChange(updated as TransformedRecord)}

@@ -476,6 +476,7 @@ const blogPostPreparationSections: PreparationSection[] = [
 
 const preparationSectionsByTemplate: Record<TemplateType, PreparationSection[]> = {
   practice: practicePagePreparationSections,
+  "areas-served": practicePagePreparationSections,
   post: blogPostPreparationSections,
 };
 
@@ -491,6 +492,7 @@ export function getPreparationSections(
 
 const fieldsByTemplate: Record<TemplateType, TemplateFieldDefinition[]> = {
   practice: practicePageFields,
+  "areas-served": practicePageFields,
   post: blogPostFields,
 };
 

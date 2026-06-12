@@ -1,4 +1,4 @@
-import { FileText, Newspaper } from "lucide-react";
+import { FileText, MapPin, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,15 @@ const templates = [
     icon: FileText,
     title: "Practice Area Pages",
     description:
-      "Import practice area pages with hero sections, content blocks, and FAQ sections. Each row creates a page under /practice-areas/.",
+      "Import practice area pages with hero sections, content blocks, and FAQ sections. Each row creates a practice-style page using the provided URL slug.",
+    fields: "Title, Slug, Hero, Content Sections, FAQ Items, SEO fields",
+  },
+  {
+    type: "areas-served" as TemplateType,
+    icon: MapPin,
+    title: "Areas Served Pages",
+    description:
+      "Import areas-served pages with the same hero, content section, FAQ, SEO, and draft settings as practice area pages.",
     fields: "Title, Slug, Hero, Content Sections, FAQ Items, SEO fields",
   },
   {

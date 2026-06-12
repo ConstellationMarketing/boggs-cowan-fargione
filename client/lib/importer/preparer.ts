@@ -35,6 +35,7 @@ import type {
   ValidationIssue,
   ImportPublishDateSource,
 } from "./types";
+import { isPracticeTemplateType } from "./types";
 import { applyMapping, collectRepeaterData, slugify } from "./fieldMapping";
 import {
   DEFAULT_PRACTICE_HERO_IMAGE,
@@ -71,12 +72,12 @@ export function prepareRecords(
 
   return sourceRecords.map((source, index) => {
     const mapped =
-      templateType === "practice"
+      isPracticeTemplateType(templateType)
         ? syncPracticeSourceImageFields(applyMapping(source, mappingConfig))
         : applyMapping(source, mappingConfig);
 
     const autoPrepared =
-      templateType === "practice"
+      isPracticeTemplateType(templateType)
         ? preparePracticePage(mapped, source, mappingConfig, {
             ...options,
             importTimestamp,
@@ -718,7 +719,7 @@ export function quickValidateRecord(
   const warnings: ValidationIssue[] = [];
   const rowIndex = 0;
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = record as TransformedPracticePage;
 
     if (!p.title || p.title.trim() === "" || p.title === "Untitled") {

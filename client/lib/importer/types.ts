@@ -6,7 +6,24 @@
 // Template & Field Definitions
 // ---------------------------------------------------------------------------
 
-export type TemplateType = "practice" | "post";
+export type TemplateType = "practice" | "areas-served" | "post";
+export type PracticeLikeTemplateType = "practice" | "areas-served";
+
+export function isPracticeTemplateType(
+  templateType: TemplateType | string | null | undefined,
+): templateType is PracticeLikeTemplateType {
+  return templateType === "practice" || templateType === "areas-served";
+}
+
+export function getImportStorageTemplateType(templateType: TemplateType): "practice" | "post" {
+  return isPracticeTemplateType(templateType) ? "practice" : "post";
+}
+
+export function getTemplateTypeLabel(templateType: TemplateType): string {
+  if (templateType === "areas-served") return "areas served pages";
+  if (templateType === "practice") return "practice pages";
+  return "blog posts";
+}
 export type ImportMode = "create" | "update" | "upsert" | "skip_duplicates";
 export type SourceType = "csv" | "api" | "json";
 export type SlugCollisionMode = "skip" | "overwrite" | "unique_suffix";

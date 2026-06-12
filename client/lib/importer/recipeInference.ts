@@ -20,6 +20,7 @@ import type {
   TransformedPracticePage,
   TransformedBlogPost,
 } from "./types";
+import { isPracticeTemplateType } from "./types";
 import { slugify } from "./fieldMapping";
 
 // ---------------------------------------------------------------------------
@@ -280,7 +281,7 @@ function inferFromPatterns(
 ): { rules: RecipeRule[] } {
   const rules: RecipeRule[] = [];
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = output as TransformedPracticePage;
     const content = p.content as Record<string, unknown>;
     const sections = content?.contentSections as Array<Record<string, unknown>> | undefined;
@@ -419,7 +420,7 @@ function flattenRecord(
 ): Record<string, unknown> {
   const flat: Record<string, unknown> = {};
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = record as TransformedPracticePage;
     flat["title"] = p.title;
     flat["url_path"] = p.url_path;

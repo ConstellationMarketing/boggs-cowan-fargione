@@ -6,6 +6,7 @@ import type {
   MappingConfig,
   SourceRecord,
 } from "./types";
+import { isPracticeTemplateType } from "./types";
 import { applyMapping, collectRepeaterData, slugify } from "./fieldMapping";
 import {
   DEFAULT_PRACTICE_HERO_IMAGE,
@@ -33,11 +34,11 @@ export function transformRecords(
 
   return sourceRecords.map((source) => {
     const mapped =
-      templateType === "practice"
+      isPracticeTemplateType(templateType)
         ? syncPracticeSourceImageFields(applyMapping(source, mappingConfig))
         : applyMapping(source, mappingConfig);
 
-    if (templateType === "practice") {
+    if (isPracticeTemplateType(templateType)) {
       return transformPracticePage(mapped, source, mappingConfig, importTimestamp);
     }
     return transformBlogPost(mapped, importTimestamp);

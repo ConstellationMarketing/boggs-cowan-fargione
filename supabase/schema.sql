@@ -576,6 +576,13 @@ SELECT 'Practice Page Template', 'practice',
 WHERE NOT EXISTS (SELECT 1 FROM public.templates WHERE name = 'Practice Page Template');
 
 INSERT INTO public.templates (name, page_type, default_content, default_meta_title, default_meta_description)
+SELECT 'Areas Served template', page_type, default_content, default_meta_title, default_meta_description
+FROM public.templates
+WHERE name = 'Practice Page Template'
+  AND NOT EXISTS (SELECT 1 FROM public.templates WHERE name = 'Areas Served template')
+LIMIT 1;
+
+INSERT INTO public.templates (name, page_type, default_content, default_meta_title, default_meta_description)
 SELECT 'Landing Page Template', 'landing',
   '[{"type":"hero","sectionLabel":"– Landing Page","tagline":"Compelling Headline Here","description":"A persuasive description that encourages visitors to take action."},{"type":"content-section","body":"<h2>Why Choose Us</h2><p>Highlight your key value propositions and what sets you apart from the competition.</p><ul><li>Benefit one</li><li>Benefit two</li><li>Benefit three</li></ul>","image":"","imageAlt":"","imagePosition":"right"},{"type":"cta","heading":"Take Action Today","description":"Do not wait — contact us now for a free consultation.","secondaryButton":{"label":"Get Started","sublabel":"No Obligation","link":"/contact"}}]'::jsonb,
   'Landing Page | Your Site Name',

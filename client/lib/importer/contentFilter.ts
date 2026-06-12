@@ -21,6 +21,8 @@
 // - Filtering is extensible for template-specific behavior.
 // ============================================================================
 
+import { isPracticeTemplateType } from "./types";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -920,7 +922,7 @@ function resolveFilterOptions(options?: FilterOptions): Required<FilterOptions> 
     extraDetectors: options?.extraDetectors ?? [],
     removeContactBlocks:
       options?.removeContactBlocks ??
-      (templateType === "practice" ? true : false),
+      (isPracticeTemplateType(templateType) ? true : false),
   };
 }
 

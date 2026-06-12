@@ -42,7 +42,11 @@ import type {
   BatchItemResult,
   BatchResponse,
 } from "@site/lib/importer/types";
-import { BATCH_SIZE } from "@site/lib/importer/types";
+import {
+  BATCH_SIZE,
+  getImportStorageTemplateType,
+  getTemplateTypeLabel,
+} from "@site/lib/importer/types";
 import type {
   ImportRecipe,
   TransformedRecordWithConfidence,
@@ -178,10 +182,12 @@ export default function StepImportRun({
         return;
       }
 
+      const storageTemplateType = getImportStorageTemplateType(templateType);
+
       // Create the import job with recipe and session references
       const jobInsert: Record<string, unknown> = {
         source_type: sourceType,
-        template_type: templateType,
+        template_type: storageTemplateType,
         mode: importMode,
         total_records: transformedRecords.length,
         status: "pending",
@@ -243,7 +249,7 @@ export default function StepImportRun({
                 },
                 body: JSON.stringify({
                   job_id: job.id,
-                  template_type: templateType,
+                  template_type: storageTemplateType,
                   mode: importMode,
                   records: batchRecords,
                   batch_index: i,
@@ -346,7 +352,7 @@ export default function StepImportRun({
         <p className="text-sm text-muted-foreground">
           {isComplete
             ? "Review the import results below"
-            : `Importing ${activeCount} approved record${activeCount !== 1 ? "s" : ""} as ${templateType === "practice" ? "practice pages" : "blog posts"}${skippedCountPrep > 0 ? ` (${skippedCountPrep} skipped` : ""}${needsReviewCount > 0 ? `, ${needsReviewCount} needs review` : ""}${skippedCountPrep > 0 || needsReviewCount > 0 ? ")" : ""}`}
+            : `Importing ${activeCount} approved record${activeCount !== 1 ? "s" : ""} as ${getTemplateTypeLabel(templateType)}${skippedCountPrep > 0 ? ` (${skippedCountPrep} skipped` : ""}${needsReviewCount > 0 ? `, ${needsReviewCount} needs review` : ""}${skippedCountPrep > 0 || needsReviewCount > 0 ? ")" : ""}`}
         </p>
       </div>
 

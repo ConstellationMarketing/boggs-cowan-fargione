@@ -10,6 +10,7 @@ import type {
   TransformationLogEntry,
 } from "./recipeTypes";
 import type { TransformedPracticePage, TransformedBlogPost, TransformedRecord, TemplateType } from "./types";
+import { isPracticeTemplateType } from "./types";
 
 // ---------------------------------------------------------------------------
 // Weight Configuration
@@ -107,7 +108,7 @@ function scoreStructural(
   const flags: string[] = [];
   let score = 1.0;
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = record as TransformedPracticePage;
 
     if (!p.title || p.title === "Untitled") {
@@ -175,7 +176,7 @@ function scoreExtraction(
   const flags: string[] = [];
   let score = 0.8;
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = record as TransformedPracticePage;
     const content = p.content as Record<string, unknown>;
     const sections = content?.contentSections as Array<Record<string, unknown>> | undefined;
@@ -277,7 +278,7 @@ function scoreContentQuality(
     flags.push("encoding_issues");
   }
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = record as TransformedPracticePage;
     const content = p.content as Record<string, unknown>;
     const sections = content?.contentSections as Array<Record<string, unknown>> | undefined;
@@ -321,7 +322,7 @@ function scoreValidation(
   const details: string[] = [];
   let score = 1.0;
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     const p = record as TransformedPracticePage;
 
     // Slug format check

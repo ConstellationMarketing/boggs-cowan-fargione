@@ -6,6 +6,7 @@ import type {
   TransformedPracticePage,
   TransformedBlogPost,
 } from "./types";
+import { isPracticeTemplateType } from "./types";
 import { getRequiredFields, getFieldsForTemplate } from "./templateFields";
 import { normalizeImportedPublishDate } from "./preparer";
 
@@ -41,7 +42,7 @@ export function validateRecords(
     }
 
     // Template-specific validation
-    if (templateType === "practice") {
+    if (isPracticeTemplateType(templateType)) {
       validatePracticePage(record, i, issues, errorRows, warningRows);
     } else if (templateType === "post") {
       validateBlogPost(record, i, issues, errorRows, warningRows);
@@ -292,7 +293,7 @@ export function validatePreparedRecords(
 
     const data = record.current;
 
-    if (templateType === "practice") {
+    if (isPracticeTemplateType(templateType)) {
       const p = data as TransformedPracticePage;
       validatePreparedPracticePage(p, i, issues, errorRows, warningRows);
 
@@ -323,8 +324,8 @@ export function validatePreparedRecords(
       for (const idx of indices) {
         issues.push({
           rowIndex: idx,
-          field: templateType === "practice" ? "url_path" : "slug",
-          message: `Duplicate ${templateType === "practice" ? "URL path" : "slug"} "${truncate(slug, 40)}" found in rows: ${indices.map((i) => i + 1).join(", ")}`,
+          field: isPracticeTemplateType(templateType) ? "url_path" : "slug",
+          message: `Duplicate ${isPracticeTemplateType(templateType) ? "URL path" : "slug"} "${truncate(slug, 40)}" found in rows: ${indices.map((i) => i + 1).join(", ")}`,
           severity: "error",
         });
         errorRows.add(idx);
@@ -516,7 +517,7 @@ export async function checkDuplicateSlugsInDB(
   if (slugs.length === 0) return [];
 
   try {
-    if (templateType === "practice") {
+    if (isPracticeTemplateType(templateType)) {
       const paths = slugs.map((s) => {
         if (s.startsWith("/")) return s;
         return `/${s}/`;

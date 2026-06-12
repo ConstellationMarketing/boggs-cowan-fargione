@@ -25,6 +25,7 @@ import type {
   TransformedRecord,
   PreparedRecord,
 } from "@site/lib/importer/types";
+import { isPracticeTemplateType } from "@site/lib/importer/types";
 import type { TransformedRecordWithConfidence } from "@site/lib/importer/recipeTypes";
 import { validatePreparedRecords } from "@site/lib/importer/validator";
 import {
@@ -444,7 +445,7 @@ function validateConfidenceRecords(
   for (let i = 0; i < records.length; i++) {
     const data = records[i].record;
 
-    if (templateType === "practice") {
+    if (isPracticeTemplateType(templateType)) {
       const p = data as import("@site/lib/importer/types").TransformedPracticePage;
       if (!p.title || p.title.trim() === "" || p.title === "Untitled") {
         issues.push({ rowIndex: i, field: "title", message: "Title is required", severity: "error" });
@@ -507,7 +508,7 @@ function validateConfidenceRecords(
       for (const idx of indices) {
         issues.push({
           rowIndex: idx,
-          field: templateType === "practice" ? "url_path" : "slug",
+          field: isPracticeTemplateType(templateType) ? "url_path" : "slug",
           message: `Duplicate slug "${slug}" found in rows: ${indices.map((i) => i + 1).join(", ")}`,
           severity: "error",
         });

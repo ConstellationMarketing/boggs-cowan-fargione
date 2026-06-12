@@ -31,6 +31,7 @@ import type {
   TransformedPracticePage,
   TransformedBlogPost,
 } from "./types";
+import { isPracticeTemplateType } from "./types";
 import { cleanSourceRecords, type CleaningOptions } from "./sourceCleaner";
 import { applyMapping } from "./fieldMapping";
 import { executeRule } from "./recipeRules";
@@ -128,7 +129,7 @@ export async function runRecipeEngine(
     ...(sourceDomain ? { sourceDomain } : {}),
     filterOptions: {
       templateType,
-      removeContactBlocks: templateType === "practice",
+      removeContactBlocks: isPracticeTemplateType(templateType),
     },
   };
   const cleanedRecords = cleanSourceRecords(sourceRecords, cleanOpts);
@@ -147,7 +148,7 @@ export async function runRecipeEngine(
   // Stage 3: Map all records
   const mappedRecords = cleanedRecords.map((cleaned) => {
     const mapped = applyMapping(cleaned.data, mappingConfig);
-    return templateType === "practice"
+    return isPracticeTemplateType(templateType)
       ? syncPracticeSourceImageFields(mapped)
       : mapped;
   });
@@ -342,7 +343,7 @@ function buildRecord(
   siteName?: string,
   importTimestamp?: string,
 ): TransformedRecord {
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     return buildPracticeRecord(mapped, ruleOutputs, siteName, importTimestamp);
   }
   return buildBlogRecord(mapped, ruleOutputs, importTimestamp);
@@ -732,7 +733,7 @@ function resolveSlugCollision(
       let suffix = 1;
 
       while (usedSlugs.has(newSlug) && suffix <= maxSuffix) {
-        if (templateType === "practice") {
+        if (isPracticeTemplateType(templateType)) {
           // For practice pages: /slug/ → /slug-1/ (no prefix assumed)
           const withoutTrailing = currentSlug.replace(/\/$/, "");
           const withoutSuffix = withoutTrailing.replace(/-\d+$/, "");
@@ -754,7 +755,7 @@ function resolveSlugCollision(
 }
 
 function getRecordSlug(record: TransformedRecord, templateType: TemplateType): string | null {
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     return (record as TransformedPracticePage).url_path ?? null;
   }
   return (record as TransformedBlogPost).slug ?? null;
@@ -765,7 +766,7 @@ function setRecordSlug(
   templateType: TemplateType,
   slug: string,
 ): TransformedRecord {
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     return { ...(record as TransformedPracticePage), url_path: slug };
   }
   return { ...(record as TransformedBlogPost), slug };
@@ -783,7 +784,7 @@ function createEmptyRecord(
   const title = String(mapped["title"] ?? "Untitled");
   const publishDate = resolveImportPublishDate(mapped["published_at"], importTimestamp);
 
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     return {
       title,
       url_path: `/${slugify(title)}/`,

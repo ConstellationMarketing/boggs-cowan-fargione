@@ -34,6 +34,7 @@ import type {
   TransformedPracticePage,
   TransformedBlogPost,
 } from "@site/lib/importer/types";
+import { isPracticeTemplateType } from "@site/lib/importer/types";
 import type {
   TransformedRecordWithConfidence,
   RecordReviewStatus,
@@ -396,7 +397,7 @@ export default function StepExceptionReview({
                   )}
 
                   {/* Record editor */}
-                  {templateType === "practice" && (
+                  {isPracticeTemplateType(templateType) && (
                     <PracticePagePrepEditor
                       record={currentRecord.record as TransformedPracticePage}
                       onChange={(updated) =>
@@ -446,7 +447,7 @@ function getTitle(
   rec: TransformedRecordWithConfidence,
   templateType: TemplateType,
 ): string {
-  if (templateType === "practice") {
+  if (isPracticeTemplateType(templateType)) {
     return (rec.record as TransformedPracticePage).title ?? "Untitled";
   }
   return (rec.record as TransformedBlogPost).title ?? "Untitled";
