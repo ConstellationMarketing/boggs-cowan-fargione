@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { AboutBadge, AboutContent } from "@site/lib/cms/homePageTypes";
@@ -49,11 +49,31 @@ function BadgeSlider({ badges }: { badges: AboutBadge[] }) {
       return;
     }
 
+    const scrollAmount = slider.clientWidth * 0.8;
+    const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 8;
+
+    if (direction === "next" && isAtEnd) {
+      slider.scrollTo({ left: 0, behavior: "smooth" });
+      return;
+    }
+
     slider.scrollBy({
-      left: direction === "next" ? slider.clientWidth * 0.8 : -slider.clientWidth * 0.8,
+      left: direction === "next" ? scrollAmount : -scrollAmount,
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    if (badges.length <= 2) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      scroll("next");
+    }, 3500);
+
+    return () => window.clearInterval(interval);
+  }, [badges.length]);
 
   return (
     <div className="relative mt-6 md:mt-8">
