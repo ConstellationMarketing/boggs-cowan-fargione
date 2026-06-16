@@ -209,9 +209,9 @@ function AboutSectionEditor({ content, update }: SectionProps) {
         <h4 className="font-medium mt-2">Badges / Awards</h4>
         <ArrayEditor
           items={about.badges}
-          onChange={(items) => set({ badges: items.slice(0, 3) })}
+          onChange={(items) => set({ badges: items })}
           itemLabel="Badge"
-          newItem={() => ({ src: "", alt: "" })}
+          newItem={() => ({ src: "", alt: "", link: "" })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-3">
               <ImageField
@@ -226,10 +226,18 @@ function AboutSectionEditor({ content, update }: SectionProps) {
                 <Label>Badge Alt Text</Label>
                 <Input value={item.alt} onChange={(e) => upd({ ...item, alt: e.target.value })} />
               </div>
+              <div>
+                <Label>Badge Link</Label>
+                <Input
+                  value={item.link || ""}
+                  onChange={(e) => upd({ ...item, link: e.target.value })}
+                  placeholder="/awards/ or https://example.com"
+                />
+              </div>
             </div>
           )}
         />
-        <p className="text-xs text-gray-500 italic">Add up to 3 badges. They render in a single row below the attorney image.</p>
+        <p className="text-xs text-gray-500 italic">Add badges for the homepage slider. Each badge can optionally link to an internal page or external URL.</p>
 
         <div className="border-t pt-4 mt-4 space-y-4">
           <div>

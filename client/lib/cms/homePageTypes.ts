@@ -14,6 +14,7 @@ export interface PartnerLogo {
 export interface AboutBadge {
   src: string;
   alt: string;
+  link?: string;
 }
 
 export interface AboutContent {

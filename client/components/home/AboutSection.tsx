@@ -1,6 +1,8 @@
 import { Check } from "lucide-react";
+import { useRef, type ReactNode } from "react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { AboutContent } from "@site/lib/cms/homePageTypes";
+import type { AboutBadge, AboutContent } from "@site/lib/cms/homePageTypes";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
 import RichText from "@site/components/shared/RichText";
 
@@ -10,6 +12,100 @@ interface AboutSectionProps {
   credentialsPlacement?: "side" | "below";
   contentAlignment?: "start" | "center";
   buttonTone?: "green" | "navy";
+}
+
+function BadgeLinkWrapper({ badge, children }: { badge: AboutBadge; children: ReactNode }) {
+  const link = badge.link?.trim();
+
+  if (!link) {
+    return <div className="block h-full">{children}</div>;
+  }
+
+  if (link.startsWith("/")) {
+    return (
+      <Link to={link} className="block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2">
+        {children}
+      </Link>
+    );
+  }
+
+  return (
+    <a
+      href={link}
+      className="block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
+      rel="noopener noreferrer"
+      target={link.startsWith("http://") || link.startsWith("https://") ? "_blank" : undefined}
+    >
+      {children}
+    </a>
+  );
+}
+
+function BadgeSlider({ badges }: { badges: AboutBadge[] }) {
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "previous" | "next") => {
+    const slider = sliderRef.current;
+    if (!slider) {
+      return;
+    }
+
+    slider.scrollBy({
+      left: direction === "next" ? slider.clientWidth * 0.8 : -slider.clientWidth * 0.8,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="relative mt-6 md:mt-8">
+      <div
+        ref={sliderRef}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] md:gap-6 [&::-webkit-scrollbar]:hidden"
+        aria-label="Badges and awards"
+      >
+        {badges.map((badge, index) => (
+          <div
+            key={`${badge.src}-${index}`}
+            className="min-w-[44%] snap-start sm:min-w-[32%] lg:min-w-[30%]"
+          >
+            <BadgeLinkWrapper badge={badge}>
+              <div className="flex min-h-[96px] items-center justify-center md:min-h-[120px]">
+                {badge.src ? (
+                  <img
+                    src={badge.src}
+                    alt={badge.alt || `Badge ${index + 1}`}
+                    className="max-h-[120px] w-full object-contain md:max-h-[148px]"
+                    loading="lazy"
+                  />
+                ) : null}
+              </div>
+            </BadgeLinkWrapper>
+          </div>
+        ))}
+      </div>
+
+      {badges.length > 2 ? (
+        <div className="mt-3 flex justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => scroll("previous")}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-black/15 bg-white text-brand-navy transition-colors hover:bg-brand-accent hover:text-white"
+            aria-label="Previous badge"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scroll("next")}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-black/15 bg-white text-brand-navy transition-colors hover:bg-brand-accent hover:text-white"
+            aria-label="Next badge"
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 function CredentialList({ title, items }: { title: string; items: string[] }) {
@@ -54,7 +150,7 @@ export default function AboutSection({
   }
 
   const data = content;
-  const badges = (data.badges || []).slice(0, 3);
+  const badges = (data.badges || []).filter((badge) => badge.src);
   const admissionsItems = (data.admissionsItems || []).filter(Boolean);
   const membershipsItems = (data.membershipsItems || []).filter(Boolean);
   const buttonText = data.contactLabel?.trim() || "Learn More";
@@ -97,25 +193,7 @@ export default function AboutSection({
               </div>
             ) : null}
 
-            {badges.length > 0 ? (
-              <div className="grid grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
-                {badges.map((badge, index) => (
-                  <div
-                    key={`${badge.src}-${index}`}
-                    className="flex min-h-[96px] md:min-h-[120px] items-center justify-center"
-                  >
-                    {badge.src ? (
-                      <img
-                        src={badge.src}
-                        alt={badge.alt || `Badge ${index + 1}`}
-                        className="max-h-[120px] md:max-h-[148px] w-full object-contain"
-                        loading="lazy"
-                      />
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            ) : null}
+            {badges.length > 0 ? <BadgeSlider badges={badges} /> : null}
           </div>
 
           <div className={`pt-1 text-center lg:text-left ${contentAlignment === "center" ? "self-center" : ""}`}>
