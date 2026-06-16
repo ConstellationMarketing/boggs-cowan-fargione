@@ -1,4 +1,3 @@
-import { Check } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
