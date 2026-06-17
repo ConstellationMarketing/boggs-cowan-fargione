@@ -122,7 +122,7 @@ CREATE TABLE public.cms_users (
 
 CREATE TABLE public.page_revisions (
   id uuid PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
-  page_id uuid NOT NULL REFERENCES public.pages(id),
+  page_id uuid NOT NULL REFERENCES public.pages(id) ON DELETE CASCADE,
   page_id_snapshot integer,
   title text NOT NULL,
   url_path text NOT NULL,

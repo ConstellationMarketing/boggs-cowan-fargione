@@ -49,22 +49,26 @@ function BadgeSlider({ badges }: { badges: AboutBadge[] }) {
       return;
     }
 
-    const scrollAmount = slider.clientWidth * 0.8;
-    const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 8;
-
-    if (direction === "next" && isAtEnd) {
-      slider.scrollTo({ left: 0, behavior: "smooth" });
+    const slides = Array.from(slider.children) as HTMLElement[];
+    if (slides.length === 0) {
       return;
     }
 
-    slider.scrollBy({
-      left: direction === "next" ? scrollAmount : -scrollAmount,
-      behavior: "smooth",
-    });
+    const currentIndex = slides.reduce((closestIndex, slide, index) => {
+      const closestDistance = Math.abs(slides[closestIndex].offsetLeft - slider.scrollLeft);
+      const slideDistance = Math.abs(slide.offsetLeft - slider.scrollLeft);
+      return slideDistance < closestDistance ? index : closestIndex;
+    }, 0);
+
+    const nextIndex = direction === "next"
+      ? (currentIndex + 1) % slides.length
+      : (currentIndex - 1 + slides.length) % slides.length;
+
+    slider.scrollTo({ left: slides[nextIndex].offsetLeft, behavior: "smooth" });
   };
 
   useEffect(() => {
-    if (badges.length <= 2) {
+    if (badges.length <= 1) {
       return;
     }
 
@@ -85,7 +89,7 @@ function BadgeSlider({ badges }: { badges: AboutBadge[] }) {
         {badges.map((badge, index) => (
           <div
             key={`${badge.src}-${index}`}
-            className="min-w-[44%] snap-start sm:min-w-[32%] lg:min-w-[30%]"
+            className="min-w-full snap-start sm:min-w-[50%] lg:min-w-[30%]"
           >
             <BadgeLinkWrapper badge={badge}>
               <div className="flex min-h-[96px] items-center justify-center md:min-h-[120px]">
@@ -103,7 +107,7 @@ function BadgeSlider({ badges }: { badges: AboutBadge[] }) {
         ))}
       </div>
 
-      {badges.length > 2 ? (
+      {badges.length > 1 ? (
         <div className="mt-3 flex justify-center gap-2">
           <button
             type="button"

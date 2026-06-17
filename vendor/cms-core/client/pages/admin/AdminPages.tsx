@@ -36,6 +36,24 @@ import {
 } from '@/components/ui/alert-dialog';
 import { buildDuplicatePageInsertPayload } from './pageUrlPath';
 
+async function deletePagesWithRevisions(ids: string[]) {
+  const { error: revisionsError } = await supabase
+    .from('page_revisions')
+    .delete()
+    .in('page_id', ids);
+
+  if (revisionsError) {
+    return revisionsError;
+  }
+
+  const { error: pagesError } = await supabase
+    .from('pages')
+    .delete()
+    .in('id', ids);
+
+  return pagesError;
+}
+
 export default function AdminPages() {
   const navigate = useNavigate();
   const [pages, setPages] = useState<Page[]>([]);
@@ -69,11 +87,11 @@ export default function AdminPages() {
     if (!deleteId) return;
     setDeleting(true);
 
-    const { error } = await supabase.from('pages').delete().eq('id', deleteId);
+    const error = await deletePagesWithRevisions([deleteId]);
 
     if (error) {
       console.error('Error deleting page:', error);
-      toast.error('Failed to delete page');
+      toast.error(`Failed to delete page: ${error.message}`);
     } else {
       setPages(pages.filter(p => p.id !== deleteId));
     }
@@ -244,11 +262,7 @@ export default function AdminPages() {
       }
 
       case 'delete': {
-        const deleteResult = await supabase
-          .from('pages')
-          .delete()
-          .in('id', ids);
-        error = deleteResult.error;
+        error = await deletePagesWithRevisions(ids);
         break;
       }
     }
