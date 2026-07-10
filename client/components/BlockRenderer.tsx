@@ -10,6 +10,10 @@ import ContactSectionBlock from "@site/components/blocks/ContactSectionBlock";
 import MapBlock from "@site/components/blocks/MapBlock";
 import PracticeAreasGridBlock from "@site/components/blocks/PracticeAreasGridBlock";
 import RecentPostsBlock from "@site/components/blocks/RecentPostsBlock";
+import LocationsAreaBlock from "@site/components/blocks/LocationsAreaBlock";
+import LocationsMapBlock from "@site/components/blocks/LocationsMapBlock";
+import WhyChooseUsBlock from "@site/components/blocks/WhyChooseUsBlock";
+import ContactFormBlock from "@site/components/blocks/ContactFormBlock";
 import LegacyBlock from "@site/components/blocks/LegacyBlock";
 
 interface BlockRendererProps {
@@ -81,6 +85,14 @@ function RenderBlock({
       return <PracticeAreasGridBlock block={block} />;
     case "recent-posts":
       return <RecentPostsBlock block={block} />;
+    case "locations-area":
+      return <LocationsAreaBlock block={block} />;
+    case "locations-map":
+      return <LocationsMapBlock block={block} />;
+    case "why-choose-us":
+      return <WhyChooseUsBlock block={block} />;
+    case "contact-form":
+      return <ContactFormBlock block={block} />;
     default:
       return <LegacyBlock block={block} />;
   }

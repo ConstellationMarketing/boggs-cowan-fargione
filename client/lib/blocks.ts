@@ -90,4 +90,33 @@ export type ContentBlock =
       sectionLabel: string;
       heading: string;
       postCount?: number;
+    }
+  | {
+      type: "locations-area";
+      sectionLabel?: string;
+      primaryHeading: string;
+      surroundingHeading: string;
+      primaryLocations: Array<{ name: string; link: string }>;
+      surroundingLocations: Array<{ name: string; link: string }>;
+    }
+  | {
+      type: "locations-map";
+      heading: string;
+      body: string;
+      mapEmbedUrl: string;
+    }
+  | {
+      type: "why-choose-us";
+      image?: string;
+      imageAlt?: string;
+      sectionLabel?: string;
+      heading?: string;
+      description?: string;
+      items: Array<{ icon: string; title: string; description: string }>;
+    }
+  | {
+      type: "contact-form";
+      sectionLabel?: string;
+      heading?: string;
+      description?: string;
     };

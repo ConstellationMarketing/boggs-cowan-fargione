@@ -3,6 +3,7 @@ import AboutEditor from "@site/components/admin/editors/AboutEditor";
 import ContactEditor from "@site/components/admin/editors/ContactEditor";
 import PracticeAreasEditor from "@site/components/admin/editors/PracticeAreasEditor";
 import PracticeAreaPageEditor from "@site/components/admin/editors/PracticeAreaPageEditor";
+import LocationsEditor from "@site/components/admin/editors/LocationsEditor";
 import { Textarea } from "@/components/ui/textarea";
 
 interface PageContentEditorProps {
@@ -26,6 +27,9 @@ export default function PageContentEditor({ pageId, pageKey, content, onChange, 
 
   if (pageId === 4) // Practice Areas listing
     return <PracticeAreasEditor content={content as any} onChange={onChange as any} />;
+
+  if (pageId === 102) // Locations / Areas We Serve
+    return <LocationsEditor content={content} onChange={onChange} />;
 
   // Individual practice area pages — detected by page_type
   if (pageType === "practice" || pageType === "areas-served")

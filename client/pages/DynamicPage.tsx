@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Layout from "@site/components/layout/Layout";
 import PracticePageView from "@site/components/practice/PracticePageView";
+import LocationsPageView from "./LocationsPage";
 import Seo from "@site/components/Seo";
 import BlockRenderer from "@site/components/BlockRenderer";
 import NotFound from "./NotFound";
@@ -115,6 +116,10 @@ export default function DynamicPage() {
 
   const title = page.title || "";
   const meta: PageMeta = page.meta || emptyPageMeta;
+
+  if (queryPath === "/locations/") {
+    return <LocationsPageView page={page} />;
+  }
 
   if (resolvePageTemplate(page) === "practice") {
     return (
