@@ -309,6 +309,7 @@ export default function AdminPageEdit() {
     ABOUT: 2,
     CONTACT: 3,
     PRACTICE_LISTING: 4,
+    LOCATIONS: 102,
   };
 
   // Check if this is a structured page using stable page_id (not URL path)
