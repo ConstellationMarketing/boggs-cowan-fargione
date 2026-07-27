@@ -83,8 +83,8 @@ function GrandchildFlyout({
       <div
         className={`absolute left-full top-0 min-w-[200px] overflow-hidden bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-150 ${
           open
-            ? "visible opacity-100 pointer-events-auto"
-            : "invisible opacity-0 pointer-events-none"
+            ? "block visible opacity-100 pointer-events-auto"
+            : "hidden invisible opacity-0 pointer-events-none"
         }`}
       >
         {child.children!.map((grandchild, idx) => (
@@ -151,8 +151,8 @@ export default function NavDropdown({ item }: NavDropdownProps) {
       <div
         className={`absolute top-full left-0 mt-0 min-w-[220px] bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-200 ${
           open
-            ? "visible opacity-100 pointer-events-auto"
-            : "invisible opacity-0 pointer-events-none"
+            ? "block visible opacity-100 pointer-events-auto"
+            : "hidden invisible opacity-0 pointer-events-none"
         }`}
       >
         {item.children!.map((child, idx) => (
