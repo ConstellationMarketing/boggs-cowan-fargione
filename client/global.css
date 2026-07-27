@@ -102,8 +102,15 @@
     @apply border-border;
   }
 
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    background-color: #000;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 
   :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
