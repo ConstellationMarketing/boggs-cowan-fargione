@@ -24,6 +24,7 @@ interface NavDropdownItem {
 
 interface NavDropdownProps {
   item: NavDropdownItem;
+  direction?: "down" | "up";
 }
 
 function GrandchildFlyout({
@@ -83,8 +84,8 @@ function GrandchildFlyout({
       <div
         className={`absolute left-full top-0 min-w-[200px] overflow-hidden bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-150 ${
           open
-            ? "block visible opacity-100 pointer-events-auto"
-            : "hidden invisible opacity-0 pointer-events-none"
+            ? "visible opacity-100 pointer-events-auto"
+            : "invisible opacity-0 pointer-events-none"
         }`}
       >
         {child.children!.map((grandchild, idx) => (
@@ -104,7 +105,7 @@ function GrandchildFlyout({
   );
 }
 
-export default function NavDropdown({ item }: NavDropdownProps) {
+export default function NavDropdown({ item, direction = "down" }: NavDropdownProps) {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -149,10 +150,14 @@ export default function NavDropdown({ item }: NavDropdownProps) {
       </Link>
 
       <div
-        className={`absolute top-full left-0 mt-0 min-w-[220px] bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-200 ${
+        className={`absolute left-0 min-w-[220px] bg-brand-card border border-brand-border rounded-xl shadow-xl z-50 py-2 transition-all duration-200 ${
+          direction === "up" ? "bottom-full mb-0" : "top-full mt-0"
+        } ${
           open
             ? "block visible opacity-100 pointer-events-auto"
-            : "hidden invisible opacity-0 pointer-events-none"
+            : direction === "up"
+              ? "hidden invisible opacity-0 pointer-events-none"
+              : "invisible opacity-0 pointer-events-none"
         }`}
       >
         {item.children!.map((child, idx) => (

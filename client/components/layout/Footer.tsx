@@ -168,7 +168,7 @@ export default function Footer() {
                   return (
                     <li key={`footer-nav-${item.href}-${index}`} className="px-[11px] flex items-center justify-center">
                       {hasChildren ? (
-                        <NavDropdown item={item} />
+                        <NavDropdown item={item} direction="up" />
                       ) : (
                         <Link
                           to={item.href}
