@@ -202,13 +202,25 @@ export default function AboutSection({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[6%] items-start">
           <div>
             {data.attorneyImage ? (
-              <div className="overflow-hidden rounded-xl border border-black/10 bg-[#f7f7f7]">
+              <div className="relative overflow-hidden rounded-xl border border-black/10 bg-[#f7f7f7]">
                 <img
                   src={data.attorneyImage}
                   alt={data.attorneyImageAlt || data.heading || "Attorney"}
                   className="block w-full h-auto object-contain object-top"
                   loading="lazy"
                 />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-3 z-10 border-2 border-brand-accent md:inset-4"
+                />
+                <div className="pointer-events-none absolute right-3 top-3 z-20 flex aspect-square w-[28%] min-w-[116px] max-w-[200px] bg-brand-accent p-2 text-white md:right-4 md:top-4 md:p-3">
+                  <div className="flex h-full w-full flex-col items-center justify-center border-2 border-white px-1 text-center font-inter uppercase leading-none">
+                    <span className="text-[clamp(2.25rem,6vw,4.5rem)] font-medium tracking-[-0.04em]">10+</span>
+                    <span className="mt-1 text-[clamp(0.72rem,1.75vw,1.35rem)] font-medium leading-[1.05] tracking-[0.01em]">
+                      Years of<br />Experience
+                    </span>
+                  </div>
+                </div>
               </div>
             ) : null}
 
