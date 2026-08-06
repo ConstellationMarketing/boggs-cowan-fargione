@@ -214,7 +214,7 @@ export default function AboutSection({
                   className="pointer-events-none absolute inset-3 z-10 border-2 border-brand-accent md:inset-4"
                 />
                 <div className="pointer-events-none absolute right-3 top-3 z-20 flex aspect-square w-[28%] min-w-[116px] max-w-[200px] bg-brand-accent p-2 text-white md:right-4 md:top-4 md:p-3">
-                  <div className="flex h-full w-full flex-col items-center justify-center border-2 border-white px-1 text-center font-inter uppercase leading-none">
+                  <div className="flex h-full w-full flex-col items-center justify-center border-2 border-white p-2 text-center font-inter uppercase leading-none md:p-3">
                     <span className="whitespace-nowrap text-[clamp(2.25rem,6vw,4.5rem)] font-medium tracking-[-0.04em]">10+</span>
                     <span className="mt-1 whitespace-nowrap text-[clamp(0.72rem,1.75vw,1.35rem)] font-medium leading-[1.05] tracking-[0.01em]">Years of</span>
                     <span className="whitespace-nowrap text-[clamp(0.72rem,1.75vw,1.35rem)] font-medium leading-[1.05] tracking-[0.01em]">Experience</span>
