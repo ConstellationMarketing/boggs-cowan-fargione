@@ -48,11 +48,10 @@ export default function AboutUs() {
     );
   }
 
-  // Use temporary placeholder avatars on the About page until real team photos are available
   const teamMembers = content.team.members.map((member, index) => ({
     ...member,
-    image: createBlankAvatar(index),
-    imageAlt: member.imageAlt || `${member.name} placeholder avatar`,
+    image: member.image || createBlankAvatar(index),
+    imageAlt: member.imageAlt || member.name,
   }));
 
   const hasApproachSection = Boolean(
