@@ -23,13 +23,11 @@ export default function TeamMemberCard({
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-xl border border-brand-border bg-brand-card transition-all duration-300 hover:border-brand-accent">
-      <div className="relative overflow-hidden aspect-[4/5] min-h-[360px]">
+      <div className="relative overflow-hidden bg-black/10">
         <img
           src={image}
           alt={imageAlt || name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          width={400}
-          height={500}
+          className="block h-auto w-full transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
