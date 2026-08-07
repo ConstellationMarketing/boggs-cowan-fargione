@@ -119,9 +119,14 @@ export default function Footer() {
             >
               {hasAddress ? (
                 <div className="space-y-4 text-center md:text-left">
-                  <div className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-accent/40 px-3 py-1 font-inter text-[12px] font-semibold uppercase tracking-[0.24em] text-brand-accent md:justify-start">
-                    <MapPin className="h-4 w-4" strokeWidth={1.5} />
-                    <span>Visit Our Office</span>
+                  <div>
+                    <div className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-accent/40 px-3 py-1 font-inter text-[12px] font-semibold uppercase tracking-[0.24em] text-brand-accent md:justify-start">
+                      <MapPin className="h-4 w-4" strokeWidth={1.5} />
+                      <span>Visit Our Office</span>
+                    </div>
+                    <p className="mt-2 font-inter text-[13px] font-medium uppercase tracking-[0.16em] text-white/65">
+                      By Appointment Only
+                    </p>
                   </div>
                   <div className="space-y-2 font-inter text-[18px] leading-[1.7] text-white md:text-[20px]">
                     {addressLine1 ? <p>{addressLine1}</p> : null}
