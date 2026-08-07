@@ -5,12 +5,14 @@ interface PracticeAreaHeroProps {
   content: PracticeAreaHeroContent;
   headingTags?: Record<string, string>;
   awards?: Array<{ src: string; alt: string }>;
+  largeSideImage?: boolean;
 }
 
 export default function PracticeAreaHero({
   content,
   headingTags,
   awards,
+  largeSideImage = false,
 }: PracticeAreaHeroProps) {
   return (
     <PageHero
@@ -18,6 +20,7 @@ export default function PracticeAreaHero({
       headingTag={headingTags?.["hero.h1Title"] || headingTags?.["hero.sectionLabel"]}
       awardLogos={awards}
       compactDesktop
+      largeSideImage={largeSideImage}
     />
   );
 }
