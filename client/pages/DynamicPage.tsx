@@ -129,7 +129,6 @@ export default function DynamicPage() {
         title={title}
         publishedAt={page.publishedAt}
         updatedAt={page.updatedAt}
-        largeSideImage={queryPath === "/personal-injury/"}
       />
     );
   }

@@ -13,7 +13,6 @@ interface PracticePageViewProps {
   title?: string | null;
   publishedAt?: string | null;
   updatedAt?: string | null;
-  largeSideImage?: boolean;
 }
 
 export default function PracticePageView({
@@ -22,7 +21,6 @@ export default function PracticePageView({
   title,
   publishedAt,
   updatedAt,
-  largeSideImage = false,
 }: PracticePageViewProps) {
   return (
     <Layout>
@@ -43,7 +41,6 @@ export default function PracticePageView({
             ? content.socialProof.awards.logos
             : undefined
         }
-        largeSideImage={largeSideImage}
       />
 
       {content.socialProof.mode === "testimonials" ? (

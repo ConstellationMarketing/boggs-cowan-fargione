@@ -44,7 +44,6 @@ export default function Index() {
         content={heroContent}
         headingTag={content.headingTags?.["hero.h1Title"]}
         ctaTone={homepageButtonTone}
-        largeSideImage
       />
 
       {/* Partner Badges Section - Bottom of Hero */}

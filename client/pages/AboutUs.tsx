@@ -73,7 +73,6 @@ export default function AboutUs() {
         content={content.hero}
         headingTag={content.headingTags?.["hero.h1Title"] || content.headingTags?.["hero.sectionLabel"]}
         compactDesktop
-        largeSideImage
       />
 
       <AboutSection

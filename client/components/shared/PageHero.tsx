@@ -15,8 +15,6 @@ interface PageHeroProps {
   hideMobileImage?: boolean;
   /** Reduce hero min-height on mobile/tablet (below lg). */
   compactMobile?: boolean;
-  /** Use an even desktop split between text and the side image. */
-  largeSideImage?: boolean;
 }
 
 function renderHeadline(content: SharedHeroContent) {
@@ -65,7 +63,6 @@ export default function PageHero({
   compactDesktop = false,
   hideMobileImage = false,
   compactMobile = false,
-  largeSideImage = false,
 }: PageHeroProps) {
   const heroImage = content.heroImage?.trim() || "";
 
@@ -95,7 +92,7 @@ export default function PageHero({
 
       <div className="relative z-10 max-w-[2560px] mx-auto w-[95%] flex-1 flex flex-col">
         <div className={`flex flex-col gap-6 lg:gap-[3%] flex-1 ${compactDesktop ? "lg:flex-row lg:items-start" : "lg:flex-row lg:items-center"}`}>
-          <div className={`${largeSideImage ? (compactDesktop ? "lg:w-1/2" : "lg:w-[48.5%]") : "lg:w-[65.667%]"} flex flex-col items-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${compactDesktop ? "justify-start lg:justify-center lg:self-stretch" : "justify-center"} ${
+          <div className={`${heroImage ? (compactDesktop ? "lg:w-1/2" : "lg:w-[48.5%]") : "lg:w-[65.667%]"} flex flex-col items-center pb-[36px] text-center md:pb-[48px] lg:items-start lg:text-left ${compactDesktop ? "justify-start lg:justify-center lg:self-stretch" : "justify-center"} ${
             underHeader
               ? `pt-[12.5rem] md:pt-[13.5rem]${compactDesktop ? " lg:pt-[234px] lg:pb-[100px]" : ""}`
               : "pt-[3rem] md:pt-[4rem]"
@@ -170,7 +167,7 @@ export default function PageHero({
 
           {compactDesktop ? (
             heroImage ? (
-              <div className={`hidden lg:block absolute right-0 top-[234px] bottom-0 ${largeSideImage ? "w-1/2" : "w-[31.3333%]"}`}>
+              <div className="hidden lg:block absolute right-0 top-[234px] bottom-0 w-1/2">
                 <img
                   src={heroImage}
                   alt={content.heroImageAlt || content.h1Title || "Hero"}
@@ -179,7 +176,7 @@ export default function PageHero({
               </div>
             ) : null
           ) : (
-            <div className={`hidden lg:block ${largeSideImage ? "lg:w-[48.5%]" : "lg:w-[31.3333%]"} self-stretch ${
+            <div className={`hidden lg:block ${heroImage ? "lg:w-[48.5%]" : "lg:w-[31.3333%]"} self-stretch ${
               underHeader ? "pt-[10rem]" : "pt-[3rem]"
             }`}>
               {heroImage ? (
