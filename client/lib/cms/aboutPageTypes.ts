@@ -8,6 +8,14 @@ import { defaultSharedHeroContent } from "./sharedHero";
 
 export type AboutHeroContent = SharedHeroContent;
 
+export type TeamCategory = "attorney" | "paralegal" | "staff";
+
+export const TEAM_CATEGORY_OPTIONS: { value: TeamCategory; label: string }[] = [
+  { value: "attorney", label: "Attorney" },
+  { value: "paralegal", label: "Paralegal" },
+  { value: "staff", label: "Office Staff" },
+];
+
 export interface TeamMember {
   name: string;
   title: string;
@@ -15,12 +23,47 @@ export interface TeamMember {
   image: string;
   imageAlt: string;
   credentials: string[];
+  category?: TeamCategory; // Missing on older content; see resolveTeamCategory
 }
 
 export interface TeamContent {
-  sectionLabel: string; // "– Our Legal Team"
-  heading: string; // "Experienced Attorneys..."
+  sectionLabel: string; // Attorneys group label, "MEET OUR ATTORNEYS"
+  heading: string; // Main heading, "Our Legal Team"
+  paralegalsLabel: string; // "MEET OUR PARALEGALS"
+  staffLabel: string; // "MEET OUR OFFICE STAFF"
   members: TeamMember[];
+}
+
+export interface TeamGroup<T extends TeamMember = TeamMember> {
+  category: TeamCategory;
+  label: string;
+  members: T[];
+}
+
+// Members saved before categories existed have no category, so fall back to the title
+export function resolveTeamCategory(member: Pick<TeamMember, "category" | "title">): TeamCategory {
+  if (member.category && TEAM_CATEGORY_OPTIONS.some((option) => option.value === member.category)) {
+    return member.category;
+  }
+  return /paralegal/i.test(member.title || "") ? "paralegal" : "attorney";
+}
+
+// Groups members in display order (attorneys, paralegals, office staff), dropping empty groups
+export function groupTeamMembers<T extends TeamMember>(
+  team: Pick<TeamContent, "sectionLabel" | "paralegalsLabel" | "staffLabel">,
+  members: T[],
+): TeamGroup<T>[] {
+  const labels: Record<TeamCategory, string> = {
+    attorney: team.sectionLabel,
+    paralegal: team.paralegalsLabel,
+    staff: team.staffLabel,
+  };
+
+  return TEAM_CATEGORY_OPTIONS.map(({ value }) => ({
+    category: value,
+    label: labels[value] || "",
+    members: members.filter((member) => resolveTeamCategory(member) === value),
+  })).filter((group) => group.members.length > 0);
 }
 
 export interface ApproachContent {
@@ -104,6 +147,8 @@ export const defaultAboutContent: AboutPageContent = {
   team: {
     sectionLabel: "",
     heading: "",
+    paralegalsLabel: "MEET OUR PARALEGALS",
+    staffLabel: "MEET OUR OFFICE STAFF",
     members: [],
   },
   approach: {

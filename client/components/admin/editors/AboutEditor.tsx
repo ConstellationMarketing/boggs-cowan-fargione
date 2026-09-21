@@ -1,4 +1,5 @@
-import type { AboutPageContent } from "@site/lib/cms/aboutPageTypes";
+import type { AboutPageContent, TeamCategory, TeamMember } from "@site/lib/cms/aboutPageTypes";
+import { TEAM_CATEGORY_OPTIONS, resolveTeamCategory } from "@site/lib/cms/aboutPageTypes";
 import { Section, ArrayEditor, ImageField, RichTextField, HeadingField, Input, Label, Textarea, GlobalSectionInfo } from "./EditorShared";
 
 interface AboutEditorProps {
@@ -236,10 +237,6 @@ function TeamSection({ content, update }: SectionProps) {
   return (
     <Section title="Team Members" defaultOpen={false}>
       <div className="grid gap-4">
-        <div>
-          <Label>Section Label</Label>
-          <Input value={team.sectionLabel} onChange={(e) => set({ sectionLabel: e.target.value })} />
-        </div>
         <HeadingField
           label="Heading"
           value={team.heading}
@@ -247,14 +244,31 @@ function TeamSection({ content, update }: SectionProps) {
           tag={ht.get("team.heading")}
           onTagChange={(t) => ht.set("team.heading", t)}
         />
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <Label>Attorneys Label</Label>
+            <Input value={team.sectionLabel} onChange={(e) => set({ sectionLabel: e.target.value })} placeholder="MEET OUR ATTORNEYS" />
+          </div>
+          <div>
+            <Label>Paralegals Label</Label>
+            <Input value={team.paralegalsLabel} onChange={(e) => set({ paralegalsLabel: e.target.value })} placeholder="MEET OUR PARALEGALS" />
+          </div>
+          <div>
+            <Label>Office Staff Label</Label>
+            <Input value={team.staffLabel} onChange={(e) => set({ staffLabel: e.target.value })} placeholder="MEET OUR OFFICE STAFF" />
+          </div>
+        </div>
+        <p className="text-xs text-gray-500 italic">
+          Members are grouped by category in this order. A group and its label are hidden when it has no members.
+        </p>
         <ArrayEditor
           items={team.members}
           onChange={(items) => set({ members: items })}
           itemLabel="Member"
-          newItem={() => ({ name: "", title: "", bio: "", image: "", imageAlt: "", credentials: [] })}
+          newItem={(): TeamMember => ({ name: "", title: "", bio: "", image: "", imageAlt: "", credentials: [], category: "attorney" })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <Label>Name</Label>
                   <Input value={item.name} onChange={(e) => upd({ ...item, name: e.target.value })} />
@@ -262,6 +276,20 @@ function TeamSection({ content, update }: SectionProps) {
                 <div>
                   <Label>Title</Label>
                   <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
+                </div>
+                <div>
+                  <Label>Category</Label>
+                  <select
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    value={resolveTeamCategory(item)}
+                    onChange={(e) => upd({ ...item, category: e.target.value as TeamCategory })}
+                  >
+                    {TEAM_CATEGORY_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <RichTextField label="Bio" value={item.bio} onChange={(v) => upd({ ...item, bio: v })} />
