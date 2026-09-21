@@ -105,7 +105,7 @@ export default function AboutUs() {
           )}
 
           {teamGroups.map((group, groupIndex) => (
-            <div key={group.category} className={groupIndex > 0 ? "mt-[40px] md:mt-[60px]" : undefined}>
+            <div key={group.category} className={groupIndex > 0 ? "mt-[70px] md:mt-[110px]" : undefined}>
               {group.label.trim() && (
                 <h3 className="text-center mb-[20px] md:mb-[30px] font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
                   {group.label}
