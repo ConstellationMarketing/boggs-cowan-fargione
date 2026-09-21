@@ -1,0 +1,21 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "docs/six-file-context",
+    "fix/UI-updations-with-docs",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "docs/six-file-context": "main",
+    "fix/UI-updations-with-docs": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "docs/six-file-context",
+    "fix/UI-updations-with-docs",
+    "origin"
+  ]
+}
