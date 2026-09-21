@@ -24,7 +24,11 @@ dist-ssr
 *.sw?
 
 .config/
-!.env
+
+# Environment files (keep the template)
+.env
+.env.*
+!.env.example
 
 # Playwright
 playwright-report/
