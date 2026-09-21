@@ -12,6 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useAboutContent } from "@site/hooks/useAboutContent";
+import { groupTeamMembers } from "@site/lib/cms/aboutPageTypes";
 import { useHomeContent } from "@site/hooks/useHomeContent";
 import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
@@ -53,6 +54,7 @@ export default function AboutUs() {
     image: member.image || createBlankAvatar(index),
     imageAlt: member.imageAlt || member.name,
   }));
+  const teamGroups = groupTeamMembers(content.team, teamMembers);
 
   const hasApproachSection = Boolean(
     content.approach.heading.trim() || content.approach.description.trim(),
@@ -87,29 +89,38 @@ export default function AboutUs() {
       {teamMembers.length > 0 && (
       <div className="bg-white pt-[40px] md:pt-[60px] pb-[30px] md:pb-[54px]">
         <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] lg:w-[85%]">
-          <div className="text-center mb-[30px] md:mb-[50px]">
-            <div className="mb-[10px]">
-              <p className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
-                {content.team.sectionLabel}
-              </p>
+          {content.team.heading.trim() && (
+            <div className="text-center mb-[20px] md:mb-[30px]">
+              <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black">
+                {content.team.heading.split("\n").map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < content.team.heading.split("\n").length - 1 && (
+                      <br className="hidden md:block" />
+                    )}
+                  </span>
+                ))}
+              </h2>
             </div>
-            <h2 className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black">
-              {content.team.heading.split("\n").map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i < content.team.heading.split("\n").length - 1 && (
-                    <br className="hidden md:block" />
-                  )}
-                </span>
-              ))}
-            </h2>
-          </div>
+          )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
-            {teamMembers.map((member, index) => (
-              <TeamMemberCard key={index} {...member} />
-            ))}
-          </div>
+          {teamGroups.map((group, groupIndex) => (
+            <div key={group.category} className={groupIndex > 0 ? "mt-[40px] md:mt-[60px]" : undefined}>
+              {group.label.trim() && (
+                <h3 className="text-center mb-[20px] md:mb-[30px] font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] text-brand-accent">
+                  {group.label}
+                </h3>
+              )}
+
+              <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+                {group.members.map((member, index) => (
+                  <div key={index} className="w-full md:w-[calc(50%-16px)] lg:w-[calc((100%-64px)/3)]">
+                    <TeamMemberCard {...member} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
