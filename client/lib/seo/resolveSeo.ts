@@ -95,8 +95,10 @@ export function resolveSeo(input: ResolveSeoInput): ResolvedSeo {
     cleanUrl(input.canonical) ??
     cleanUrl(input.meta?.canonical_url) ??
     buildRouteCanonical(siteUrl, input.pathname);
-  const routeNoindex = input.noindex ?? input.meta?.noindex ?? false;
-  const robots = routeNoindex || input.settings.siteNoindex ? "noindex, nofollow" : undefined;
+  // This site is retired: bcflawfirm.com is now served by the Astro build, so
+  // every page stays out of search regardless of the CMS noindex settings.
+  // netlify.toml sends the same rule as an X-Robots-Tag header.
+  const robots = "noindex, nofollow";
   const image = resolveSocialImage(input.image, input.ogImage ?? input.meta?.og_image);
   const timestamp = cleanString(input.updatedTime) ?? cleanString(input.publishedTime);
 
